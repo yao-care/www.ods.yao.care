@@ -8,6 +8,8 @@
   "observability": { "enabled": true },
   "vars": {
     "TO_EMAIL": "service@yao.care",
+    // Brevo 已驗證的寄件人（見 src/index.js 註解；換成 yao.care 前要先做 Brevo 網域驗證）
+    "FROM_EMAIL": "service@weiqi.kids",
     "ALLOWED_ORIGIN": "https://www.ods.yao.care"
   }
 }

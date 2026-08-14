@@ -11,6 +11,10 @@
  *
  * 環境變數（wrangler.jsonc 的 vars）：
  *   TO_EMAIL        收件信箱
+ *   FROM_EMAIL      寄件人。必須是 Brevo 已驗證的 sender —— 2026-08-14 定案用 service@weiqi.kids
+ *                   （此 Brevo 帳號唯一驗證過的身分；yao.care 未做 Brevo 網域驗證，DMARC p=reject
+ *                   會讓未簽章的信被拒收）。這是寄給服務方自己的內部通知，寄件人品牌無妨；
+ *                   回信對象靠 replyTo（填表人）。
  *   ALLOWED_ORIGIN  只接受這個來源的跨網域請求
  */
 
@@ -79,7 +83,7 @@ export default {
       method: 'POST',
       headers: { 'api-key': env.BREVO_API_KEY, 'content-type': 'application/json' },
       body: JSON.stringify({
-        sender: { name: '公文 AI 申請表單', email: env.TO_EMAIL },
+        sender: { name: '公文 AI 申請表單', email: env.FROM_EMAIL ?? env.TO_EMAIL },
         to: [{ email: env.TO_EMAIL }],
         replyTo: { email: values.email, name: values.contact },
         subject: `【申請試用】${values.org}`,

@@ -1,6 +1,8 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "ods-apply-form",
+  // 帳號由用戶 2026-08-14 拍板：Lightman.chang@gmail.com（授權下另有 Gcmgcm 帳號，勿混用）
+  "account_id": "9d9e58b5e0d1657b8f74bd2cbfc91ee3",
   "main": "src/index.js",
   "compatibility_date": "2026-08-14",
   "observability": { "enabled": true },

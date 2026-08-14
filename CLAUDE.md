@@ -14,7 +14,7 @@
 | 8 個案例頁＋索引、檢核、文別、用語、功能、資料處理、申請 | 已寫 |
 | GitHub repo | **尚未建立**（要 `gh repo create yao-care/www.ods.yao.care --public`） |
 | GitHub Pages / deploy workflow | **尚未設定**（模板在 `/root/.claude/skills/new-astro-site/templates/deploy.yml`） |
-| 申請表單 Worker | 程式碼已寫（`workers/apply-form/`），**尚未部署** |
+| 申請表單 Worker | **已部署**（2026-08-14，`https://ods-apply-form.lightman-chang.workers.dev`，帳號用戶拍板 Lightman）。**待 `BREVO_API_KEY`**（用戶產生 xkeysib → `wrangler secret put`），金鑰就位前 apply 頁 `ENDPOINT` 留空 |
 | Phase 4–5（Slack、GA4/GSC、seo-ops 納管） | **未開始** |
 
 現況一律查、不要相信這張表：`gh repo view yao-care/www.ods.yao.care`、`gh run list`、
@@ -85,12 +85,10 @@ pnpm check:content:all
 2. `gh api -X POST repos/…/pages -f build_type=workflow`＋**必做** `gh api -X PUT repos/…/pages -f cname=www.ods.yao.care`
 3. 複製 `deploy.yml` 模板，`{{SITE_URL}}`→`https://www.ods.yao.care`、
    `{{INDEXNOW_KEY}}`→`770ed0a7691038e945d0cb91b9410f4a`（＝`public/` 下那個 .txt 檔名）
-4. Worker 部署：Cloudflare 授權**其實存在**（wrangler OAuth token 在 `~/.config/.wrangler/`，
-   `npx wrangler whoami` 驗證過 2026-08-14；之前寫「沒有授權」是文件漂移）。
-   `npx wrangler deploy` 即可，但寄信要 Brevo 的 **HTTP API 金鑰**（`xkeysib-…`，與
-   secrets.md 的 SMTP 密碼不同，只能由用戶到 Brevo 後台產生）→
-   `npx wrangler secret put BREVO_API_KEY`。細節見 `workers/apply-form/README.md`。
-   金鑰就位前**不要**把網址填進 `src/pages/apply/index.astro` 的 `ENDPOINT`
-   （會 502；留空自動退回信件模式）
+4. Worker：**已部署**（見上表；Cloudflare 授權在 `~/.config/.wrangler/`，`whoami` 可查；
+   帳號 Lightman，已寫死在 `wrangler.jsonc` 的 `account_id`）。剩兩步：
+   用戶到 Brevo 後台產生 **HTTP API 金鑰**（`xkeysib-…`，與 secrets.md 的 SMTP 密碼不同）→
+   `cd workers/apply-form && npx wrangler secret put BREVO_API_KEY`；成功寄測後把
+   Worker 網址填進 `src/pages/apply/index.astro` 的 `ENDPOINT`（金鑰沒好前留空＝信件模式）
 5. Phase 4–5：Slack 頻道、GA4/GSC 授權（**每站要自己的 GCP 專案與 SA，絕不可複製別站金鑰**）、
    seo-ops 納管。照 `/root/.claude/skills/new-astro-site/SKILL.md` 走

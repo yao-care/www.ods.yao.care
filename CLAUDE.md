@@ -37,7 +37,9 @@ Astro 6 + @astrojs/sitemap，pnpm，無框架、無外部 CDN。
 語意色 `--color-{pass,critical,warn,info}` 與應用端 `ods.yao.care/public/css/tokens.css` **同值**，
 兩邊視覺一致，勿各自改。
 
-品牌主色仍是模板佔位色（`--color-primary` / `--color-accent`），用戶尚未給品牌色。
+品牌色已定案（2026-08-14，用戶授權代決）：主色「墨青」`oklch(0.38 0.09 250)`／`#154470`
+—— 與應用端 tokens.css 整套冷藍軸（色相 250）同軸；強調色「朱磚」`oklch(0.58 0.13 40)`／`#b95c3a`
+—— 色相 40 與語意色 critical(25)、warn(80) 保持距離，不會被誤讀成檢核狀態。
 
 ## 案例資料從哪來（不要手改）
 
@@ -83,8 +85,12 @@ pnpm check:content:all
 2. `gh api -X POST repos/…/pages -f build_type=workflow`＋**必做** `gh api -X PUT repos/…/pages -f cname=www.ods.yao.care`
 3. 複製 `deploy.yml` 模板，`{{SITE_URL}}`→`https://www.ods.yao.care`、
    `{{INDEXNOW_KEY}}`→`770ed0a7691038e945d0cb91b9410f4a`（＝`public/` 下那個 .txt 檔名）
-4. Worker 部署：這台**沒有 Cloudflare 授權**，且需要 Brevo 的 **HTTP API 金鑰**
-   （與 secrets.md 記的 SMTP 密碼不同）。細節見 `workers/apply-form/README.md`。
-   部署後把網址填進 `src/pages/apply/index.astro` 的 `ENDPOINT`
+4. Worker 部署：Cloudflare 授權**其實存在**（wrangler OAuth token 在 `~/.config/.wrangler/`，
+   `npx wrangler whoami` 驗證過 2026-08-14；之前寫「沒有授權」是文件漂移）。
+   `npx wrangler deploy` 即可，但寄信要 Brevo 的 **HTTP API 金鑰**（`xkeysib-…`，與
+   secrets.md 的 SMTP 密碼不同，只能由用戶到 Brevo 後台產生）→
+   `npx wrangler secret put BREVO_API_KEY`。細節見 `workers/apply-form/README.md`。
+   金鑰就位前**不要**把網址填進 `src/pages/apply/index.astro` 的 `ENDPOINT`
+   （會 502；留空自動退回信件模式）
 5. Phase 4–5：Slack 頻道、GA4/GSC 授權（**每站要自己的 GCP 專案與 SA，絕不可複製別站金鑰**）、
    seo-ops 納管。照 `/root/.claude/skills/new-astro-site/SKILL.md` 走

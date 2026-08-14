@@ -8,10 +8,11 @@
 
 :root {
   /* ── 色彩（hex fallback；下方 @supports 區塊以 oklch 覆寫） ──
-   * ⚠ primary/accent 為佔位色，建站時依用戶提供的品牌色改掉（oklch 與 hex 兩處都要改）。 */
-  --color-primary: #1a4f8a;      /* 品牌主色（佔位） */
-  --color-accent: #c25e2e;       /* 品牌強調色（佔位） */
-  --color-accent-dark: #a54d22;  /* 強調色 hover（佔位） */
+   * 品牌色 2026-08-14 定案：主色「墨青」與應用端 tokens.css 的冷藍軸（oklch 色相 250）同軸，
+   * 兩邊視覺統一；強調色「朱磚」（色相 40）與語意色 critical(25)/warn(80) 保持距離。 */
+  --color-primary: #154470;      /* 品牌主色：墨青 */
+  --color-accent: #b95c3a;       /* 品牌強調色：朱磚 */
+  --color-accent-dark: #9e4a2c;  /* 強調色 hover */
   --color-bg-light: #F4F4F4;     /* 淺灰底 */
   --color-text: #1F1F1F;         /* 主文字 */
   --color-white: #ffffff;
@@ -27,8 +28,8 @@
   --color-pass: #1e8050;
 
   /* ── 透明度變體與陰影（元件內禁 rgba/hex，一律引用這些） ── */
-  --color-primary-a80: rgba(26, 79, 138, 0.8);
-  --color-primary-a60: rgba(26, 79, 138, 0.6);
+  --color-primary-a80: rgba(21, 68, 112, 0.8);
+  --color-primary-a60: rgba(21, 68, 112, 0.6);
   --color-white-a20: rgba(255, 255, 255, 0.2);
   --color-white-a10: rgba(255, 255, 255, 0.1);
   --scrim-50: rgba(0, 0, 0, 0.5);
@@ -56,9 +57,9 @@
 
 @supports (color: oklch(0.5 0.1 250)) {
   :root {
-    --color-primary: oklch(0.42 0.11 255);
-    --color-accent: oklch(0.58 0.13 45);
-    --color-accent-dark: oklch(0.51 0.12 45);
+    --color-primary: oklch(0.38 0.09 250);
+    --color-accent: oklch(0.58 0.13 40);
+    --color-accent-dark: oklch(0.51 0.12 40);
     --color-bg-light: oklch(0.967 0 0);
     --color-text: oklch(0.239 0 0);
     --color-white: oklch(1 0 0);
@@ -69,8 +70,8 @@
     --color-warn: oklch(0.52 0.14 80);
     --color-info: oklch(0.52 0.13 240);
     --color-pass: oklch(0.48 0.16 150);
-    --color-primary-a80: oklch(0.42 0.11 255 / 0.8);
-    --color-primary-a60: oklch(0.42 0.11 255 / 0.6);
+    --color-primary-a80: oklch(0.38 0.09 250 / 0.8);
+    --color-primary-a60: oklch(0.38 0.09 250 / 0.6);
     --color-white-a20: oklch(1 0 0 / 0.2);
     --color-white-a10: oklch(1 0 0 / 0.1);
     --scrim-50: oklch(0 0 0 / 0.5);

@@ -6,16 +6,8 @@
 
 ## 部署
 
-這台主機**尚未**有 Cloudflare 授權（沒有 `~/.wrangler`、沒有 `CLOUDFLARE_API_TOKEN`），
-所以下列指令要先解決授權才跑得動。二選一：
-
-```bash
-npx wrangler login                      # 互動式，需在瀏覽器授權
-# 或
-export CLOUDFLARE_API_TOKEN=…           # 需含 Workers Scripts:Edit 權限
-```
-
-然後：
+這台主機的 Cloudflare 授權**存在**（wrangler OAuth token 在 `~/.config/.wrangler/`；
+現況用 `npx wrangler whoami` 查，不要相信文件——2026-08-14 前的版本誤寫成沒有授權）。部署：
 
 ```bash
 cd workers/apply-form

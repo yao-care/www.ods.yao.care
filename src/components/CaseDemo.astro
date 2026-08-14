@@ -1,0 +1,429 @@
+---
+/**
+ * 仿真體驗器：操作流程與應用一致（填事由 → 產生草稿 → 看檢核 → 編輯／簽核），
+ * 但一切都是靜態的。凡會改變狀態的動作一律攔截，導向申請或註冊。
+ *
+ * 漸進增強：伺服器端就把公文全文與檢核結果渲染出來，沒有 JavaScript 時整頁照樣可讀
+ * （搜尋引擎讀得到公文全文，這是本站被搜到的關鍵）。JS 載入後才收合成互動流程。
+ */
+interface Props {
+  scenario: { key: string; title: string; source: string };
+  draft: {
+    subject: string;
+    doc_type: string;
+    sections: { title: string; items: string[] }[];
+    fields?: Record<string, unknown>;
+  };
+  checks: { id: string; title: string; severity: string; ok: boolean; detail?: string }[];
+  receiver: string | null;
+}
+const { scenario, draft, checks, receiver } = Astro.props;
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const passed = checks.filter((c) => c.ok).length;
+---
+
+<section class="demo" data-demo>
+  <ol class="steps" aria-label="操作步驟">
+    <li data-step="1" class="on">填寫事由</li>
+    <li data-step="2">產生草稿</li>
+    <li data-step="3">格式檢核</li>
+    <li data-step="4">送出簽核</li>
+  </ol>
+
+  <form class="compose" data-compose>
+    <label>
+      <span>事由</span>
+      <textarea rows="3" readonly data-gate="edit-source">{scenario.source}</textarea>
+    </label>
+    <div class="row">
+      <label>
+        <span>文別</span>
+        <input type="text" value={draft.doc_type} readonly data-gate="edit-meta" />
+      </label>
+      <label>
+        <span>受文者</span>
+        <input type="text" value={receiver ?? '（無）'} readonly data-gate="edit-meta" />
+      </label>
+    </div>
+    <button type="button" class="primary" data-generate>產生草稿</button>
+    <p class="hint">這是範例事由。要改成貴機關自己的案子，需要帳號。</p>
+  </form>
+
+  <div class="progress" data-progress hidden>
+    <p data-progress-text>檢索機關知識庫與既有稿件…</p>
+    <div class="track"><span data-progress-bar></span></div>
+  </div>
+
+  <article class="result" data-result>
+    <header class="result-head">
+      <h3>{draft.doc_type}稿</h3>
+      <p class="meta">{receiver ? `受文者：${receiver}` : '無受文者'}</p>
+    </header>
+
+    <div class="doc">
+      <p class="subject"><strong>主旨：</strong>{draft.subject}</p>
+      {draft.sections.map((s) => (
+        <div class="section">
+          <p class="section-title"><strong>{s.title}：</strong></p>
+          <ol>{s.items.map((it) => <li>{it}</li>)}</ol>
+        </div>
+      ))}
+    </div>
+
+    <div class="checks">
+      <p class="checks-head">
+        格式檢核 <strong>{passed}/{checks.length}</strong> 通過
+      </p>
+      <ul>
+        {checks.map((c) => (
+          <li class={c.ok ? 'ok' : 'bad'}>
+            <span class="mark" aria-hidden="true">{c.ok ? '✓' : '✗'}</span>
+            <span class="name">{c.title}</span>
+            {!c.ok && c.detail && <span class="why">{c.detail}</span>}
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="actions">
+      <button type="button" data-gate="edit">開啟編輯</button>
+      <button type="button" data-gate="save">儲存並重新檢核</button>
+      <button type="button" data-gate="confirm">簽核確認</button>
+      <button type="button" data-gate="export">匯出純文字</button>
+    </div>
+  </article>
+</section>
+
+<dialog class="gate" data-gate-dialog>
+  <h3 data-gate-title>這一步需要帳號</h3>
+  <p data-gate-body></p>
+  <div class="gate-actions">
+    <a class="primary" href={`${base}apply/`}>機關申請試用</a>
+    <a class="secondary" href="https://app.ods.yao.care/">小型單位自助註冊</a>
+    <button type="button" data-gate-close>返回範例</button>
+  </div>
+</dialog>
+
+<script>
+  const GATE_COPY = {
+    'edit-source': ['換成自己的案子', '把事由改成貴機關正在辦的案子，需要帳號 —— 草擬會依貴機關的稿件庫與慣用語調整。'],
+    'edit-meta': ['調整文別與受文者', '文別與受文者會影響期望語與段落結構。要自己選，需要帳號。'],
+    edit: ['編輯這份稿件', '編輯後系統會重新跑一次格式檢核。這一步會寫進貴機關的稿件庫，需要帳號。'],
+    save: ['儲存並重新檢核', '儲存會寫進貴機關的稿件庫並留下稽核軌跡，需要帳號。'],
+    confirm: ['送出簽核', '簽核確認會鎖定稿件、記錄簽核人與時間，需要帳號。'],
+    export: ['匯出純文字', '匯出的檔案會帶貴機關的發文格式，需要帳號。'],
+  };
+
+  const STAGES = [
+    ['檢索機關知識庫與既有稿件…', 25],
+    ['去識別化：姓名、身分證、電話、地址…', 50],
+    ['產生草稿…', 80],
+    ['執行 24 條格式檢核…', 100],
+  ];
+
+  document.querySelectorAll('[data-demo]').forEach((root) => {
+    const result = root.querySelector('[data-result]');
+    const progress = root.querySelector('[data-progress]');
+    const progressText = root.querySelector('[data-progress-text]');
+    const progressBar = root.querySelector('[data-progress-bar]');
+    const generate = root.querySelector('[data-generate]');
+    const steps = root.querySelectorAll('[data-step]');
+    const dialog = document.querySelector('[data-gate-dialog]');
+
+    // 有 JS 才收合：無 JS 時公文全文與檢核結果本來就看得到
+    result.hidden = true;
+
+    const setStep = (n) => steps.forEach((li) => li.classList.toggle('on', Number(li.dataset.step) <= n));
+
+    generate?.addEventListener('click', () => {
+      generate.disabled = true;
+      progress.hidden = false;
+      setStep(2);
+      let i = 0;
+      const tick = () => {
+        const [text, pct] = STAGES[i];
+        progressText.textContent = text;
+        progressBar.style.width = `${pct}%`;
+        if (i === 3) setStep(3);
+        i += 1;
+        if (i < STAGES.length) {
+          setTimeout(tick, 700);
+        } else {
+          setTimeout(() => {
+            progress.hidden = true;
+            result.hidden = false;
+            result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 600);
+        }
+      };
+      tick();
+    });
+
+    root.querySelectorAll('[data-gate]').forEach((el) => {
+      const open = (event) => {
+        event.preventDefault();
+        const [title, body] = GATE_COPY[el.dataset.gate] ?? ['需要帳號', '這一步需要帳號。'];
+        dialog.querySelector('[data-gate-title]').textContent = title;
+        dialog.querySelector('[data-gate-body]').textContent = body;
+        if (el.dataset.gate === 'confirm') setStep(4);
+        dialog.showModal();
+      };
+      el.addEventListener('click', open);
+      el.addEventListener('focus', () => el.blur());
+    });
+
+    dialog?.querySelector('[data-gate-close]')?.addEventListener('click', () => dialog.close());
+  });
+</script>
+
+<style>
+  .demo {
+    border: 1px solid var(--color-line);
+    border-radius: 0.5rem;
+    background: var(--color-white);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 1rem 1.25rem;
+    list-style: none;
+    background: var(--color-bg-light);
+    border-bottom: 1px solid var(--color-line);
+    font-size: var(--text-xs);
+    color: var(--color-ink-muted);
+    counter-reset: step;
+  }
+  .steps li {
+    counter-increment: step;
+  }
+  .steps li::before {
+    content: counter(step) '. ';
+  }
+  .steps li + li::before {
+    content: '→ ' counter(step) '. ';
+  }
+  .steps li.on {
+    color: var(--color-primary);
+    font-weight: 700;
+  }
+
+  .compose {
+    display: grid;
+    gap: 1rem;
+    padding: 1.25rem;
+  }
+  .compose label {
+    display: grid;
+    gap: 0.375rem;
+  }
+  .compose span {
+    font-size: var(--text-xs);
+    color: var(--color-ink-soft);
+  }
+  .compose textarea,
+  .compose input {
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    line-height: 1.7;
+    color: var(--color-text);
+    background: var(--color-bg-light);
+    border: 1px solid var(--color-line);
+    border-radius: 0.375rem;
+    padding: 0.75rem;
+    width: 100%;
+    cursor: pointer;
+  }
+  .row {
+    display: grid;
+    gap: 1rem;
+  }
+  @media (min-width: 640px) {
+    .row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .hint {
+    font-size: var(--text-xs);
+    color: var(--color-ink-muted);
+  }
+
+  button.primary,
+  .gate-actions .primary {
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    background: var(--color-accent);
+    color: var(--color-white);
+    border: 0;
+    border-radius: 0.375rem;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    justify-self: start;
+    text-decoration: none;
+  }
+  button.primary:hover {
+    background: var(--color-accent-dark);
+  }
+  button.primary:disabled {
+    background: var(--color-ink-muted);
+    cursor: default;
+  }
+
+  .progress {
+    padding: 1.25rem;
+    border-top: 1px solid var(--color-line);
+  }
+  .progress p {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+    margin-bottom: 0.75rem;
+  }
+  .track {
+    height: 0.5rem;
+    background: var(--color-bg-light);
+    border-radius: 0.25rem;
+    overflow: hidden;
+  }
+  .track span {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: var(--color-primary);
+    transition: width 0.6s ease;
+  }
+
+  .result {
+    border-top: 1px solid var(--color-line);
+  }
+  .result-head {
+    padding: 1.25rem 1.25rem 0;
+  }
+  .result-head h3 {
+    font-size: var(--text-lg);
+  }
+  .meta {
+    font-size: var(--text-xs);
+    color: var(--color-ink-muted);
+  }
+  .doc {
+    padding: 1.25rem;
+    font-size: var(--text-base);
+    line-height: 1.9;
+  }
+  .subject {
+    margin-bottom: 1rem;
+  }
+  .section-title {
+    margin-top: 1rem;
+  }
+  .doc ol {
+    padding-inline-start: 2rem;
+  }
+  .doc li {
+    margin-block: 0.5rem;
+  }
+
+  .checks {
+    padding: 1.25rem;
+    border-top: 1px dashed var(--color-line);
+    background: var(--color-bg-light);
+  }
+  .checks-head {
+    font-size: var(--text-sm);
+    margin-bottom: 0.75rem;
+  }
+  .checks ul {
+    list-style: none;
+    display: grid;
+    gap: 0.375rem;
+  }
+  @media (min-width: 768px) {
+    .checks ul {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .checks li {
+    display: flex;
+    gap: 0.5rem;
+    align-items: baseline;
+    font-size: var(--text-xs);
+  }
+  .checks .mark {
+    font-weight: 700;
+  }
+  .checks .ok .mark {
+    color: var(--color-pass);
+  }
+  .checks .bad .mark {
+    color: var(--color-critical);
+  }
+  .checks .why {
+    color: var(--color-critical);
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 1.25rem;
+    border-top: 1px solid var(--color-line);
+  }
+  .actions button {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    background: var(--color-white);
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+    border-radius: 0.375rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+  }
+  .actions button:hover {
+    background: var(--color-bg-light);
+  }
+
+  .gate {
+    border: 0;
+    border-radius: 0.5rem;
+    padding: 2rem;
+    max-width: 36rem;
+    box-shadow: var(--shadow-float);
+    color: var(--color-text);
+  }
+  .gate::backdrop {
+    background: var(--scrim-50);
+  }
+  .gate h3 {
+    font-size: var(--text-lg);
+    margin-bottom: 0.75rem;
+  }
+  .gate p {
+    font-size: var(--text-base);
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+  }
+  .gate-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+  }
+  .gate-actions .secondary {
+    font-size: var(--text-sm);
+    color: var(--color-primary);
+  }
+  .gate-actions button {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    background: none;
+    border: 0;
+    color: var(--color-ink-soft);
+    cursor: pointer;
+    text-decoration: underline;
+  }
+</style>

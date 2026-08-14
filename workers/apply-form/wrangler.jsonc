@@ -1,0 +1,11 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ods-apply-form",
+  "main": "src/index.js",
+  "compatibility_date": "2026-08-14",
+  "observability": { "enabled": true },
+  "vars": {
+    "TO_EMAIL": "service@yao.care",
+    "ALLOWED_ORIGIN": "https://www.ods.yao.care"
+  }
+}

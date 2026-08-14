@@ -1,0 +1,103 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import { CASES, CATEGORIES } from '../../data/cases.js';
+import index from '../../data/scenarios.json';
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const docTypeOf = (key) => index.items.find((i) => i.key === key)?.doc_type ?? '';
+---
+
+<BaseLayout
+  title="公文範例庫｜公文 AI"
+  description="核銷、陳情轉請、開會通知、公告、簽稿等公文範例全文，每一則都附 24 條格式檢核結果。"
+>
+  <SiteHeader />
+  <main>
+    <h1>公文範例庫</h1>
+    <p class="lead">
+      每一則都是完整的公文全文，附上 24 條格式檢核逐條結果。點進去可以照實際流程試做一次。
+    </p>
+
+    {CATEGORIES.map((cat) => (
+      <section>
+        <h2>{cat}</h2>
+        <ul class="cards">
+          {CASES.filter((c) => c.category === cat).map((c) => (
+            <li>
+              <a href={`${base}cases/${c.slug}/`}>
+                <span class="doc-type">{docTypeOf(c.key)}</span>
+                <span class="title">{c.seoTitle}</span>
+                <span class="lead-sm">{c.lead}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </main>
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  main {
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 4rem;
+  }
+  h1 {
+    font-size: var(--text-2xl);
+  }
+  h2 {
+    font-size: var(--text-xl);
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  .lead {
+    font-size: var(--text-base);
+    line-height: 1.9;
+    color: var(--color-ink-soft);
+    margin-top: 1rem;
+  }
+  .cards {
+    list-style: none;
+    display: grid;
+    gap: 1rem;
+  }
+  @media (min-width: 768px) {
+    .cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .cards a {
+    display: grid;
+    gap: 0.5rem;
+    height: 100%;
+    padding: 1.25rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.5rem;
+    background: var(--color-white);
+    text-decoration: none;
+    color: var(--color-text);
+  }
+  .cards a:hover {
+    box-shadow: var(--shadow-card-hover);
+    border-color: var(--color-primary);
+  }
+  .doc-type {
+    font-size: var(--text-xs);
+    color: var(--color-primary);
+  }
+  .title {
+    font-size: var(--text-lg);
+    font-weight: 700;
+  }
+  .lead-sm {
+    font-size: var(--text-xs);
+    color: var(--color-ink-soft);
+    line-height: 1.7;
+  }
+</style>

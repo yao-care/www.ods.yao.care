@@ -1,0 +1,203 @@
+---
+import ArticlePage from '../../layouts/ArticlePage.astro';
+
+// Worker 部署後把網址填進來（見 workers/apply-form/README.md）。
+// 留空時表單自動改走信件，不會變成按了沒反應的死按鈕。
+const ENDPOINT = '';
+---
+
+<ArticlePage
+  title="機關申請試用｜公文 AI"
+  description="留下機關全銜與聯絡方式，我們會開通帳號並配置專屬網址。小型單位可直接自助註冊。"
+  heading="機關申請試用"
+  lead="機關帳號由我們開通 —— 因為要配置貴機關的專屬網址並接上既有稿件。留下聯絡方式，我們會與您聯繫。"
+>
+  <section>
+    <form data-form data-endpoint={ENDPOINT}>
+      <label>
+        <span>機關全銜<em>必填</em></span>
+        <input type="text" name="org" required maxlength="100" placeholder="○○縣○○鄉公所" />
+      </label>
+      <div class="row">
+        <label>
+          <span>聯絡人<em>必填</em></span>
+          <input type="text" name="contact" required maxlength="60" />
+        </label>
+        <label>
+          <span>職稱或課室</span>
+          <input type="text" name="scale" maxlength="40" placeholder="民政課 承辦" />
+        </label>
+      </div>
+      <div class="row">
+        <label>
+          <span>電子郵件<em>必填</em></span>
+          <input type="email" name="email" required maxlength="120" />
+        </label>
+        <label>
+          <span>聯絡電話</span>
+          <input type="tel" name="phone" maxlength="40" />
+        </label>
+      </div>
+      <label>
+        <span>想先解決什麼</span>
+        <textarea name="note" rows="4" maxlength="2000" placeholder="例如：核銷公文常被退、想接上這幾年的既有稿件"></textarea>
+      </label>
+      <label class="trap" aria-hidden="true">
+        <span>請勿填寫</span>
+        <input type="text" name="website" tabindex="-1" autocomplete="off" />
+      </label>
+      <button type="submit">送出申請</button>
+      <p class="status" data-status role="status"></p>
+    </form>
+  </section>
+
+  <section>
+    <h2>直接來信也可以</h2>
+    <p>
+      不想填表就寄到 <a href="mailto:service@yao.care">service@yao.care</a>，
+      信裡寫機關全銜與聯絡方式即可。採購或資安審查需要的說明文件也從這個信箱索取。
+    </p>
+  </section>
+
+  <section>
+    <h2>小型單位不用等我們</h2>
+    <p>
+      社區發展協會、學校家長會、農會這類單位可以直接
+      <a href="https://app.ods.yao.care/">自助註冊</a>，不需要申請。
+    </p>
+  </section>
+
+  <section>
+    <h2>接下來會發生什麼</h2>
+    <ol>
+      <li>我們收到申請後與您確認機關名稱、課室與使用人數</li>
+      <li>開通帳號並配置貴機關的專屬網址</li>
+      <li>給您一組邀請連結，由貴機關自行加入同仁（連結 72 小時內有效、只能用一次）</li>
+      <li>視需要協助把既有稿件匯入</li>
+    </ol>
+  </section>
+</ArticlePage>
+
+<script>
+  const form = document.querySelector('[data-form]');
+  const status = document.querySelector('[data-status]');
+  if (form) {
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const data = Object.fromEntries(new FormData(form).entries());
+      const endpoint = form.dataset.endpoint;
+
+      // 收單端點還沒設定時改走信件，而不是讓使用者按了沒反應
+      if (!endpoint) {
+        const body = [
+          `機關全銜：${data.org ?? ''}`,
+          `聯絡人：${data.contact ?? ''}`,
+          `職稱或課室：${data.scale ?? ''}`,
+          `電子郵件：${data.email ?? ''}`,
+          `聯絡電話：${data.phone ?? ''}`,
+          '',
+          data.note ?? '',
+        ].join('\n');
+        window.location.href = `mailto:service@yao.care?subject=${encodeURIComponent(
+          `【申請試用】${data.org ?? ''}`,
+        )}&body=${encodeURIComponent(body)}`;
+        status.textContent = '已開啟您的郵件軟體，送出後我們就會收到。';
+        return;
+      }
+
+      const button = form.querySelector('button[type="submit"]');
+      button.disabled = true;
+      status.textContent = '送出中…';
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        if (!res.ok) throw new Error(String(res.status));
+        form.reset();
+        status.textContent = '收到了，我們會盡快與您聯繫。';
+      } catch {
+        status.textContent = '送出沒有成功，請改寄 service@yao.care，我們一樣收得到。';
+        button.disabled = false;
+      }
+    });
+  }
+</script>
+
+<style>
+  form {
+    display: grid;
+    gap: 1.25rem;
+    max-width: 44rem;
+  }
+  label {
+    display: grid;
+    gap: 0.375rem;
+  }
+  label span {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+  label em {
+    font-size: var(--text-xs);
+    font-style: normal;
+    color: var(--color-critical);
+    margin-inline-start: 0.5rem;
+  }
+  input,
+  textarea {
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    color: var(--color-text);
+    background: var(--color-white);
+    border: 1px solid var(--color-line);
+    border-radius: 0.375rem;
+    padding: 0.75rem;
+    width: 100%;
+  }
+  input:focus,
+  textarea:focus {
+    outline: 3px solid var(--color-info);
+    outline-offset: 1px;
+  }
+  .row {
+    display: grid;
+    gap: 1.25rem;
+  }
+  @media (min-width: 640px) {
+    .row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .trap {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  button {
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    background: var(--color-accent);
+    color: var(--color-white);
+    border: 0;
+    border-radius: 0.375rem;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    justify-self: start;
+  }
+  button:hover {
+    background: var(--color-accent-dark);
+  }
+  button:disabled {
+    background: var(--color-ink-muted);
+    cursor: default;
+  }
+  .status {
+    font-size: var(--text-sm);
+    color: var(--color-info);
+    min-height: 1.5rem;
+  }
+</style>

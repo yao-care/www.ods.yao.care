@@ -1,0 +1,97 @@
+---
+import ArticlePage from '../../layouts/ArticlePage.astro';
+import sample from '../../data/scenarios/grant_report.json';
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+
+// 檢核清單直接取自實際產物，不手抄 —— 產品改版時這頁會跟著變
+const checks = sample.checks;
+
+const GROUPS = [
+  {
+    name: '主旨',
+    ids: ['subject_present', 'subject_single_paragraph', 'subject_length', 'subject_expectation', 'subject_period', 'subject_no_section_name'],
+    why: '主旨要一段到底、句末帶期望語。分項或漏期望語是最常見的退件原因。',
+  },
+  {
+    name: '文別與段落',
+    ids: ['doc_type_valid', 'classification_valid', 'section_titles_valid', 'section_not_empty', 'section_item_period', 'section_item_count', 'section_item_length'],
+    why: '說明、辦法的段名與分項寫法有固定規矩，一項只講一件事。',
+  },
+  {
+    name: '個資與代稱',
+    ids: ['no_mask_token', 'no_placeholder', 'no_raw_id_number', 'no_raw_mobile'],
+    why: '去識別化的代稱如果殘留在稿件裡，或身分證號、手機號直接寫進公文，都不能送出。',
+  },
+  {
+    name: '用字與格式',
+    ids: ['roc_year', 'currency_format', 'no_colloquial', 'no_simplified', 'fullwidth_punctuation', 'no_extra_blank'],
+    why: '民國紀年、國字大寫金額、全形標點、無簡體字 —— 這幾條機器抓比人快。',
+  },
+  {
+    name: '收發',
+    ids: ['receiver_required'],
+    why: '函必須有受文者；簽與公告則沒有。',
+  },
+];
+
+const byId = Object.fromEntries(checks.map((c) => [c.id, c]));
+const grouped = GROUPS.map((g) => ({ ...g, items: g.ids.map((id) => byId[id]).filter(Boolean) }));
+const covered = new Set(GROUPS.flatMap((g) => g.ids));
+const others = checks.filter((c) => !covered.has(c.id));
+---
+
+<ArticlePage
+  title="公文格式檢核 24 條｜公文 AI"
+  description="主旨、段落、個資代稱、用字格式、收發共 24 條公文格式檢核，逐條說明為什麼會被退件。"
+  heading="格式檢核 24 條"
+  lead="每一份草稿產出後都會跑這 24 條。critical 等級不通過就不讓送簽，warn 等級會標出來讓承辦自己判斷。"
+>
+  {grouped.map((g) => (
+    <section>
+      <h2>{g.name}（{g.items.length} 條）</h2>
+      <p>{g.why}</p>
+      <table>
+        <thead>
+          <tr><th>檢核項目</th><th>等級</th></tr>
+        </thead>
+        <tbody>
+          {g.items.map((c) => (
+            <tr>
+              <td>{c.title}</td>
+              <td class={c.severity === 'critical' ? 'critical' : 'warn'}>
+                {c.severity === 'critical' ? '不通過不得送簽' : '提醒'}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+  ))}
+
+  {others.length > 0 && (
+    <section>
+      <h2>其他</h2>
+      <ul>{others.map((c) => <li>{c.title}</li>)}</ul>
+    </section>
+  )}
+
+  <section>
+    <h2>看實際跑出來的結果</h2>
+    <p>
+      每一則<a href={`${base}cases/`}>公文範例</a>都附了這 24 條的逐條結果，
+      可以直接看哪些通過、哪些被標記。
+    </p>
+  </section>
+</ArticlePage>
+
+<style>
+  .critical {
+    color: var(--color-critical);
+  }
+  .warn {
+    color: var(--color-warn);
+  }
+</style>

@@ -1,0 +1,6 @@
+# robots.txt — 開放一般與 AI 爬蟲；Sitemap 行供 Google 等自動發現
+# 建站時把 https://www.ods.yao.care 換成正式網址（含 https://）
+User-agent: *
+Allow: /
+
+Sitemap: https://www.ods.yao.care/sitemap-index.xml

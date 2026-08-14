@@ -1,0 +1,441 @@
+{
+  "scenario": {
+    "key": "notice",
+    "title": "公告禁止露天燃燒稻草",
+    "source": "為維護空氣品質，公告本鄉自114年3月1日起全面禁止露天燃燒稻草及農業廢棄物，違者依空氣污染防制法處罰。"
+  },
+  "draft": {
+    "id": "drf_01M003JECKXFQ8K3F1XJ",
+    "user_id": "usr_DEMO00000000000000",
+    "unit": "民政課",
+    "doc_type": "公告",
+    "classification": "普通",
+    "topic": "公告禁止露天燃燒稻草",
+    "subject": "為維護空氣品質，公告本鄉自114年3月1日起全面禁止露天燃燒稻草及農業廢棄物，違者將依法處罰，請查照。",
+    "sections_json": "[{\"title\":\"說明\",\"items\":[\"依空氣污染防制法第75條規定，露天燃燒稻草、稻稈、農業剩餘廢棄物者，處新臺幣一千二百元以上十萬元以下罰鍰。\",\"為改善本鄉空氣品質，維護居民健康，特公告全面禁止露天燃燒稻草及農業廢棄物。\"]},{\"title\":\"辦法\",\"items\":[\"自114年3月1日起，本鄉轄內全面禁止露天燃燒稻草及農業廢棄物。\",\"違反前項規定者，依空氣污染防制法第75條規定處罰。\",\"請鄉民配合改用其他合法方式處理農業廢棄物，以維護空氣品質。\"]}]",
+    "fields_json": "{\"receiver\":null,\"source_len\":52,\"scenario\":\"notice\"}",
+    "engine": "llm",
+    "model": "claude-sonnet-5",
+    "degraded_reason": null,
+    "citations_json": "[\"knw_01M003GSF9SB5633AJYR\"]",
+    "checks_json": "[{\"id\":\"subject_present\",\"title\":\"主旨必填\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_single_paragraph\",\"title\":\"主旨不分項\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_length\",\"title\":\"主旨長度\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_expectation\",\"title\":\"主旨期望語\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_period\",\"title\":\"主旨句末句號\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_no_section_name\",\"title\":\"主旨不含段名\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"doc_type_valid\",\"title\":\"文別合法\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"classification_valid\",\"title\":\"密等合法\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_titles_valid\",\"title\":\"段名合法\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_not_empty\",\"title\":\"段落不得為空\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_item_period\",\"title\":\"分項句末句號\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_item_count\",\"title\":\"分項數量\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_item_length\",\"title\":\"分項長度\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_mask_token\",\"title\":\"無殘留代稱\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_placeholder\",\"title\":\"無未填佔位符\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_raw_id_number\",\"title\":\"無身分證字號\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_raw_mobile\",\"title\":\"無行動電話號碼\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"roc_year\",\"title\":\"民國紀年\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"currency_format\",\"title\":\"金額格式\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_colloquial\",\"title\":\"無口語詞\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_simplified\",\"title\":\"無簡體字\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"fullwidth_punctuation\",\"title\":\"全形標點\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"receiver_required\",\"title\":\"受文者必填\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_extra_blank\",\"title\":\"無多餘空白\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]}]",
+    "confirmed": 0,
+    "confirmed_by": null,
+    "confirmed_at": null,
+    "created_at": "2026-08-14T12:22:25.427Z",
+    "updated_at": "2026-08-14T12:22:25.427Z",
+    "sections": [
+      {
+        "title": "說明",
+        "items": [
+          "依空氣污染防制法第75條規定，露天燃燒稻草、稻稈、農業剩餘廢棄物者，處新臺幣一千二百元以上十萬元以下罰鍰。",
+          "為改善本鄉空氣品質，維護居民健康，特公告全面禁止露天燃燒稻草及農業廢棄物。"
+        ]
+      },
+      {
+        "title": "辦法",
+        "items": [
+          "自114年3月1日起，本鄉轄內全面禁止露天燃燒稻草及農業廢棄物。",
+          "違反前項規定者，依空氣污染防制法第75條規定處罰。",
+          "請鄉民配合改用其他合法方式處理農業廢棄物，以維護空氣品質。"
+        ]
+      }
+    ],
+    "fields": {
+      "receiver": null,
+      "source_len": 52,
+      "scenario": "notice"
+    },
+    "citations": [
+      "knw_01M003GSF9SB5633AJYR"
+    ],
+    "checks": [
+      {
+        "id": "subject_present",
+        "title": "主旨必填",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "subject_single_paragraph",
+        "title": "主旨不分項",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "subject_length",
+        "title": "主旨長度",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "subject_expectation",
+        "title": "主旨期望語",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "subject_period",
+        "title": "主旨句末句號",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "subject_no_section_name",
+        "title": "主旨不含段名",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "doc_type_valid",
+        "title": "文別合法",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "classification_valid",
+        "title": "密等合法",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "section_titles_valid",
+        "title": "段名合法",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "section_not_empty",
+        "title": "段落不得為空",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "section_item_period",
+        "title": "分項句末句號",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "section_item_count",
+        "title": "分項數量",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "section_item_length",
+        "title": "分項長度",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "no_mask_token",
+        "title": "無殘留代稱",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "no_placeholder",
+        "title": "無未填佔位符",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "no_raw_id_number",
+        "title": "無身分證字號",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "no_raw_mobile",
+        "title": "無行動電話號碼",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "roc_year",
+        "title": "民國紀年",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "currency_format",
+        "title": "金額格式",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "no_colloquial",
+        "title": "無口語詞",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "no_simplified",
+        "title": "無簡體字",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "fullwidth_punctuation",
+        "title": "全形標點",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "receiver_required",
+        "title": "受文者必填",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "no_extra_blank",
+        "title": "無多餘空白",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      }
+    ]
+  },
+  "checks": [
+    {
+      "id": "subject_present",
+      "title": "主旨必填",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "subject_single_paragraph",
+      "title": "主旨不分項",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "subject_length",
+      "title": "主旨長度",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "subject_expectation",
+      "title": "主旨期望語",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "subject_period",
+      "title": "主旨句末句號",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "subject_no_section_name",
+      "title": "主旨不含段名",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "doc_type_valid",
+      "title": "文別合法",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "classification_valid",
+      "title": "密等合法",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "section_titles_valid",
+      "title": "段名合法",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "section_not_empty",
+      "title": "段落不得為空",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "section_item_period",
+      "title": "分項句末句號",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "section_item_count",
+      "title": "分項數量",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "section_item_length",
+      "title": "分項長度",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "no_mask_token",
+      "title": "無殘留代稱",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "no_placeholder",
+      "title": "無未填佔位符",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "no_raw_id_number",
+      "title": "無身分證字號",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "no_raw_mobile",
+      "title": "無行動電話號碼",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "roc_year",
+      "title": "民國紀年",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "currency_format",
+      "title": "金額格式",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "no_colloquial",
+      "title": "無口語詞",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "no_simplified",
+      "title": "無簡體字",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "fullwidth_punctuation",
+      "title": "全形標點",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "receiver_required",
+      "title": "受文者必填",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "no_extra_blank",
+      "title": "無多餘空白",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    }
+  ]
+}

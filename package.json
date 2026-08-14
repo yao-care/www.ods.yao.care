@@ -1,0 +1,21 @@
+{
+  "name": "www.ods.yao.care",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.32.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "node scripts/check-design.mjs && node scripts/check-content.mjs && astro build",
+    "preview": "astro preview",
+    "check:design": "node scripts/check-design.mjs",
+    "check:content": "node scripts/check-content.mjs",
+    "check:content:all": "node scripts/check-content.mjs --all"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "astro": "^7.2.2"
+  }
+}

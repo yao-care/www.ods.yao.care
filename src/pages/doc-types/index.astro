@@ -1,0 +1,80 @@
+---
+import ArticlePage from '../../layouts/ArticlePage.astro';
+import { CASES } from '../../data/cases.js';
+import index from '../../data/scenarios.json';
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+
+const TYPES = [
+  {
+    name: '函',
+    when: '機關之間往來、對民眾有所答復或請求，最常用的一種。',
+    subject: '期望語看對象：對上級用「請鑒核」，平行機關用「請查照」，下級用「請查照辦理」。',
+    keys: ['grant_report', 'subsidy_apply', 'repair', 'low_income'],
+  },
+  {
+    name: '書函',
+    when: '案情簡單、不需正式行文的答復或洽辦，比函輕。',
+    subject: '結構與函相同，語氣較簡。常用在陳情案的初步回覆。',
+    keys: ['petition_reply'],
+  },
+  {
+    name: '公告',
+    when: '對不特定多數人宣布事項，例如禁令、招標、時程。',
+    subject: '沒有受文者。要把法源與罰則寫清楚，讓民眾看得懂。',
+    keys: ['notice'],
+  },
+  {
+    name: '簽',
+    when: '對內陳報長官核示，不對外發文。',
+    subject: '結尾用「簽請核示」或「陳請鑒核」，不用對外的期望語，也沒有受文者。',
+    keys: ['sign'],
+  },
+  {
+    name: '開會通知單',
+    when: '召集會議，時間、地點、出席人員都有固定欄位。',
+    subject: '主旨不要以「開會通知單：」開頭 —— 文別是另外的欄位，期望語仍用「請查照」。',
+    keys: ['meeting'],
+  },
+];
+
+const caseOf = (key) => CASES.find((c) => c.key === key);
+const docTypeOf = (key) => index.items.find((i) => i.key === key)?.doc_type ?? '';
+---
+
+<ArticlePage
+  title="公文文別怎麼選：函、書函、公告、簽、開會通知單｜公文 AI"
+  description="五種常用文別的使用時機、主旨寫法與期望語差異，每一種都附完整範例。"
+  heading="文別怎麼選"
+  lead="選錯文別，後面的期望語與段落結構都會跟著錯。這五種涵蓋地方機關日常九成以上的行文。"
+>
+  {TYPES.map((t) => (
+    <section>
+      <h2>{t.name}</h2>
+      <p><strong>什麼時候用：</strong>{t.when}</p>
+      <p><strong>主旨與期望語：</strong>{t.subject}</p>
+      <ul>
+        {t.keys.map((k) => {
+          const c = caseOf(k);
+          return c ? <li><a href={`${base}cases/${c.slug}/`}>{c.seoTitle}</a>（{docTypeOf(k)}）</li> : null;
+        })}
+      </ul>
+    </section>
+  ))}
+
+  <section>
+    <h2>期望語對照</h2>
+    <table>
+      <thead><tr><th>行文對象</th><th>期望語</th></tr></thead>
+      <tbody>
+        <tr><td>上級機關</td><td>請鑒核、請核示</td></tr>
+        <tr><td>平行機關</td><td>請查照</td></tr>
+        <tr><td>下級機關</td><td>請查照辦理、請照辦</td></tr>
+        <tr><td>對內陳核（簽）</td><td>簽請核示、陳請鑒核</td></tr>
+      </tbody>
+    </table>
+    <p>依據見<a href={`${base}terms/`}>用語與法規速查</a>。</p>
+  </section>
+</ArticlePage>

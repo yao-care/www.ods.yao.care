@@ -1,0 +1,71 @@
+---
+import ArticlePage from '../../layouts/ArticlePage.astro';
+import knowledge from '../../data/knowledge.json';
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const categories = [...new Set(knowledge.items.map((k) => k.category))];
+---
+
+<ArticlePage
+  title="公文用語與法規速查｜公文 AI"
+  description="期望語、函之結構等作業規範，以及社會救助法、政府採購法、行政程序法等承辦常引的法條摘要。"
+  heading="用語與法規速查"
+  lead="草擬時系統會從這些條目裡挑相關的引用進說明段。這裡列的是示範用的公版內容；機關導入後會換成貴機關自己的法規與作業規定。"
+>
+  {categories.map((cat) => (
+    <section>
+      <h2>{cat}</h2>
+      {knowledge.items
+        .filter((k) => k.category === cat)
+        .map((k) => (
+          <article class="entry">
+            <h3>{k.title}</h3>
+            <p class="src">出處：{k.source}</p>
+            <p>{k.excerpt}</p>
+            <p class="kw">{k.keywords.map((w) => <span>{w}</span>)}</p>
+          </article>
+        ))}
+    </section>
+  ))}
+
+  <section>
+    <h2>怎麼用在稿件上</h2>
+    <p>
+      承辦輸入事由之後，系統會先在機關自己的知識庫與既有稿件裡檢索，把相關條目一併交給草擬，
+      引用會出現在說明段。實際效果看<a href={`${base}cases/`}>公文範例</a>裡的說明段落。
+    </p>
+  </section>
+</ArticlePage>
+
+<style>
+  .entry {
+    padding: 1.25rem;
+    margin-block: 1rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.5rem;
+    background: var(--color-white);
+  }
+  .entry h3 {
+    margin-top: 0;
+  }
+  .src {
+    font-size: var(--text-xs);
+    color: var(--color-ink-muted);
+    margin-block: 0.25rem;
+  }
+  .kw {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0;
+  }
+  .kw span {
+    font-size: var(--text-xs);
+    color: var(--color-primary);
+    background: var(--color-bg-light);
+    border-radius: 0.25rem;
+    padding: 0.125rem 0.5rem;
+  }
+</style>

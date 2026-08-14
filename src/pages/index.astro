@@ -1,0 +1,203 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { CASES } from '../data/cases.js';
+import index from '../data/scenarios.json';
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const featured = ['grant-settlement', 'meeting-notice', 'noise-petition-reply', 'procurement-sign'];
+const cards = CASES.filter((c) => featured.includes(c.slug));
+const docTypeOf = (key) => index.items.find((i) => i.key === key)?.doc_type ?? '';
+---
+
+<BaseLayout
+  title="公文 AI｜承辦開案就能用的公文範例與格式檢核"
+  description="補助核銷、陳情轉請、開會通知、公告與簽稿的完整公文範例，附 24 條格式檢核。機關可申請試用，小型單位可自助註冊。"
+>
+  <SiteHeader />
+  <main>
+    <section class="hero">
+      <h1>開案的時候，先看一份寫好的</h1>
+      <p>
+        補助核銷、陳情轉請、開會通知、公告、簽稿 —— 每一種都有完整範例全文，
+        附上 24 條格式檢核逐條結果。接上機關既有稿件之後，草擬會沿用貴機關的慣用語。
+      </p>
+      <div class="cta-row">
+        <a class="primary" href={`${base}cases/`}>看公文範例</a>
+        <a class="secondary" href={`${base}apply/`}>機關申請試用</a>
+      </div>
+    </section>
+
+    <section>
+      <h2>從案子找起</h2>
+      <ul class="cards">
+        {cards.map((c) => (
+          <li>
+            <a href={`${base}cases/${c.slug}/`}>
+              <span class="doc-type">{docTypeOf(c.key)}</span>
+              <span class="title">{c.seoTitle}</span>
+              <span class="lead-sm">{c.lead}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <p class="more"><a href={`${base}cases/`}>看全部範例</a></p>
+    </section>
+
+    <section class="cols">
+      <div>
+        <h2>退件的通常不是內容，是格式</h2>
+        <p>
+          期望語對上級要用「請鑒核」、對平行機關用「請查照」；日期要民國紀年；
+          金額要國字大寫；主旨不能分項。這些規則系統會逐條檢查，
+          <a href={`${base}checks/`}>24 條檢核</a>全部列出來，不通過會指出哪一條。
+        </p>
+      </div>
+      <div>
+        <h2>稿件不會離開機關</h2>
+        <p>
+          送到模型之前，姓名、身分證號、電話、地址會先換成代稱，產出後再還原。
+          去識別化服務不可用的時候，系統改用本機規則引擎組稿，不會把原文送出去。
+          細節寫在<a href={`${base}security/`}>資料處理方式</a>。
+        </p>
+      </div>
+    </section>
+
+    <section class="who">
+      <h2>兩種開通方式</h2>
+      <div class="cols">
+        <div class="who-card">
+          <h3>機關</h3>
+          <p>鄉鎮市公所、縣市府各處室。由我們開通帳號並配置專屬網址，接上既有稿件庫。</p>
+          <a class="primary" href={`${base}apply/`}>申請試用</a>
+        </div>
+        <div class="who-card">
+          <h3>小型受補助單位</h3>
+          <p>社區發展協會、學校家長會、農會、民間團體。核銷公文一樣要照格式，可以自己註冊。</p>
+          <a class="secondary" href="https://app.ods.yao.care/">自助註冊</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  main {
+    max-width: 64rem;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 4rem;
+  }
+  section + section {
+    margin-top: 4rem;
+  }
+  .hero h1 {
+    font-size: var(--text-2xl);
+    line-height: 1.3;
+  }
+  .hero p {
+    font-size: var(--text-base);
+    line-height: 1.9;
+    color: var(--color-ink-soft);
+    max-width: 44rem;
+    margin-top: 1rem;
+  }
+  h2 {
+    font-size: var(--text-xl);
+    margin-bottom: 1rem;
+  }
+  h3 {
+    font-size: var(--text-lg);
+    margin-bottom: 0.5rem;
+  }
+  p {
+    font-size: var(--text-base);
+    line-height: 1.9;
+  }
+  .cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 1.5rem;
+  }
+  .primary {
+    font-size: var(--text-base);
+    background: var(--color-accent);
+    color: var(--color-white);
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.375rem;
+    text-decoration: none;
+    justify-self: start;
+  }
+  .primary:hover {
+    background: var(--color-accent-dark);
+  }
+  .secondary {
+    font-size: var(--text-sm);
+    color: var(--color-primary);
+  }
+  .cards {
+    list-style: none;
+    display: grid;
+    gap: 1rem;
+  }
+  @media (min-width: 768px) {
+    .cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .cards a {
+    display: grid;
+    gap: 0.5rem;
+    height: 100%;
+    padding: 1.25rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.5rem;
+    background: var(--color-white);
+    text-decoration: none;
+    color: var(--color-text);
+  }
+  .cards a:hover {
+    box-shadow: var(--shadow-card-hover);
+    border-color: var(--color-primary);
+  }
+  .doc-type {
+    font-size: var(--text-xs);
+    color: var(--color-primary);
+  }
+  .title {
+    font-size: var(--text-lg);
+    font-weight: 700;
+  }
+  .lead-sm {
+    font-size: var(--text-xs);
+    color: var(--color-ink-soft);
+    line-height: 1.7;
+  }
+  .more {
+    margin-top: 1rem;
+    font-size: var(--text-sm);
+  }
+  .cols {
+    display: grid;
+    gap: 2rem;
+  }
+  @media (min-width: 768px) {
+    .cols {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .who-card {
+    padding: 1.5rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.5rem;
+    background: var(--color-white);
+    display: grid;
+    gap: 1rem;
+    align-content: start;
+  }
+</style>

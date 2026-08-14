@@ -1,9 +1,9 @@
 ---
 import ArticlePage from '../../layouts/ArticlePage.astro';
 
-// Worker 部署後把網址填進來（見 workers/apply-form/README.md）。
+// 收單 Worker（見 workers/apply-form/README.md；2026-08-14 部署並端到端驗證過）。
 // 留空時表單自動改走信件，不會變成按了沒反應的死按鈕。
-const ENDPOINT = '';
+const ENDPOINT = 'https://ods-apply-form.lightman-chang.workers.dev';
 ---
 
 <ArticlePage

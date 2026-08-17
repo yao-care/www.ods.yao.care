@@ -117,6 +117,7 @@ const ENDPOINT = 'https://ods-apply-form.lightman-chang.workers.dev';
         if (!res.ok) throw new Error(String(res.status));
         form.reset();
         status.textContent = '收到了，我們會盡快與您聯繫。';
+        window.odsTrack?.('generate_lead', { method: 'agency_application' });
       } catch {
         status.textContent = '送出沒有成功，請改寄 service@yao.care，我們一樣收得到。';
         button.disabled = false;

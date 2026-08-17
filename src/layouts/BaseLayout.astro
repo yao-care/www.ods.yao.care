@@ -1,6 +1,7 @@
 ---
 import '../styles/variables.css';
 import '../styles/global.css';
+import Analytics from '../components/Analytics.astro';
 
 interface Props {
   title: string;
@@ -8,6 +9,28 @@ interface Props {
 }
 const { title, description } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const siteUrl = new URL('/', Astro.site).href;
+const siteSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': 'https://www.yao.care/#organization',
+      name: '藥提醒科技有限公司',
+      legalName: '藥提醒科技有限公司',
+      url: 'https://www.yao.care/',
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${siteUrl}#website`,
+      url: siteUrl,
+      name: '公文 AI｜公文範例與格式檢核',
+      description: '公文範例、24 條格式檢核、文別選擇與機關導入說明。',
+      publisher: { '@id': 'https://www.yao.care/#organization' },
+      inLanguage: 'zh-Hant-TW',
+    },
+  ],
+};
 // 站內絕對路徑一律用 base 組：模式 A 時 BASE_URL='/'（行為不變），模式 B 才不會掉到主機根目錄。
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
@@ -26,6 +49,8 @@ const base = import.meta.env.BASE_URL.endsWith('/')
     <meta property="og:title" content={title} />
     {description && <meta property="og:description" content={description} />}
     <meta property="og:url" content={canonical} />
+    <script type="application/ld+json" set:html={JSON.stringify(siteSchema)} />
+    <Analytics />
   </head>
   <body>
     <slot />

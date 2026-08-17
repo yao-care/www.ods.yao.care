@@ -22,6 +22,32 @@ const base = import.meta.env.BASE_URL.endsWith('/')
 
 const related = CASES.filter((c) => c.category === caseMeta.category && c.slug !== caseMeta.slug);
 const failed = payload.checks.filter((c) => !c.ok);
+const caseDescription = `${caseMeta.lead} 提供完整${payload.draft.doc_type}範例全文與 24 條格式檢核結果。`;
+const caseUrl = new URL(Astro.url.pathname, Astro.site).href;
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Article',
+      '@id': `${caseUrl}#article`,
+      mainEntityOfPage: caseUrl,
+      headline: caseMeta.seoTitle,
+      description: caseDescription,
+      author: { '@type': 'Organization', name: '藥提醒科技有限公司', url: 'https://www.yao.care/' },
+      publisher: { '@type': 'Organization', name: '藥提醒科技有限公司', url: 'https://www.yao.care/' },
+      inLanguage: 'zh-Hant-TW',
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: '首頁', item: 'https://www.ods.yao.care/' },
+        { '@type': 'ListItem', position: 2, name: '公文範例', item: 'https://www.ods.yao.care/cases/' },
+        { '@type': 'ListItem', position: 3, name: caseMeta.seoTitle, item: caseUrl },
+      ],
+    },
+  ],
+};
 
 const faq = {
   '@context': 'https://schema.org',
@@ -43,7 +69,7 @@ const faq = {
 
 <BaseLayout
   title={`${caseMeta.seoTitle}｜公文 AI`}
-  description={`${caseMeta.lead} 提供完整${payload.draft.doc_type}範例全文與 24 條格式檢核結果。`}
+  description={caseDescription}
 >
   <SiteHeader />
   <main>
@@ -102,6 +128,7 @@ const faq = {
     </section>
   </main>
   <SiteFooter />
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(faq)} />
 </BaseLayout>
 

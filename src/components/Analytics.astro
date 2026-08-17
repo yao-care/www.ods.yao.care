@@ -1,0 +1,181 @@
+---
+import { SITE } from '../site.config.js';
+
+const { gaId, linkerDomains } = SITE;
+---
+
+<script async is:inline src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
+<script is:inline define:vars={{ gaId, linkerDomains }}>
+  // GA4 與 yao.care 共用同一個 Property／網站串流；hostName 由 seo-ops 分開統計。
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+  window.gtag('js', new Date());
+  window.gtag('set', 'linker', { domains: linkerDomains });
+
+  function classifyPage(path) {
+    var p = (path || '/').replace(/\/+$/, '') || '/';
+    var parts = p.split('/').filter(Boolean);
+    var section = parts[0] || '';
+    if (p === '/') return { type: 'home', category: '', item: '', group: '首頁' };
+    if (section === 'cases') {
+      return parts[1]
+        ? { type: 'case', category: 'cases', item: parts[1], group: '公文範例' }
+        : { type: 'hub', category: 'cases', item: '', group: '公文範例' };
+    }
+    var groups = {
+      checks: '格式檢核',
+      'doc-types': '文別',
+      product: '功能',
+      security: '資料處理',
+      terms: '用語與法規',
+      apply: '申請試用',
+    };
+    return {
+      type: section === 'apply' ? 'lead_page' : 'page',
+      category: section,
+      item: parts[1] || '',
+      group: groups[section] || '其他',
+    };
+  }
+
+  function classifySource() {
+    var referrer = document.referrer || '';
+    var host = '';
+    try { host = referrer ? new URL(referrer).hostname.replace(/^www\./, '') : ''; } catch (_) {}
+    var utm = '';
+    try { utm = (new URLSearchParams(location.search).get('utm_source') || '').toLowerCase(); } catch (_) {}
+    var haystack = (host + ' ' + utm).toLowerCase();
+    var aiHosts = ['chatgpt', 'chat.openai', 'perplexity', 'gemini.google', 'copilot.microsoft', 'claude.ai', 'anthropic', 'poe.com', 'felo.ai', 'genspark'];
+    var searchHosts = ['google.', 'bing.com', 'search.yahoo', 'duckduckgo', 'baidu', 'yandex', 'naver'];
+    var socialHosts = ['facebook', 'instagram', 'line.me', 'lin.ee', 't.co', 'twitter', 'x.com', 'linkedin', 'youtube', 'reddit', 'threads'];
+    var has = function (list) { return list.some(function (key) { return haystack.indexOf(key) >= 0; }); };
+    var category = 'direct';
+    var aiSource = '';
+    if (has(aiHosts)) { category = 'ai'; aiSource = host || utm; }
+    else if (has(searchHosts)) category = 'organic_search';
+    else if (has(socialHosts)) category = 'social';
+    else if (host) category = host.indexOf('yao.care') >= 0 ? 'internal' : 'referral';
+    else if (utm) category = 'referral';
+    return { traffic_category: category, ai_source: aiSource };
+  }
+
+  var page = classifyPage(location.pathname);
+  var source = classifySource();
+  var baseParams = {
+    content_type: page.type,
+    content_category: page.category,
+    content_item: page.item,
+    content_group: page.group,
+  };
+
+  window.gtag('set', 'user_properties', { traffic_category: source.traffic_category });
+  window.gtag('config', gaId, {
+    content_group: page.group,
+    content_type: page.type,
+    content_category: page.category,
+    content_item: page.item,
+    linker: { domains: linkerDomains },
+  });
+
+  function track(name, params) {
+    if (typeof window.gtag !== 'function') return;
+    window.gtag('event', name, Object.assign({}, baseParams, source, params || {}));
+  }
+  // 申請頁的成功回應與案例體驗器可共用這個小介面，不必把 gtag 細節散落各頁。
+  window.odsTrack = track;
+
+  function initInteractionTracking() {
+    var engaged = 0;
+    var activeUntil = Date.now() + 30000;
+    var markActive = function () { activeUntil = Date.now() + 30000; };
+    ['scroll', 'mousemove', 'keydown', 'click', 'touchstart'].forEach(function (eventName) {
+      window.addEventListener(eventName, markActive, { passive: true });
+    });
+    window.setInterval(function () {
+      if (document.visibilityState === 'visible' && Date.now() < activeUntil) engaged += 1;
+    }, 1000);
+
+    var marks = [25, 50, 75, 100];
+    var seen = new Set();
+    var maxScroll = 0;
+    var raf = 0;
+    var onScroll = function () {
+      if (raf) return;
+      raf = window.requestAnimationFrame(function () {
+        raf = 0;
+        var doc = document.documentElement;
+        var scrollable = doc.scrollHeight - window.innerHeight;
+        var percent = scrollable <= 0 ? 100 : Math.min(100, Math.round((window.scrollY / scrollable) * 100));
+        if (percent > maxScroll) maxScroll = percent;
+        marks.forEach(function (mark) {
+          if (percent >= mark && !seen.has(mark)) {
+            seen.add(mark);
+            track('scroll_depth', { percent: mark });
+          }
+        });
+        if (seen.has(100)) window.removeEventListener('scroll', onScroll);
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    var readSent = false;
+    var sendRead = function () {
+      if (readSent) return;
+      readSent = true;
+      track('read_complete', { engaged_seconds: Math.round(engaged), max_scroll: maxScroll });
+    };
+    var content = document.querySelector('main');
+    if (content && 'IntersectionObserver' in window) {
+      var sentinel = document.createElement('div');
+      sentinel.setAttribute('aria-hidden', 'true');
+      sentinel.style.cssText = 'height:1px;width:100%';
+      content.appendChild(sentinel);
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) { sendRead(); observer.disconnect(); }
+        });
+      }, { rootMargin: '0px 0px -10% 0px' });
+      observer.observe(sentinel);
+    }
+
+    var flushed = false;
+    var flush = function () {
+      if (flushed) return;
+      flushed = true;
+      track('page_engagement', {
+        engaged_seconds: Math.round(engaged),
+        max_scroll: maxScroll,
+        completed: readSent,
+      });
+    };
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'hidden') flush();
+    });
+    window.addEventListener('pagehide', flush);
+
+    document.addEventListener('click', function (event) {
+      var target = event.target;
+      var anchor = target && target.closest ? target.closest('a[href]') : null;
+      if (!anchor) return;
+      var href = anchor.getAttribute('href') || '';
+      if (!href || href.charAt(0) === '#') return;
+      var url;
+      try { url = new URL(href, location.href); } catch (_) { return; }
+      var host = url.hostname.toLowerCase().replace(/^www\./, '');
+      var self = location.hostname.toLowerCase().replace(/^www\./, '');
+      var type = '';
+      if (url.protocol === 'mailto:') type = 'mail';
+      else if (host === self && /\/apply\/?$/.test(url.pathname)) type = 'agency_apply';
+      else if (host === 'app.ods.yao.care') type = 'self_register';
+      else if (host && host !== self) type = /yao\.care$/.test(host) ? 'cross_site' : 'external';
+      if (!type) return;
+      // 只送 origin/path；不把 mailto body、query string 或 hash 中的資料送到 GA4。
+      var safeUrl = url.protocol === 'mailto:' ? 'mailto:' : `${url.origin}${url.pathname}`;
+      track('cta_click', { link_url: safeUrl.slice(0, 200), link_domain: host, cta_type: type });
+    }, { passive: true, capture: true });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initInteractionTracking, { once: true });
+  else initInteractionTracking();
+</script>

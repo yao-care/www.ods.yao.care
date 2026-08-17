@@ -12,7 +12,7 @@
 
 - `www.ods.yao.care` 是本 repo 的公文案例庫、純靜態 Guest 體驗與行銷站；案例全文和檢核結果預先渲染進 HTML。
 - `ods.yao.care` 是 apex；目前部署定義為 301 導向 `www.ods.yao.care`。
-- `app.ods.yao.care` 是小型受補助單位共用的應用入口，可自助註冊與使用。
+- `app.ods.yao.care` 是小型受補助單位、一般民眾與個人／企業共用的應用入口，可自助建立工作區。
 - 機關使用專屬 `<機關>.ods.yao.care`，由服務方建立租戶和邀請；行銷站的 `/apply/` 是這條申請路徑。
 - Guest 體驗中會改變資料的動作導向 `/apply/` 或 `app.ods.yao.care`；不要把它描述成一般登入後產品流程。
 
@@ -78,10 +78,11 @@ cp -r /tmp/…/out/scenarios /tmp/…/out/scenarios.json /tmp/…/out/knowledge.
 - 凡會改變狀態的動作（改事由、改文別、編輯、儲存、簽核、匯出）一律攔截，跳 gate 對話框導向
   申請頁或 `app.ods.yao.care` 自助註冊
 
-## 兩種客群（與應用端的網域架構對應）
+## 三種客群（與應用端的網域架構對應）
 
 - 機關 → 專屬子網域，**由服務方開通**，站上走 `/apply/` 申請表
 - 小型受補助單位（社區發展協會、學校家長會、農會…）→ 共用 `app.ods.yao.care` **自助註冊**
+- 一般民眾／個人或企業 → 共用 `app.ods.yao.care` **自助建立個人工作區**，撰寫民眾對機關書件或存證信函
 
 ## 常用指令
 

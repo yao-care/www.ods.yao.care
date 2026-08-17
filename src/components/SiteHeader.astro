@@ -167,6 +167,50 @@ const agencyApplyHref = SERVICE_LINKS.agencyApply('header_apply');
   </div>
 </header>
 
+<script>
+  const initMenuDismissal = () => {
+    const menus = Array.from(document.querySelectorAll('header details'));
+    if (!menus.length) return;
+
+    const closeMenus = (except) => {
+      menus.forEach((menu) => {
+        if (menu !== except) menu.removeAttribute('open');
+      });
+    };
+
+    menus.forEach((menu) => {
+      menu.addEventListener('toggle', () => {
+        if (menu.open) closeMenus(menu);
+      });
+    });
+
+    document.addEventListener('click', (event) => {
+      const target = event.target;
+      if (target instanceof Element && target.closest('header details')) return;
+      closeMenus();
+    });
+
+    document.addEventListener('focusin', (event) => {
+      const target = event.target;
+      if (target instanceof Element && target.closest('header details')) return;
+      closeMenus();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') return;
+      const openMenu = menus.find((menu) => menu.open);
+      closeMenus();
+      openMenu?.querySelector('summary')?.focus();
+    });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMenuDismissal, { once: true });
+  } else {
+    initMenuDismissal();
+  }
+</script>
+
 <style>
   header {
     position: sticky;

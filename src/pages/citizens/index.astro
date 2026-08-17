@@ -3,6 +3,60 @@ import ArticlePage from '../../layouts/ArticlePage.astro';
 import { SERVICE_LINKS } from '../../site.config.js';
 
 const registerHref = SERVICE_LINKS.selfRegister('citizens_self_register');
+
+const examples = [
+  {
+    family: '民眾對機關',
+    type: '申請書',
+    title: '提出申請與希望的處理結果',
+    lead: '把資格、事實與申請事項分開，機關才知道要審查什麼。',
+    sections: [
+      ['事實與理由', '本人符合○○申請資格，檢附相關證明文件。'],
+      ['請求事項', '請受理本申請，並依相關規定審查後告知處理結果。'],
+    ],
+  },
+  {
+    family: '民眾對機關',
+    type: '陳情書',
+    title: '把問題經過與影響說清楚',
+    lead: '適合反映環境、交通、公共設施或行政服務等問題。',
+    sections: [
+      ['事實與理由', '○○路段長期積水，雨天已影響附近居民通行。'],
+      ['請求事項', '請查明事實、依權責處理，並告知本人辦理情形。'],
+    ],
+  },
+  {
+    family: '民眾對機關',
+    type: '申訴書',
+    title: '對原處理結果提出不同意見',
+    lead: '先交代原處理內容，再說明為什麼希望重新查明。',
+    sections: [
+      ['事實與理由', '本人不服○○處理結果，理由與相關資料如下。'],
+      ['請求事項', '請重新查明本案，並依相關規定作成適當處理。'],
+    ],
+  },
+  {
+    family: '民眾對機關',
+    type: '說明書',
+    title: '補充案件背景與事實',
+    lead: '把機關尚未掌握的經過、資料與附件整理成一份說明。',
+    sections: [
+      ['事實與理由', '就○○案件補充說明發生經過及相關資料。'],
+      ['請求事項', '請將本說明納入案件審酌，並告知後續處理方式。'],
+    ],
+  },
+  {
+    family: '個人／企業之間',
+    type: '存證信函',
+    title: '留下正式通知與履行期限',
+    lead: '除了內容，也要把雙方資料、地址與期限填完整。',
+    sections: [
+      ['事實與理由', '本函所述事實與理由，依契約及往來資料整理如下。'],
+      ['請求事項', '請就上述事項完成履行或以書面回覆，並保留處理紀錄。'],
+      ['履行期限', '請於民國○○年○○月○○日前完成履行或回覆。'],
+    ],
+  },
+];
 ---
 
 <ArticlePage
@@ -11,6 +65,37 @@ const registerHref = SERVICE_LINKS.selfRegister('citizens_self_register');
   heading="民眾也有自己的正式書件"
   lead="公文不只存在於機關之間。需要向公家機關提出申請、陳情或申訴，或要正式通知另一個人／企業時，都需要清楚、可審閱的文字。"
 >
+  <section class="showcase">
+    <div class="section-intro">
+      <p class="eyebrow">先看一份示意</p>
+      <h2>民眾文件長什麼樣子？</h2>
+      <p>
+        不用先猜該寫成什麼格式。先從用途找一份示意，會看到系統如何把內容整理成「事實與理由／請求事項／附件」；
+        存證信函則另外保留雙方資料與履行期限。
+      </p>
+    </div>
+
+    <div class="example-grid">
+      {examples.map((example) => (
+        <article class="example-card">
+          <div class="card-meta">
+            <span>{example.family}</span>
+            <strong>{example.type}</strong>
+          </div>
+          <h3>{example.title}</h3>
+          <p class="card-lead">{example.lead}</p>
+          <div class="document-preview" aria-label={`${example.type}格式示意`}>
+            <p class="preview-label">{example.type}格式示意</p>
+            {example.sections.map(([label, text]) => (
+              <p><strong>{label}</strong>{text}</p>
+            ))}
+          </div>
+        </article>
+      ))}
+    </div>
+    <p class="showcase-note">以上內容為虛構示意，實際草稿仍應依個人事實、附件與收文機關逐項確認。</p>
+  </section>
+
   <section>
     <h2>民眾對機關：把事情與請求寫清楚</h2>
     <p>
@@ -58,3 +143,116 @@ const registerHref = SERVICE_LINKS.selfRegister('citizens_self_register');
     </p>
   </section>
 </ArticlePage>
+
+<style>
+  .showcase {
+    margin-top: 3rem;
+    padding: 1.5rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.75rem;
+    background: var(--color-bg-light);
+  }
+
+  .section-intro {
+    max-width: 48rem;
+  }
+
+  .section-intro h2 {
+    margin-top: 0.25rem;
+  }
+
+  .section-intro p:last-child {
+    margin-bottom: 0;
+  }
+
+  .eyebrow {
+    margin: 0;
+    color: var(--color-accent);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+
+  .example-grid {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .example-card {
+    display: grid;
+    align-content: start;
+    gap: 0.75rem;
+    padding: 1.25rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.625rem;
+    background: var(--color-white);
+    box-shadow: var(--shadow-card);
+  }
+
+  .card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    color: var(--color-ink-muted);
+    font-size: var(--text-xs);
+  }
+
+  .card-meta strong {
+    padding: 0.25rem 0.625rem;
+    border-radius: 1rem;
+    background: var(--color-primary);
+    color: var(--color-white);
+    font-size: var(--text-xs);
+  }
+
+  .example-card h3 {
+    margin: 0;
+  }
+
+  .card-lead {
+    margin: 0;
+    color: var(--color-ink-soft);
+  }
+
+  .document-preview {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+    padding: 1rem;
+    border-inline-start: 0.25rem solid var(--color-accent);
+    background: var(--color-bg-light);
+  }
+
+  .document-preview p {
+    margin: 0;
+    font-size: var(--text-sm);
+    line-height: 1.7;
+  }
+
+  .document-preview .preview-label {
+    color: var(--color-ink-muted);
+    font-size: var(--text-xs);
+    font-weight: 700;
+  }
+
+  .document-preview p strong {
+    display: block;
+    color: var(--color-primary);
+    font-size: var(--text-xs);
+  }
+
+  .showcase-note {
+    margin: 1rem 0 0;
+    color: var(--color-ink-soft);
+    font-size: var(--text-xs);
+  }
+
+  @media (min-width: 768px) {
+    .example-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

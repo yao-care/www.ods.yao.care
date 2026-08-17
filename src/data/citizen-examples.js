@@ -195,5 +195,5 @@ export const CITIZEN_EXAMPLES = [
   },
 ];
 
-export const CITIZEN_CATEGORIES = ['民眾對機關', '個人／企業之間'];
-
+// 存證信函是最常用的民眾文件，首頁優先呈現。
+export const CITIZEN_CATEGORIES = ['個人／企業之間', '民眾對機關'];

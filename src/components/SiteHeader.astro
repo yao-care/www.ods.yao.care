@@ -5,76 +5,476 @@ const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 const path = Astro.url.pathname;
-const nav = [
-  { href: `${base}cases/`, label: '公文範例' },
-  { href: `${base}citizens/`, label: '民眾書件' },
-  { href: `${base}checks/`, label: '格式檢核' },
-  { href: `${base}doc-types/`, label: '文別' },
-  { href: `${base}terms/`, label: '用語與法規' },
-  { href: `${base}product/`, label: '功能' },
-  { href: `${base}security/`, label: '資料處理' },
+
+const links = {
+  cases: `${base}cases/`,
+  citizens: `${base}citizens/`,
+  checks: `${base}checks/`,
+  docTypes: `${base}doc-types/`,
+  terms: `${base}terms/`,
+  product: `${base}product/`,
+  security: `${base}security/`,
+};
+
+const isCurrent = (href) => path === href || path.startsWith(href);
+
+const primaryLinks = [
+  {
+    href: links.cases,
+    label: '範例庫',
+    description: '看完整公文與逐條檢核結果',
+  },
+  {
+    href: links.citizens,
+    label: '民眾文件',
+    description: '申請、陳情與存證信函',
+  },
 ];
+
+const navGroups = [
+  {
+    label: '格式與用語',
+    items: [
+      {
+        href: links.checks,
+        label: '格式檢核 24 條',
+        description: '知道哪些規則會被逐條檢查',
+      },
+      {
+        href: links.docTypes,
+        label: '文別怎麼選',
+        description: '函、書函、公告、簽與通知單',
+      },
+      {
+        href: links.terms,
+        label: '用語與法規速查',
+        description: '期望語與常用法規依據',
+      },
+    ],
+  },
+  {
+    label: '服務說明',
+    items: [
+      {
+        href: links.product,
+        label: '功能與導入',
+        description: '草擬、匯出與機關導入方式',
+      },
+      {
+        href: links.security,
+        label: '資料處理方式',
+        description: '去識別化、隔離與稽核軌跡',
+      },
+    ],
+  },
+];
+
+const selfRegisterHref = SERVICE_LINKS.selfRegister('header_self_register');
+const agencyApplyHref = SERVICE_LINKS.agencyApply('header_apply');
 ---
 
 <header>
   <div class="bar">
-    <a class="brand" href={base}>公文 AI</a>
-    <nav aria-label="主導覽">
-      {nav.map((n) => (
-        <a href={n.href} aria-current={path.startsWith(n.href) ? 'page' : undefined}>{n.label}</a>
+    <a class="brand" href={base} aria-label="公文 AI 首頁">
+      <span class="mark" aria-hidden="true">公</span>
+      <span class="brand-copy">
+        <strong>公文 AI</strong>
+        <small>正式文書工作台</small>
+      </span>
+    </a>
+
+    <nav class="desktop-nav" aria-label="主導覽">
+      {primaryLinks.map((item) => (
+        <a
+          class:list={['nav-link', { active: isCurrent(item.href) }]}
+          href={item.href}
+          aria-current={isCurrent(item.href) ? 'page' : undefined}
+        >
+          {item.label}
+        </a>
       ))}
+
+      {navGroups.map((group) => {
+        const groupIsCurrent = group.items.some((item) => isCurrent(item.href));
+        return (
+          <details class="menu">
+            <summary class:list={['nav-link', { active: groupIsCurrent }]}>
+              {group.label}
+              <span class="chevron" aria-hidden="true">⌄</span>
+            </summary>
+            <div class="menu-panel">
+              {group.items.map((item) => (
+                <a
+                  class:list={['menu-item', { active: isCurrent(item.href) }]}
+                  href={item.href}
+                  aria-current={isCurrent(item.href) ? 'page' : undefined}
+                >
+                  <strong>{item.label}</strong>
+                  <small>{item.description}</small>
+                </a>
+              ))}
+            </div>
+          </details>
+        );
+      })}
     </nav>
-    <a class="cta" href={SERVICE_LINKS.agencyApply('header_apply')}>申請試用</a>
+
+    <div class="actions">
+      <a class="quiet-action" href={selfRegisterHref}>自助開始</a>
+      <a class="cta" href={agencyApplyHref}>機關試用</a>
+    </div>
+
+    <details class="mobile-menu">
+      <summary>
+        <span>選單</span>
+        <span class="menu-icon" aria-hidden="true"><i></i><i></i><i></i></span>
+      </summary>
+      <div class="mobile-panel">
+        <div class="mobile-section">
+          <span class="section-label">開始找資料</span>
+          {primaryLinks.map((item) => (
+            <a
+              class:list={['mobile-link', { active: isCurrent(item.href) }]}
+              href={item.href}
+              aria-current={isCurrent(item.href) ? 'page' : undefined}
+            >
+              <strong>{item.label}</strong>
+              <small>{item.description}</small>
+            </a>
+          ))}
+        </div>
+        {navGroups.map((group) => (
+          <div class="mobile-section">
+            <span class="section-label">{group.label}</span>
+            {group.items.map((item) => (
+              <a
+                class:list={['mobile-link', { active: isCurrent(item.href) }]}
+                href={item.href}
+                aria-current={isCurrent(item.href) ? 'page' : undefined}
+              >
+                <strong>{item.label}</strong>
+                <small>{item.description}</small>
+              </a>
+            ))}
+          </div>
+        ))}
+        <div class="mobile-actions">
+          <a class="quiet-action" href={selfRegisterHref}>自助開始</a>
+          <a class="cta" href={agencyApplyHref}>機關申請試用</a>
+        </div>
+      </div>
+    </details>
   </div>
 </header>
 
 <style>
   header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
     border-bottom: 1px solid var(--color-line);
     background: var(--color-white);
+    box-shadow: var(--shadow-card);
   }
+
   .bar {
     max-width: 72rem;
+    min-height: 4.75rem;
     margin: 0 auto;
-    padding: 1rem 1.25rem;
+    padding: 0.75rem 1.25rem;
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
     gap: 1rem;
   }
+
   .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    flex-shrink: 0;
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .mark {
+    width: 2.5rem;
+    height: 2.5rem;
+    display: grid;
+    place-items: center;
+    border-radius: 0.625rem;
+    background: var(--color-primary);
+    color: var(--color-white);
     font-size: var(--text-lg);
     font-weight: 700;
+    line-height: 1;
+  }
+
+  .brand-copy {
+    display: grid;
+    gap: 0.125rem;
+    line-height: 1.1;
+  }
+
+  .brand-copy strong {
     color: var(--color-primary);
+    font-size: var(--text-lg);
+  }
+
+  .brand-copy small {
+    display: none;
+    color: var(--color-ink-muted);
+    font-size: var(--text-xs);
+    line-height: 1.2;
+  }
+
+  .desktop-nav,
+  .actions {
+    display: none;
+  }
+
+  .mobile-menu {
+    position: relative;
+    margin-inline-start: auto;
+  }
+
+  .mobile-menu summary {
+    min-height: 2.75rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.5rem;
+    color: var(--color-primary);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .mobile-menu summary::-webkit-details-marker,
+  .menu summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .menu-icon {
+    display: grid;
+    gap: 0.25rem;
+  }
+
+  .menu-icon i {
+    width: 1.125rem;
+    height: 0.125rem;
+    display: block;
+    border-radius: 1rem;
+    background: var(--color-primary);
+  }
+
+  .mobile-menu[open] .menu-icon i:nth-child(2) {
+    opacity: 0;
+  }
+
+  .mobile-panel {
+    position: absolute;
+    top: calc(100% + 0.75rem);
+    right: 0;
+    width: min(23rem, calc(100vw - 2rem));
+    padding: 0.75rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.75rem;
+    background: var(--color-white);
+    box-shadow: var(--shadow-float);
+  }
+
+  .mobile-section {
+    display: grid;
+    gap: 0.25rem;
+    padding-block: 0.75rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .mobile-section:first-child {
+    padding-top: 0.25rem;
+  }
+
+  .section-label {
+    padding: 0.25rem 0.75rem 0.5rem;
+    color: var(--color-ink-muted);
+    font-size: var(--text-xs);
+    font-weight: 700;
+  }
+
+  .mobile-link {
+    display: grid;
+    gap: 0.125rem;
+    padding: 0.625rem 0.75rem;
+    border-radius: 0.5rem;
+    color: var(--color-text);
     text-decoration: none;
   }
-  nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-inline-end: auto;
+
+  .mobile-link:hover,
+  .mobile-link.active {
+    background: var(--color-bg-light);
+    color: var(--color-primary);
   }
-  nav a {
+
+  .mobile-link strong,
+  .menu-item strong {
     font-size: var(--text-sm);
+  }
+
+  .mobile-link small,
+  .menu-item small {
     color: var(--color-ink-soft);
-    text-decoration: none;
-    padding-block: 0.25rem;
-    border-bottom: 2px solid transparent;
+    font-size: var(--text-xs);
+    line-height: 1.5;
   }
-  nav a:hover,
-  nav a[aria-current='page'] {
-    color: var(--color-primary);
-    border-bottom-color: var(--color-primary);
+
+  .mobile-actions {
+    display: grid;
+    gap: 0.625rem;
+    padding-top: 0.875rem;
   }
+
+  .mobile-actions a {
+    text-align: center;
+  }
+
+  .quiet-action,
   .cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+    padding: 0.5rem 0.875rem;
+    border-radius: 0.5rem;
     font-size: var(--text-sm);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .quiet-action {
+    color: var(--color-primary);
+  }
+
+  .quiet-action:hover {
+    background: var(--color-bg-light);
+  }
+
+  .cta {
     background: var(--color-accent);
     color: var(--color-white);
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
-    text-decoration: none;
+    font-weight: 700;
   }
+
   .cta:hover {
     background: var(--color-accent-dark);
+    color: var(--color-white);
+  }
+
+  a:focus-visible,
+  summary:focus-visible {
+    outline: 0.1875rem solid var(--color-accent);
+    outline-offset: 0.1875rem;
+  }
+
+  @media (min-width: 1024px) {
+    .bar {
+      gap: 1.25rem;
+    }
+
+    .brand-copy small {
+      display: block;
+    }
+
+    .desktop-nav {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      margin-inline: auto;
+    }
+
+    .nav-link {
+      min-height: 2.75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid transparent;
+      border-radius: 0.5rem;
+      color: var(--color-ink-soft);
+      font-size: var(--text-sm);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .nav-link:hover,
+    .nav-link.active,
+    .menu[open] > summary {
+      border-color: var(--color-line);
+      background: var(--color-bg-light);
+      color: var(--color-primary);
+    }
+
+    .menu {
+      position: relative;
+    }
+
+    .menu summary {
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .chevron {
+      color: var(--color-ink-muted);
+      font-size: var(--text-xs);
+      line-height: 1;
+      transform: translateY(-0.125rem);
+    }
+
+    .menu[open] .chevron {
+      transform: translateY(0.125rem) rotate(180deg);
+    }
+
+    .menu-panel {
+      position: absolute;
+      top: calc(100% + 0.75rem);
+      left: 50%;
+      width: 21rem;
+      display: grid;
+      gap: 0.25rem;
+      padding: 0.75rem;
+      border: 1px solid var(--color-line);
+      border-radius: 0.75rem;
+      background: var(--color-white);
+      box-shadow: var(--shadow-float);
+      transform: translateX(-50%);
+    }
+
+    .menu-item {
+      display: grid;
+      gap: 0.125rem;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      color: var(--color-text);
+      text-decoration: none;
+    }
+
+    .menu-item:hover,
+    .menu-item.active {
+      background: var(--color-bg-light);
+      color: var(--color-primary);
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      flex-shrink: 0;
+    }
+
+    .mobile-menu {
+      display: none;
+    }
   }
 </style>

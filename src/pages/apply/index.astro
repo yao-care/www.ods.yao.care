@@ -1,5 +1,6 @@
 ---
 import ArticlePage from '../../layouts/ArticlePage.astro';
+import { SERVICE_LINKS } from '../../site.config.js';
 
 // 收單 Worker（見 workers/apply-form/README.md；2026-08-14 部署並端到端驗證過）。
 // 留空時表單自動改走信件，不會變成按了沒反應的死按鈕。
@@ -63,7 +64,7 @@ const ENDPOINT = 'https://ods-apply-form.lightman-chang.workers.dev';
     <h2>小型單位不用等我們</h2>
     <p>
       社區發展協會、學校家長會、農會這類單位可以直接
-      <a href="https://app.ods.yao.care/">自助註冊</a>，不需要申請。
+      <a href={SERVICE_LINKS.selfRegister('apply_self_register')}>自助註冊</a>，不需要申請。
     </p>
   </section>
 

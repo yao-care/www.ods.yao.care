@@ -1,5 +1,6 @@
 ---
 import ArticlePage from '../../layouts/ArticlePage.astro';
+import { SERVICE_LINKS } from '../../site.config.js';
 
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
@@ -64,7 +65,7 @@ const base = import.meta.env.BASE_URL.endsWith('/')
   <section>
     <h2>還有什麼要問的</h2>
     <p>
-      採購或資安審查需要更細的說明文件，<a href={`${base}apply/`}>來信告訴我們</a>，
+      採購或資安審查需要更細的說明文件，<a href={SERVICE_LINKS.agencyApply('security_agency_apply')}>來信告訴我們</a>，
       會依貴機關的檢核表逐項回覆。
     </p>
   </section>

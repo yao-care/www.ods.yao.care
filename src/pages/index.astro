@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import { SERVICE_LINKS } from '../site.config.js';
 import { CASES } from '../data/cases.js';
 import index from '../data/scenarios.json';
 
@@ -11,6 +12,8 @@ const base = import.meta.env.BASE_URL.endsWith('/')
 const featured = ['grant-settlement', 'meeting-notice', 'noise-petition-reply', 'procurement-sign'];
 const cards = CASES.filter((c) => featured.includes(c.slug));
 const docTypeOf = (key) => index.items.find((i) => i.key === key)?.doc_type ?? '';
+const agencyApplyHref = SERVICE_LINKS.agencyApply('home_agency_apply');
+const selfRegisterHref = SERVICE_LINKS.selfRegister('home_self_register');
 ---
 
 <BaseLayout
@@ -27,7 +30,7 @@ const docTypeOf = (key) => index.items.find((i) => i.key === key)?.doc_type ?? '
       </p>
       <div class="cta-row">
         <a class="primary" href={`${base}cases/`}>看公文範例</a>
-        <a class="secondary" href={`${base}apply/`}>機關申請試用</a>
+        <a class="secondary" href={agencyApplyHref}>機關申請試用</a>
       </div>
     </section>
 
@@ -72,12 +75,12 @@ const docTypeOf = (key) => index.items.find((i) => i.key === key)?.doc_type ?? '
         <div class="who-card">
           <h3>機關</h3>
           <p>鄉鎮市公所、縣市府各處室。由我們開通帳號並配置專屬網址，接上既有稿件庫。</p>
-          <a class="primary" href={`${base}apply/`}>申請試用</a>
+          <a class="primary" href={agencyApplyHref}>申請試用</a>
         </div>
         <div class="who-card">
           <h3>小型受補助單位</h3>
           <p>社區發展協會、學校家長會、農會、民間團體。核銷公文一樣要照格式，可以自己註冊。</p>
-          <a class="secondary" href="https://app.ods.yao.care/">自助註冊</a>
+          <a class="secondary" href={selfRegisterHref}>自助註冊</a>
         </div>
       </div>
     </section>

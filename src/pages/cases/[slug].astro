@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import SiteHeader from '../../components/SiteHeader.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import CaseDemo from '../../components/CaseDemo.astro';
+import { SERVICE_LINKS } from '../../site.config.js';
 import { CASES } from '../../data/cases.js';
 import index from '../../data/scenarios.json';
 
@@ -122,8 +123,8 @@ const faq = {
         機關由我們開通帳號；社區發展協會、學校家長會這類小型單位可以自己註冊。
       </p>
       <div class="cta-row">
-        <a class="primary" href={`${base}apply/`}>機關申請試用</a>
-        <a class="secondary" href="https://app.ods.yao.care/">小型單位自助註冊</a>
+        <a class="primary" href={SERVICE_LINKS.agencyApply('case_agency_apply')}>機關申請試用</a>
+        <a class="secondary" href={SERVICE_LINKS.selfRegister('case_self_register')}>小型單位自助註冊</a>
       </div>
     </section>
   </main>

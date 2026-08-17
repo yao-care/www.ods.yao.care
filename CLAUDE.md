@@ -25,7 +25,7 @@
 | 2026-08-16 | 品牌色與表單接線 push 上線 |
 | 2026-08-17 | apex 改由主機 NPM 轉址（見下段） |
 
-Phase 4–5（Slack、GA4/GSC、seo-ops 納管）截至 2026-08-17 未開始（納管與否查 `grep ods /etc/cron.d/seo-ops`）。
+2026-08-17：Phase 4–5（Slack、GA4/GSC、seo-ops 納管）已接通。共用 GA4 Property 242590219、GSC `sc-domain:yao.care`、Bing sitemap／IndexNow 與既有 SEO Slack 報表；正式狀態查 `grep ods /etc/cron.d/seo-ops`、`gh run list` 與 `seo-data/`。www.yao.care → ODS → 申請／自助註冊是立即運作的導流漏斗，2–4 週只作轉換比較，不是導流前置等待。
 
 現況查法：`gh repo view yao-care/www.ods.yao.care`、`gh run list`、
 `curl -s -o /dev/null -w '%{http_code}' https://www.ods.yao.care/`、

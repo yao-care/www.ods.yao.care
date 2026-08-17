@@ -10,3 +10,13 @@ export const SITE = {
     'app.ods.yao.care',
   ],
 };
+
+const withCampaign = (url, content) =>
+  `${url}${url.includes('?') ? '&' : '?'}utm_source=ods.yao.care&utm_medium=owned&utm_campaign=ods_service&utm_content=${content}`;
+
+// ODS 的公開內容與實際服務是同一條漏斗；統一產生 CTA 連結，讓 GA4 能分辨入口位置。
+export const SERVICE_LINKS = {
+  agencyApply: (content = 'agency_apply') => withCampaign('/apply/', content),
+  selfRegister: (content = 'self_register') =>
+    withCampaign('https://app.ods.yao.care/', content),
+};

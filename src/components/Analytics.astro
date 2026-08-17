@@ -51,7 +51,9 @@ const { gaId, linkerDomains } = SITE;
     var has = function (list) { return list.some(function (key) { return haystack.indexOf(key) >= 0; }); };
     var category = 'direct';
     var aiSource = '';
-    if (has(aiHosts)) { category = 'ai'; aiSource = host || utm; }
+    if (utm === 'yao.care' || utm === 'www.yao.care' || host === 'yao.care') category = 'owned_yao';
+    else if (utm === 'ods.yao.care' || utm === 'www.ods.yao.care' || host === 'ods.yao.care') category = 'owned_ods';
+    else if (has(aiHosts)) { category = 'ai'; aiSource = host || utm; }
     else if (has(searchHosts)) category = 'organic_search';
     else if (has(socialHosts)) category = 'social';
     else if (host) category = host.indexOf('yao.care') >= 0 ? 'internal' : 'referral';
@@ -167,12 +169,18 @@ const { gaId, linkerDomains } = SITE;
       var type = '';
       if (url.protocol === 'mailto:') type = 'mail';
       else if (host === self && /\/apply\/?$/.test(url.pathname)) type = 'agency_apply';
-      else if (host === 'app.ods.yao.care') type = 'self_register';
+      else if (host === 'app.ods.yao.care') type = 'ods_self_register';
       else if (host && host !== self) type = /yao\.care$/.test(host) ? 'cross_site' : 'external';
       if (!type) return;
       // 只送 origin/path；不把 mailto body、query string 或 hash 中的資料送到 GA4。
       var safeUrl = url.protocol === 'mailto:' ? 'mailto:' : `${url.origin}${url.pathname}`;
-      track('cta_click', { link_url: safeUrl.slice(0, 200), link_domain: host, cta_type: type });
+      var linkContent = url.searchParams.get('utm_content') || '';
+      track('cta_click', {
+        link_url: safeUrl.slice(0, 200),
+        link_domain: host,
+        cta_type: type,
+        ...(linkContent ? { link_content: linkContent.slice(0, 80) } : {}),
+      });
     }, { passive: true, capture: true });
   }
 

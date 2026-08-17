@@ -1,62 +1,12 @@
 ---
 import ArticlePage from '../../layouts/ArticlePage.astro';
 import { SERVICE_LINKS } from '../../site.config.js';
+import { CITIZEN_CATEGORIES, CITIZEN_EXAMPLES } from '../../data/citizen-examples.js';
 
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
 const registerHref = SERVICE_LINKS.selfRegister('citizens_self_register');
-
-const examples = [
-  {
-    family: '民眾對機關',
-    type: '申請書',
-    title: '提出申請與希望的處理結果',
-    lead: '把資格、事實與申請事項分開，機關才知道要審查什麼。',
-    sections: [
-      ['事實與理由', '本人符合○○申請資格，檢附相關證明文件。'],
-      ['請求事項', '請受理本申請，並依相關規定審查後告知處理結果。'],
-    ],
-  },
-  {
-    family: '民眾對機關',
-    type: '陳情書',
-    title: '把問題經過與影響說清楚',
-    lead: '適合反映環境、交通、公共設施或行政服務等問題。',
-    sections: [
-      ['事實與理由', '○○路段長期積水，雨天已影響附近居民通行。'],
-      ['請求事項', '請查明事實、依權責處理，並告知本人辦理情形。'],
-    ],
-  },
-  {
-    family: '民眾對機關',
-    type: '申訴書',
-    title: '對原處理結果提出不同意見',
-    lead: '先交代原處理內容，再說明為什麼希望重新查明。',
-    sections: [
-      ['事實與理由', '本人不服○○處理結果，理由與相關資料如下。'],
-      ['請求事項', '請重新查明本案，並依相關規定作成適當處理。'],
-    ],
-  },
-  {
-    family: '民眾對機關',
-    type: '說明書',
-    title: '補充案件背景與事實',
-    lead: '把機關尚未掌握的經過、資料與附件整理成一份說明。',
-    sections: [
-      ['事實與理由', '就○○案件補充說明發生經過及相關資料。'],
-      ['請求事項', '請將本說明納入案件審酌，並告知後續處理方式。'],
-    ],
-  },
-  {
-    family: '個人／企業之間',
-    type: '存證信函',
-    title: '留下正式通知與履行期限',
-    lead: '除了內容，也要把雙方資料、地址與期限填完整。',
-    sections: [
-      ['事實與理由', '本函所述事實與理由，依契約及往來資料整理如下。'],
-      ['請求事項', '請就上述事項完成履行或以書面回覆，並保留處理紀錄。'],
-      ['履行期限', '請於民國○○年○○月○○日前完成履行或回覆。'],
-    ],
-  },
-];
 ---
 
 <ArticlePage
@@ -75,25 +25,32 @@ const examples = [
       </p>
     </div>
 
-    <div class="example-grid">
-      {examples.map((example) => (
-        <article class="example-card">
-          <div class="card-meta">
-            <span>{example.family}</span>
-            <strong>{example.type}</strong>
-          </div>
-          <h3>{example.title}</h3>
-          <p class="card-lead">{example.lead}</p>
-          <div class="document-preview" aria-label={`${example.type}格式示意`}>
-            <p class="preview-label">{example.type}格式示意</p>
-            {example.sections.map(([label, text]) => (
-              <p><strong>{label}</strong>{text}</p>
+    <div class="categories">
+      {CITIZEN_CATEGORIES.map((category) => (
+        <section class="category">
+          <h3 class="category-title">{category}</h3>
+          <div class="example-grid">
+            {CITIZEN_EXAMPLES.filter((example) => example.category === category).map((example) => (
+              <a class="example-card" href={`${base}citizens/${example.slug}/`}>
+                <div class="card-meta">
+                  <span>{example.family === 'notice' ? '存證信函' : '民眾對機關'}</span>
+                  <strong>{example.draft.doc_type}</strong>
+                </div>
+                <h3>{example.seoTitle}</h3>
+                <p class="card-lead">{example.lead}</p>
+                <div class="document-preview" aria-label={`${example.draft.doc_type}示意`}>
+                  <p class="preview-label">先看內容</p>
+                  <p><strong>事由</strong>{example.scenario.source}</p>
+                  <p><strong>產出</strong>{example.draft.subject}</p>
+                </div>
+                <span class="card-link">進入模擬操作 →</span>
+              </a>
             ))}
           </div>
-        </article>
+        </section>
       ))}
     </div>
-    <p class="showcase-note">以上內容為虛構示意，實際草稿仍應依個人事實、附件與收文機關逐項確認。</p>
+    <p class="showcase-note">點進去會進入和公文範例相同的仿真流程；內容為虛構示意，實際草稿仍應逐項確認。</p>
   </section>
 
   <section>
@@ -179,6 +136,22 @@ const examples = [
     margin-top: 1.5rem;
   }
 
+  .categories {
+    display: grid;
+    gap: 2rem;
+    margin-top: 1.5rem;
+  }
+
+  .category {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .category-title {
+    margin: 0;
+    color: var(--color-primary);
+  }
+
   .example-card {
     display: grid;
     align-content: start;
@@ -188,6 +161,16 @@ const examples = [
     border-radius: 0.625rem;
     background: var(--color-white);
     box-shadow: var(--shadow-card);
+  }
+
+  a.example-card {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  a.example-card:hover {
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-card-hover);
   }
 
   .card-meta {
@@ -248,6 +231,12 @@ const examples = [
     margin: 1rem 0 0;
     color: var(--color-ink-soft);
     font-size: var(--text-xs);
+  }
+
+  .card-link {
+    color: var(--color-primary);
+    font-size: var(--text-sm);
+    font-weight: 700;
   }
 
   @media (min-width: 768px) {

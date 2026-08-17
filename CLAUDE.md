@@ -6,19 +6,20 @@
 **站的主體是公文案例庫**，不是產品簡報 —— 承辦開案時搜的是「補助核銷 公文 範例」，不是「公文 AI」。
 產品介紹是配角。
 
-## 目前狀態（2026-08-14）
+## 里程碑（帶日期的歷史；**現況一律用下面的指令查，不要信本表**）
 
-| 項目 | 狀態 |
+| 事件（日期） | 內容 |
 |---|---|
-| 骨架、設計 token、守門腳本 | 已建，`pnpm build` 通過（16 頁） |
-| 8 個案例頁＋索引、檢核、文別、用語、功能、資料處理、申請 | 已寫 |
-| GitHub repo | **尚未建立**（要 `gh repo create yao-care/www.ods.yao.care --public`） |
-| GitHub Pages / deploy workflow | **尚未設定**（模板在 `/root/.claude/skills/new-astro-site/templates/deploy.yml`） |
-| 申請表單 Worker | **✅ 全通**（2026-08-14）：部署於 `https://ods-apply-form.lightman-chang.workers.dev`（CF 帳號 Lightman，用戶拍板）、`BREVO_API_KEY` 已設（金鑰見 secrets.md § SMTP）、端到端實測 200、apply 頁 `ENDPOINT` 已接上 |
-| Phase 4–5（Slack、GA4/GSC、seo-ops 納管） | **未開始** |
+| 2026-08-14 | 骨架、設計 token、守門腳本、案例頁全數建好；repo＋GitHub Pages＋deploy workflow 上線（用戶完成） |
+| 2026-08-14 | 申請表單 Worker 全通：`ods-apply-form.lightman-chang.workers.dev`（CF 帳號 Lightman，用戶拍板）、`BREVO_API_KEY` 已設（副本 secrets.md § SMTP）、以 Brevo `delivered` 事件驗證、apply 頁 `ENDPOINT` 已接上 |
+| 2026-08-16 | 品牌色與表單接線 push 上線 |
+| 2026-08-17 | apex 改由主機 NPM 轉址（見下段） |
 
-現況一律查、不要相信這張表：`gh repo view yao-care/www.ods.yao.care`、`gh run list`、
-`curl -s -o /dev/null -w '%{http_code}' https://www.ods.yao.care/`。
+Phase 4–5（Slack、GA4/GSC、seo-ops 納管）截至 2026-08-17 未開始（納管與否查 `grep ods /etc/cron.d/seo-ops`）。
+
+現況查法：`gh repo view yao-care/www.ods.yao.care`、`gh run list`、
+`curl -s -o /dev/null -w '%{http_code}' https://www.ods.yao.care/`、
+頁數看 `pnpm build` 輸出、Worker 投遞看 Brevo `/v3/smtp/statistics/events`。
 
 DNS 已就緒（用戶設定）：www CNAME 到 `yao-care.github.io`；apex `ods.yao.care` 於
 2026-08-17 改 A/AAAA 指主機、由 NPM redirection host（自簽 LE 憑證）301 到 www——
@@ -83,13 +84,10 @@ pnpm check:content:all
 
 ## 待辦（接手時從這裡開始）
 
-1. `gh repo create yao-care/www.ods.yao.care --public --source . --remote origin`
-2. `gh api -X POST repos/…/pages -f build_type=workflow`＋**必做** `gh api -X PUT repos/…/pages -f cname=www.ods.yao.care`
-3. 複製 `deploy.yml` 模板，`{{SITE_URL}}`→`https://www.ods.yao.care`、
-   `{{INDEXNOW_KEY}}`→`770ed0a7691038e945d0cb91b9410f4a`（＝`public/` 下那個 .txt 檔名）
-4. ~~Worker~~：**✅ 完成**（2026-08-14，見上表）。Cloudflare 授權在 `~/.config/.wrangler/`
-   （`whoami` 可查）；CF 帳號 Lightman 寫死在 `wrangler.jsonc` 的 `account_id`；
-   `BREVO_API_KEY` 為 Brevo **HTTP API 金鑰**（`xkeysib-…`，與 SMTP 密碼不同種，
-   副本在 secrets.md § SMTP）。輪替金鑰時：`cd workers/apply-form && npx wrangler secret put BREVO_API_KEY`
+1.–4. ~~repo／Pages／deploy workflow／Worker~~：**都已完成**（見上方里程碑表；
+   現況一律指令查）。維運備忘：Cloudflare 授權在 `~/.config/.wrangler/`（`whoami` 可查）、
+   CF 帳號寫死在 `wrangler.jsonc` 的 `account_id`；輪替 Brevo 金鑰：
+   `cd workers/apply-form && npx wrangler secret put BREVO_API_KEY`（HTTP API 金鑰
+   `xkeysib-…`，與 SMTP 密碼不同種，副本在 secrets.md § SMTP）
 5. Phase 4–5：Slack 頻道、GA4/GSC 授權（**每站要自己的 GCP 專案與 SA，絕不可複製別站金鑰**）、
    seo-ops 納管。照 `/root/.claude/skills/new-astro-site/SKILL.md` 走

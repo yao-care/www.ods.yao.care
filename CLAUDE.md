@@ -20,8 +20,10 @@
 現況一律查、不要相信這張表：`gh repo view yao-care/www.ods.yao.care`、`gh run list`、
 `curl -s -o /dev/null -w '%{http_code}' https://www.ods.yao.care/`。
 
-DNS 已就緒（用戶設定）：apex 與 www 都 CNAME 到 `yao-care.github.io`，
-`*.ods.yao.care` 則 A/AAAA 指向主機（那是應用，不是本站）。
+DNS 已就緒（用戶設定）：www CNAME 到 `yao-care.github.io`；apex `ods.yao.care` 於
+2026-08-17 改 A/AAAA 指主機、由 NPM redirection host（自簽 LE 憑證）301 到 www——
+GitHub 不為「巢狀 www」的上層網域簽憑證，掛 GitHub 時 https apex 恆憑證警告。
+`*.ods.yao.care` 亦 A/AAAA 指向主機（那是應用，不是本站）。
 
 ## 技術棧與規範
 

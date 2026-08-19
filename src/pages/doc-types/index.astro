@@ -2,6 +2,8 @@
 import ArticlePage from '../../layouts/ArticlePage.astro';
 import { CASES } from '../../data/cases.js';
 import index from '../../data/scenarios.json';
+import downloads from '../../data/downloads.json';
+import { CITIZEN_EXAMPLES } from '../../data/citizen-examples.js';
 
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
@@ -40,6 +42,16 @@ const TYPES = [
   },
 ];
 
+// 民眾端的文別。機關公文選錯文別會退件，民眾書件選錯則是機關不知道該用哪個程序辦。
+const CITIZEN_TYPES = [
+  { name: '陳情書', when: '反映問題、請機關查明或處理，例如噪音、髒亂、道路破損。', subject: '寫可確認的事實與影響，不先替機關認定違法；請求事項要寫成希望機關採取的具體處理。' },
+  { name: '申請書', when: '向機關申請某項資格、補助或許可。', subject: '申請事由、依據與檢附文件分開寫，機關才不必來電補問。' },
+  { name: '申訴書', when: '對機關已經做出的處理結果有不同意見。', subject: '寫清楚原處分是哪一件、不同意的具體理由，以及請求重新查明什麼。' },
+  { name: '說明書', when: '案件已經在辦，機關要求補充說明或補件。', subject: '把背景與補充資料整理成機關看得懂的段落，不要用口語敘述。' },
+  { name: '存證信函', when: '個人或企業之間要留下正式通知紀錄，例如押金、借款、瑕疵退款、修繕、終止契約。', subject: '雙方姓名地址、事實經過、請求事項與履行期限都是必要欄位；用紙與字數格式由中華郵政規定。' },
+];
+const citizensOf = (docType) => CITIZEN_EXAMPLES.filter((e) => e.draft.doc_type === docType);
+
 const caseOf = (key) => CASES.find((c) => c.key === key);
 const docTypeOf = (key) => index.items.find((i) => i.key === key)?.doc_type ?? '';
 ---
@@ -65,6 +77,50 @@ const docTypeOf = (key) => index.items.find((i) => i.key === key)?.doc_type ?? '
   ))}
 
   <section>
+    <h2>民眾自己要寫的書件</h2>
+    <p>
+      公文不只存在於機關之間。向機關申請、陳情、申訴，或要正式通知另一個人與企業時，
+      一樣有固定的段落與必填欄位。這五種涵蓋一般民眾會遇到的大部分情況。
+    </p>
+    {CITIZEN_TYPES.map((t) => (
+      <section>
+        <h3>{t.name}</h3>
+        <p><strong>什麼時候用：</strong>{t.when}</p>
+        <p><strong>寫法重點：</strong>{t.subject}</p>
+        <ul>
+          {citizensOf(t.name).map((e) => (
+            <li><a href={`${base}citizens/${e.slug}/`}>{e.seoTitle}</a></li>
+          ))}
+        </ul>
+      </section>
+    ))}
+    <p><a href={`${base}citizens/`}>看全部民眾書件與存證信函</a></p>
+  </section>
+
+  <section>
+    <h2>空白範本下載</h2>
+    <p>
+      版面取自{downloads.source.name}（{downloads.source.promulgated}）的原始檔，
+      欄位順序、字級、行距與縮排都照規範走：A4、四邊 2.5 公分邊界、中文標楷體、
+      英數 Times New Roman，機關全銜與文別 20 點字、主旨與說明 16 點字、發文資訊 12 點字、頁碼 10 點字。
+      下載後在 Word 直接改成自己的內容。
+    </p>
+    <ul class="templates">
+      {downloads.templates.map((t) => (
+        <li>
+          <a href={`${base}downloads/${t.path}`} download={t.filename}>{t.filename}</a>
+          <span>{t.note}</span>
+        </li>
+      ))}
+    </ul>
+    <p class="source">
+      規範原文與 PDF／DOC／ODT 原始檔：
+      <a href={downloads.source.page} rel="noopener">國家發展委員會檔案管理局</a>。
+      存證信函用紙另依<a href={downloads.postalGuide} rel="noopener">中華郵政</a>規定，本站不重製用紙。
+    </p>
+  </section>
+
+  <section>
     <h2>期望語對照</h2>
     <table>
       <thead><tr><th>行文對象</th><th>期望語</th></tr></thead>
@@ -78,3 +134,29 @@ const docTypeOf = (key) => index.items.find((i) => i.key === key)?.doc_type ?? '
     <p>依據見<a href={`${base}terms/`}>用語與法規速查</a>。</p>
   </section>
 </ArticlePage>
+
+<style>
+  .templates {
+    padding-inline-start: 0;
+    list-style: none;
+  }
+  .templates li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .templates a {
+    color: var(--color-primary);
+  }
+  .templates span {
+    font-size: var(--text-xs);
+    color: var(--color-ink-soft);
+  }
+  .source {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+</style>

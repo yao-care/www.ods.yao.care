@@ -22,9 +22,17 @@ const { gaId, linkerDomains } = SITE;
         ? { type: 'case', category: 'cases', item: parts[1], group: '公文範例' }
         : { type: 'hub', category: 'cases', item: '', group: '公文範例' };
     }
+    // 民眾端與公文端是兩條各自獨立的漏斗，分開歸類才比得出轉換差異；
+    // 沒有這一段時 /citizens/* 會全部掉進「其他」，而它是目前瀏覽量第一名。
+    if (section === 'citizens') {
+      return parts[1]
+        ? { type: 'case', category: 'citizens', item: parts[1], group: '民眾文件' }
+        : { type: 'hub', category: 'citizens', item: '', group: '民眾文件' };
+    }
     var groups = {
       checks: '格式檢核',
       'doc-types': '文別',
+      templates: '範本下載',
       product: '功能',
       security: '資料處理',
       terms: '用語與法規',

@@ -1,0 +1,345 @@
+---
+/**
+ * 範本下載索引頁。
+ *
+ * 這一頁的存在理由是搜尋意圖：承辦與民眾搜的是「公文格式 word」「公文範本下載」
+ * 「存證信函格式 word」，而不是「公文 AI」。各機關文書組頁面給的多半是 PDF 或整份
+ * 51 頁規範，可直接編輯、分文別的 .docx 是本站才有的東西。
+ *
+ * 檔案本身由 scripts/build-docx.mjs 在 build 時產生，清單走 src/data/downloads.json。
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import { SERVICE_LINKS } from '../../site.config.js';
+import { CASES } from '../../data/cases.js';
+import { CITIZEN_EXAMPLES } from '../../data/citizen-examples.js';
+import downloads from '../../data/downloads.json';
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+
+const OFFICIAL_TYPES = ['函', '書函', '公告', '開會通知單', '簽'];
+const officialTemplates = downloads.templates.filter((t) => OFFICIAL_TYPES.includes(t.docType));
+const citizenTemplates = downloads.templates.filter((t) => !OFFICIAL_TYPES.includes(t.docType));
+
+const caseRows = CASES.map((c) => ({
+  ...downloads.cases[c.slug],
+  title: c.seoTitle,
+  href: `${base}cases/${c.slug}/`,
+  lead: c.lead,
+})).filter((row) => row.path);
+
+const citizenRows = CITIZEN_EXAMPLES.map((e) => ({
+  ...downloads.citizens[e.slug],
+  title: e.seoTitle,
+  href: `${base}citizens/${e.slug}/`,
+  lead: e.lead,
+})).filter((row) => row.path);
+
+const total = officialTemplates.length + citizenTemplates.length + caseRows.length + citizenRows.length;
+
+const description =
+  `函、書函、公告、開會通知單、簽與民眾書件的空白 Word 範本，版面取自政府文書格式參考規範原始檔，` +
+  `另附 ${caseRows.length + citizenRows.length} 份填好內容的範例檔，下載後直接編輯。`;
+
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'CollectionPage',
+      '@id': `${pageUrl}#page`,
+      name: '公文格式 Word 範本下載',
+      description,
+      inLanguage: 'zh-Hant-TW',
+      isPartOf: { '@type': 'WebSite', url: 'https://www.ods.yao.care/' },
+    },
+    ...downloads.templates.map((t) => ({
+      '@type': 'DigitalDocument',
+      name: t.filename.replace(/\.docx$/, ''),
+      description: t.note,
+      encodingFormat: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      url: new URL(`${base}downloads/${t.path}`, Astro.site).href,
+      inLanguage: 'zh-Hant-TW',
+      license: downloads.source.page,
+    })),
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: '首頁', item: 'https://www.ods.yao.care/' },
+        { '@type': 'ListItem', position: 2, name: '範本下載', item: pageUrl },
+      ],
+    },
+  ],
+};
+
+const faq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: '公文的 Word 版面要怎麼設定？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text:
+          '依政府文書格式參考規範：A4、上下左右各留 2.5 公分±0.3、中文用楷書、英文與阿拉伯數字用 Times New Roman；' +
+          '機關全銜與文別 20 點字置中，受文者、主旨、說明等主要資訊 16 點字靠左，發文日期、發文字號、速別、密等、附件、' +
+          '正本、副本等普通資訊 12 點字，頁碼頁尾 10 點字置中。行距為 10 點字 10 點、12 點字 15 點、16 點字 28 點、20 點字 36 點。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '存證信函可以直接用這裡的 Word 檔寄嗎？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text:
+          '不行。存證信函用紙由中華郵政規定，且明文「請依所提供之格式使用，變更樣式內容者，不予收寄」，' +
+          '所以本站不重製用紙，只提供內文。內文已依中華郵政使用說明設定為英數符號全形、字體 18、' +
+          '段落固定行高 34pt 靠左對齊、字元間距加寬 2.9pt；請到中華郵政下載官方用紙後把內文貼上，字就會落在格子內。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '這些範本要付費或註冊嗎？',
+      acceptedAnswer: { '@type': 'Answer', text: '不用。直接下載，用 Word 或 LibreOffice 開啟後自行編輯即可。' },
+    },
+  ],
+};
+---
+
+<BaseLayout title="公文格式 Word 範本下載｜函、公告、開會通知單、簽、存證信函" description={description}>
+  <SiteHeader />
+  <main>
+    <h1>公文格式 Word 範本下載</h1>
+    <p class="lead">
+      共 {total} 份 .docx，下載後用 Word 或 LibreOffice 開啟就能改。
+      版面不是自己排的 —— 字級、行距、縮排、邊界都取自
+      <a href={downloads.source.page} rel="noopener">{downloads.source.name}</a>的原始檔
+      （{downloads.source.promulgated}）。
+    </p>
+
+    <section class="spec">
+      <h2>版面規格</h2>
+      <dl>
+        <div><dt>紙張</dt><dd>A4，上下左右各留 2.5 公分±0.3</dd></div>
+        <div><dt>字型</dt><dd>中文標楷體，英文與阿拉伯數字 Times New Roman</dd></div>
+        <div><dt>機關全銜與文別</dt><dd>20 點字置中</dd></div>
+        <div><dt>受文者、主旨、說明</dt><dd>16 點字靠左</dd></div>
+        <div><dt>發文日期字號、速別、密等、附件、正副本</dt><dd>12 點字</dd></div>
+        <div><dt>頁碼頁尾</dt><dd>10 點字置中</dd></div>
+      </dl>
+    </section>
+
+    <section>
+      <h2>機關公文空白範本</h2>
+      <p>檔號、機關全銜、地址、聯絡方式、發文日期與發文字號都是空白待填欄位。</p>
+      <ul class="files">
+        {officialTemplates.map((t) => (
+          <li>
+            <a href={`${base}downloads/${t.path}`} download={t.filename}>{t.filename}</a>
+            <span>{t.note}</span>
+          </li>
+        ))}
+      </ul>
+      <p class="more">文別怎麼選、期望語怎麼寫，看<a href={`${base}doc-types/`}>文別指南</a>。</p>
+    </section>
+
+    <section>
+      <h2>民眾書件空白範本</h2>
+      <p>
+        向機關申請、陳情，或要正式通知個人與企業時用的。存證信函那份是「內文」 ——
+        用紙由中華郵政規定且不得變更樣式，本站不重製，請到
+        <a href={downloads.postalGuide} rel="noopener">中華郵政</a>下載官方用紙再把內文貼上。
+      </p>
+      <ul class="files">
+        {citizenTemplates.map((t) => (
+          <li>
+            <a href={`${base}downloads/${t.path}`} download={t.filename}>{t.filename}</a>
+            <span>{t.note}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section>
+      <h2>填好內容的公文範例</h2>
+      <p>不想從空白開始的話，直接下載一份寫好的改。每一份都附完整全文與 24 條格式檢核結果。</p>
+      <ul class="files">
+        {caseRows.map((row) => (
+          <li>
+            <a href={`${base}downloads/${row.path}`} download={row.filename}>{row.filename}</a>
+            <span>{row.docType}　<a href={row.href}>看全文與檢核結果</a></span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section>
+      <h2>填好內容的民眾書件與存證信函範例</h2>
+      <ul class="files">
+        {citizenRows.map((row) => (
+          <li>
+            <a href={`${base}downloads/${row.path}`} download={row.filename}>{row.filename}</a>
+            <span>{row.docType}　<a href={row.href}>看全文與檢核結果</a></span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="note-box">
+      <h2>使用前請注意</h2>
+      <ul>
+        <li>所有範例內容都是虛構案例，不代表法律意見；請改成自己的事實與資料後再送出。</li>
+        <li>機關全銜、地址、聯絡方式、發文日期與發文字號留空，請填貴機關實際資料。</li>
+        <li>存證信函一式三份、每格限書一字，用紙與收寄規定以中華郵政公告為準。</li>
+        <li>規範原文與 PDF／DOC／ODT 原始檔在<a href={downloads.source.page} rel="noopener">國家發展委員會檔案管理局</a>。</li>
+      </ul>
+    </section>
+
+    <section class="cta-box">
+      <h2>不想每次都從範本改起</h2>
+      <p>
+        填事由就產草稿、自動跑格式檢核、直接匯出，機關由我們開通帳號；
+        社區發展協會、學校家長會這類小型單位與一般民眾可以自己註冊。
+      </p>
+      <div class="cta-row">
+        <a class="primary" href={SERVICE_LINKS.agencyApply('templates_agency_apply')}>機關申請試用</a>
+        <a class="secondary" href={SERVICE_LINKS.selfRegister('templates_self_register')}>自助註冊</a>
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faq)} />
+</BaseLayout>
+
+<style>
+  main {
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 4rem;
+  }
+  h1 {
+    font-size: var(--text-2xl);
+    line-height: 1.3;
+  }
+  h2 {
+    font-size: var(--text-xl);
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+  }
+  .lead {
+    font-size: var(--text-base);
+    line-height: 1.9;
+    color: var(--color-ink-soft);
+    margin-top: 1rem;
+  }
+  main p {
+    font-size: var(--text-sm);
+    line-height: 1.9;
+    color: var(--color-ink-soft);
+  }
+  main a {
+    color: var(--color-primary);
+  }
+  .spec dl {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0;
+  }
+  .spec div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .spec dt {
+    flex: 0 0 16rem;
+    font-size: var(--text-xs);
+    color: var(--color-ink-muted);
+  }
+  .spec dd {
+    flex: 1 1 18rem;
+    margin: 0;
+    font-size: var(--text-sm);
+  }
+  .files {
+    display: grid;
+    gap: 0.5rem;
+    padding-inline-start: 0;
+    list-style: none;
+  }
+  .files li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .files > li > a {
+    font-size: var(--text-base);
+  }
+  .files span {
+    flex: 1 1 16rem;
+    font-size: var(--text-xs);
+    color: var(--color-ink-soft);
+  }
+  .more {
+    margin-top: 1rem;
+  }
+  .note-box {
+    margin-top: 3rem;
+    padding: 1.5rem 2rem;
+    border-radius: 0.5rem;
+    background: var(--color-bg-light);
+  }
+  .note-box h2 {
+    margin-top: 0;
+  }
+  .note-box ul {
+    display: grid;
+    gap: 0.5rem;
+    padding-inline-start: 1.5rem;
+  }
+  .note-box li {
+    font-size: var(--text-sm);
+    line-height: 1.8;
+    color: var(--color-ink-soft);
+  }
+  .cta-box {
+    margin-top: 3rem;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    background: var(--color-bg-light);
+  }
+  .cta-box h2 {
+    margin-top: 0;
+  }
+  .cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 1.5rem;
+  }
+  .cta-row .primary {
+    font-size: var(--text-base);
+    background: var(--color-accent);
+    color: var(--color-white);
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.375rem;
+    text-decoration: none;
+  }
+  .cta-row .primary:hover {
+    background: var(--color-accent-dark);
+  }
+  .cta-row .secondary {
+    font-size: var(--text-sm);
+  }
+</style>

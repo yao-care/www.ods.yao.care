@@ -5,6 +5,7 @@ import SiteFooter from '../../components/SiteFooter.astro';
 import CaseDemo from '../../components/CaseDemo.astro';
 import { SERVICE_LINKS } from '../../site.config.js';
 import { CITIZEN_EXAMPLES } from '../../data/citizen-examples.js';
+import downloads from '../../data/downloads.json';
 
 export function getStaticPaths() {
   return CITIZEN_EXAMPLES.map((example) => ({
@@ -19,7 +20,16 @@ const base = import.meta.env.BASE_URL.endsWith('/')
   : `${import.meta.env.BASE_URL}/`;
 const failed = example.checks.filter((check) => !check.ok);
 const familyLabel = example.family === 'notice' ? '個人／企業之間' : '民眾對機關';
-const description = `${example.lead} 提供完整${example.draft.doc_type}示範與民眾文件檢核流程。`;
+const description = `${example.lead} 提供完整${example.draft.doc_type}示範、民眾文件檢核流程與可自行編輯的 Word 檔。`;
+const download = downloads.citizens[example.slug] ?? null;
+const isNotice = example.family === 'notice';
+const blankTemplate = downloads.templates.find((t) => t.docType === example.draft.doc_type) ?? null;
+
+// 同族群的其他文件。民眾端明細頁原本只有 /citizens/ 一個入口連進來，
+// Google 只從 sitemap 發現、遲遲不爬（2026-08-19 實測 8/10 頁未爬），所以補上橫向互連。
+const sameFamily = CITIZEN_EXAMPLES.filter((e) => e.family === example.family && e.slug !== example.slug);
+const otherFamily = CITIZEN_EXAMPLES.filter((e) => e.family !== example.family).slice(0, 2);
+const familyLabelOf = (e) => (e.family === 'notice' ? '存證信函' : '民眾對機關');
 ---
 
 <BaseLayout
@@ -51,7 +61,48 @@ const description = `${example.lead} 提供完整${example.draft.doc_type}示範
       draft={example.draft}
       checks={example.checks}
       receiver={example.draft.fields?.receiver ?? null}
+      download={download}
     />
+
+    {download && (
+      <>
+        <h2>下載 Word 自己改</h2>
+        {isNotice ? (
+          <p class="note">
+            存證信函的用紙由中華郵政規定，且明文「請依所提供之格式使用，變更樣式內容者，不予收寄」，
+            所以這裡不重製用紙，只把內文照官方使用說明設定好：英數符號全形、字體 18、
+            段落固定行高 34pt 靠左對齊、字元間距加寬 2.9pt。下載後複製貼進官方用紙，字就會落在格子內。
+          </p>
+        ) : (
+          <p class="note">
+            版面沿用{downloads.source.name}的紙張、邊界、字級與縮排，機關收到時的閱讀感受與內部公文一致。
+            姓名、地址、電話與日期留空待填。
+          </p>
+        )}
+        <ul class="downloads">
+          <li>
+            <a href={`${base}downloads/${download.path}`} download={download.filename}>
+              {download.filename}
+            </a>
+            <span>含本頁全文</span>
+          </li>
+          {blankTemplate && (
+            <li>
+              <a href={`${base}downloads/${blankTemplate.path}`} download={blankTemplate.filename}>
+                {blankTemplate.filename}
+              </a>
+              <span>{blankTemplate.note}</span>
+            </li>
+          )}
+          {isNotice && (
+            <li>
+              <a href={downloads.postalGuide} rel="noopener">中華郵政存證信函官方用紙</a>
+              <span>用紙、使用說明與網路交寄說明都在這一頁（外部連結）</span>
+            </li>
+          )}
+        </ul>
+      </>
+    )}
 
     <h2>這類文件常注意的點</h2>
     <ul class="watch">
@@ -60,6 +111,38 @@ const description = `${example.lead} 提供完整${example.draft.doc_type}示範
     <p class="note">
       民眾文件會依文件族群檢查主旨、段落、請求事項、個資與必要欄位；不會套用機關公文的期望語或簽核規則。
     </p>
+
+    {sameFamily.length > 0 && (
+      <>
+        <h2>{isNotice ? '其他存證信函範例' : '其他民眾書件範例'}</h2>
+        <ul class="related">
+          {sameFamily.map((e) => (
+            <li>
+              <a href={`${base}citizens/${e.slug}/`}>{e.seoTitle}</a>
+              <span>{e.lead}</span>
+            </li>
+          ))}
+        </ul>
+      </>
+    )}
+
+    {otherFamily.length > 0 && (
+      <>
+        <h2>{isNotice ? '要寫給機關的話' : '要通知個人或企業的話'}</h2>
+        <ul class="related">
+          {otherFamily.map((e) => (
+            <li>
+              <a href={`${base}citizens/${e.slug}/`}>{e.seoTitle}</a>
+              <span>{familyLabelOf(e)}</span>
+            </li>
+          ))}
+          <li>
+            <a href={`${base}cases/`}>機關端的公文範例庫</a>
+            <span>函、公告、開會通知單、簽 —— 機關承辦寫的那一邊</span>
+          </li>
+        </ul>
+      </>
+    )}
 
     <section class="cta-box">
       <h2>用自己的事情開始</h2>
@@ -123,6 +206,59 @@ const description = `${example.lead} 提供完整${example.draft.doc_type}示範
 
   .facts dt {
     color: var(--color-ink-muted);
+    font-size: var(--text-xs);
+  }
+
+  .related {
+    display: grid;
+    gap: 0.75rem;
+    padding-inline-start: 0;
+    list-style: none;
+  }
+
+  .related li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .related a {
+    color: var(--color-primary);
+    font-size: var(--text-base);
+  }
+
+  .related span {
+    flex: 1 1 18rem;
+    color: var(--color-ink-soft);
+    font-size: var(--text-xs);
+  }
+
+  .downloads {
+    display: grid;
+    gap: 0.75rem;
+    padding-inline-start: 0;
+    list-style: none;
+  }
+
+  .downloads li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .downloads a {
+    color: var(--color-primary);
+    font-size: var(--text-base);
+  }
+
+  .downloads span {
+    color: var(--color-ink-soft);
     font-size: var(--text-xs);
   }
 

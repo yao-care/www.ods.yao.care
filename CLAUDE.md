@@ -69,14 +69,34 @@ cp -r /tmp/…/out/scenarios /tmp/…/out/scenarios.json /tmp/…/out/knowledge.
 日後要改成打即時 API，前端不用改解析。
 
 `src/data/cases.js` 是本站自己的欄位（slug、搜尋用標題、分類、常踩的點），與上面互補。
+開會通知單那筆另有 `meeting`：應用產出的草稿是**函的形狀**（時間地點寫在說明分項、主旨帶期望語），
+排成正式通知單要拆進規範第八點的固定欄位，這些值放這裡而不是去改 scenarios 的 JSON。
 
 ## 體驗器的設計（`src/components/CaseDemo.astro`）
 
 - **漸進增強**：伺服器端就把公文全文與 24 條檢核渲染進 HTML，沒有 JS 時整頁照樣可讀 ——
   這是本站能被搜到的關鍵，**不要改成 JS 注入**
 - JS 載入後才收合成互動流程：填事由 → 產生草稿（分段進度）→ 結果 → 動作列
-- 凡會改變狀態的動作（改事由、改文別、編輯、儲存、簽核、匯出）一律攔截，跳 gate 對話框導向
+- 凡會改變狀態的動作（改事由、改文別、編輯、儲存、簽核）一律攔截，跳 gate 對話框導向
   申請頁或 `app.ods.yao.care` 自助註冊
+- **下載 Word 不攔截**：範例本身是固定內容，下載不是狀態改變，而且「公文格式 word 範本下載」
+  正是承辦會搜的字串。被攔的是「匯出你自己改過的稿件」，那條路本來就先被編輯 gate 擋住了
+
+## 內鏈結構是這個站的收錄命脈（2026-08-19 的教訓）
+
+民眾端 10 頁上線後只有 2 頁被 Google 爬，8 頁停在 Discovered／unknown，`referringUrls` 全 0；
+同期機關端 9 頁全部 indexed。差別只在內鏈：機關端有首頁直連＋文別頁直連＋案例互連三條路，
+民眾端只有 `/citizens/` 一個入口。**新增任何一批頁面時，同一回合就要補上這三條路**，
+只靠 sitemap 不會被爬。查法：
+
+```bash
+node -e "import('/root/seo-ops/lib/google.mjs').then(async g=>{
+  const r=await g.inspectUrl('/root/.config/yaocare/ga4-sa.json','sc-domain:yao.care','<完整網址>');
+  console.log(r.coverageState, r.lastCrawlTime, r.referringUrls);})"
+```
+
+`/templates/` 是為「公文格式 word」「公文範本下載」這類高意圖字開的落地頁，
+同時也是全站每一頁都連得到的 Word 下載入口（導覽列「格式與用語」群組內）。
 
 ## 三種客群（與應用端的網域架構對應）
 
@@ -84,13 +104,37 @@ cp -r /tmp/…/out/scenarios /tmp/…/out/scenarios.json /tmp/…/out/knowledge.
 - 小型受補助單位（社區發展協會、學校家長會、農會…）→ 共用 `app.ods.yao.care` **自助註冊**
 - 一般民眾／個人或企業 → 共用 `app.ods.yao.care` **自助建立個人工作區**，撰寫民眾對機關書件或存證信函
 
+## 公文正式格式的 Word 從哪來（不要手抄規範）
+
+案例與空白範本的 Word 檔（`public/downloads/**.docx`）是 build 時產生的，版面數值**不是手打的**：
+
+```bash
+pnpm fetch:gov-template   # 只在規範改版時跑：抓官方原檔 → src/data/gov-format.json（要 commit）
+pnpm build:docx           # 每次 build 自動跑：json + 案例資料 → public/downloads/*.docx
+```
+
+- `scripts/fetch-gov-template.mjs` 下載國發會檔案管理局的「政府文書格式參考規範(105年4月)」**ODT
+  原始檔**（ODT 是 zip＋XML，量得到真值；同頁的 PDF／DOC 只能看），逐一解出令／函／公告／
+  開會通知單／簽各欄位的字級、行距、縮排、段距與頁面邊界，寫成 `src/data/gov-format.json`。
+  條文與範例檔打架時以條文為準（腳本會印出修正了哪幾項）。
+- **本主機 IPv6 到 `archives.gov.tw` 不通**，腳本已固定 `curl -4`。
+- `scripts/lib/docx.mjs` 是自幹的最小 OOXML 產生器（zip 也是自己寫的），**不引任何 npm 相依** ——
+  CI 不必裝 LibreOffice，靜態站也不必為了 zip 引前端函式庫。
+- **存證信函不重製郵局用紙**：中華郵政明文「請依所提供之格式使用，變更樣式內容者，不予收寄」。
+  站上只產「內文」，並照其〈使用說明〉設定英數全形、字體 18、固定行高 34pt 靠左、字元間距 2.9pt，
+  使用者貼進官方用紙就會落在格子內；用紙本身給官方連結。
+- `public/downloads/` 是產物，已 gitignore；`src/data/downloads.json`（下載清單）要 commit，
+  頁面靠它產生連結。
+
 ## 常用指令
 
 ```bash
 pnpm dev              # 開發（起了就要記得 kill，主機紅線）
-pnpm build            # check-design && check-content && astro build
+pnpm build            # check-design && check-content && build-docx && astro build
 pnpm check:design
 pnpm check:content:all
+pnpm build:docx       # 只重烘 Word（改案例資料或版面後）
+pnpm fetch:gov-template  # 規範改版才跑（會連外網，需 IPv4）
 ```
 
 ## 待辦（接手時從這裡開始）

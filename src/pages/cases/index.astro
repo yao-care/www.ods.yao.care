@@ -22,6 +22,12 @@ const docTypeOf = (key) => index.items.find((i) => i.key === key)?.doc_type ?? '
       每一則都是完整的公文全文，附上 24 條格式檢核逐條結果。點進去可以照實際流程試做一次。
     </p>
 
+    <p class="cross">
+      不是機關承辦？向機關申請、陳情，或要通知個人與企業的話，看
+      <a href={`${base}citizens/`}>民眾書件與存證信函範例</a>。
+      各文別的空白 Word 範本在<a href={`${base}templates/`}>範本下載</a>。
+    </p>
+
     {CATEGORIES.map((cat) => (
       <section>
         <h2>{cat}</h2>
@@ -61,6 +67,17 @@ const docTypeOf = (key) => index.items.find((i) => i.key === key)?.doc_type ?? '
     line-height: 1.9;
     color: var(--color-ink-soft);
     margin-top: 1rem;
+  }
+  .cross {
+    font-size: var(--text-sm);
+    line-height: 1.9;
+    color: var(--color-ink-soft);
+    margin-top: 1rem;
+    padding: 1rem 0;
+    border-block: 1px solid var(--color-line);
+  }
+  .cross a {
+    color: var(--color-primary);
   }
   .cards {
     list-style: none;

@@ -15,6 +15,12 @@ const registerHref = SERVICE_LINKS.selfRegister('citizens_self_register');
   heading="民眾也有自己的正式書件"
   lead="公文不只存在於機關之間。需要向公家機關提出申請、陳情或申訴，或要正式通知另一個人／企業時，都需要清楚、可審閱的文字。"
 >
+  <p class="cross">
+    你是機關承辦？函、公告、開會通知單、簽的範例在<a href={`${base}cases/`}>公文範例庫</a>，
+    文別怎麼選看<a href={`${base}doc-types/`}>文別指南</a>，
+    各文別的空白 Word 範本在<a href={`${base}templates/`}>範本下載</a>。
+  </p>
+
   <section class="showcase">
     <div class="section-intro">
       <p class="eyebrow">先看一份示意</p>
@@ -102,6 +108,19 @@ const registerHref = SERVICE_LINKS.selfRegister('citizens_self_register');
 </ArticlePage>
 
 <style>
+  .cross {
+    margin-top: 0;
+    padding: 1rem 0;
+    border-block: 1px solid var(--color-line);
+    color: var(--color-ink-soft);
+    font-size: var(--text-sm);
+    line-height: 1.9;
+  }
+
+  .cross a {
+    color: var(--color-primary);
+  }
+
   .showcase {
     margin-top: 3rem;
     padding: 1.5rem;

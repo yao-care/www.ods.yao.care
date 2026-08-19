@@ -6,6 +6,7 @@ import CaseDemo from '../../components/CaseDemo.astro';
 import { SERVICE_LINKS } from '../../site.config.js';
 import { CASES } from '../../data/cases.js';
 import index from '../../data/scenarios.json';
+import downloads from '../../data/downloads.json';
 
 const payloads = import.meta.glob('../../data/scenarios/*.json', { eager: true });
 
@@ -21,9 +22,12 @@ const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 
+const download = downloads.cases[caseMeta.slug] ?? null;
+const blankTemplate = downloads.templates.find((t) => t.docType === payload.draft.doc_type) ?? null;
+
 const related = CASES.filter((c) => c.category === caseMeta.category && c.slug !== caseMeta.slug);
 const failed = payload.checks.filter((c) => !c.ok);
-const caseDescription = `${caseMeta.lead} 提供完整${payload.draft.doc_type}範例全文與 24 條格式檢核結果。`;
+const caseDescription = `${caseMeta.lead} 提供完整${payload.draft.doc_type}範例全文、24 條格式檢核結果與可自行編輯的 Word 檔。`;
 const caseUrl = new URL(Astro.url.pathname, Astro.site).href;
 
 const articleSchema = {
@@ -94,7 +98,42 @@ const faq = {
       draft={payload.draft}
       checks={payload.checks}
       receiver={listing?.receiver ?? null}
+      download={download}
     />
+
+    {download && (
+      <>
+        <h2>下載 Word 自己改</h2>
+        <p class="note">
+          版面取自{downloads.source.name}（{downloads.source.promulgated}）的原始檔：
+          A4、四邊 2.5 公分邊界、中文標楷體、英數 Times New Roman，機關全銜與文別 20 點字、
+          主旨與說明 16 點字、發文資訊 12 點字、頁碼 10 點字。
+        </p>
+        {caseMeta.meeting && (
+          <p class="note">
+            上面示範的草稿把開會時間與地點寫在說明分項裡；Word 版依規範第八點把它們拆進
+            開會事由、開會時間、開會地點、主持人、聯絡人及電話這幾個固定欄位，備註只留下與會事項。
+            這正是這類案子最常被退的地方。
+          </p>
+        )}
+        <ul class="downloads">
+          <li>
+            <a href={`${base}downloads/${download.path}`} download={download.filename}>
+              {caseMeta.seoTitle}.docx
+            </a>
+            <span>含本頁全文，機關全銜、地址、發文日期與字號留空待填</span>
+          </li>
+          {blankTemplate && (
+            <li>
+              <a href={`${base}downloads/${blankTemplate.path}`} download={blankTemplate.filename}>
+                {blankTemplate.filename}
+              </a>
+              <span>{blankTemplate.note}</span>
+            </li>
+          )}
+        </ul>
+      </>
+    )}
 
     <h2>這類案子常踩的點</h2>
     <ul class="watch">
@@ -182,6 +221,28 @@ const faq = {
     font-size: var(--text-sm);
     color: var(--color-ink-soft);
     margin-bottom: 1rem;
+  }
+  .downloads {
+    display: grid;
+    gap: 0.75rem;
+    padding-inline-start: 0;
+    list-style: none;
+  }
+  .downloads li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .downloads a {
+    font-size: var(--text-base);
+    color: var(--color-primary);
+  }
+  .downloads span {
+    font-size: var(--text-xs);
+    color: var(--color-ink-soft);
   }
   .watch,
   .related {

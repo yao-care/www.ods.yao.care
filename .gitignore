@@ -3,3 +3,4 @@ dist/
 .astro/
 .source/
 seo-data/
+public/downloads/

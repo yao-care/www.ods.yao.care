@@ -1,0 +1,173 @@
+{
+  "source": {
+    "page": "https://www.archives.gov.tw/tw/arctw/156-3145.html",
+    "odt": "https://www.archives.gov.tw/wSite/public/Attachment/0/f1716517318514.odt",
+    "name": "政府文書格式參考規範(105年4月)",
+    "promulgated": "中華民國105年4月1日行政院院授發檔(資)字第1050008178號函修正"
+  },
+  "postalGuide": "https://www.post.gov.tw/post/internet/Download/index.jsp?ID=220301",
+  "cases": {
+    "grant-settlement": {
+      "path": "cases/grant-settlement.docx",
+      "filename": "補助經費核銷公文範例.docx",
+      "docType": "函"
+    },
+    "subsidy-application": {
+      "path": "cases/subsidy-application.docx",
+      "filename": "申請中央補助計畫公文範例.docx",
+      "docType": "函"
+    },
+    "road-repair": {
+      "path": "cases/road-repair.docx",
+      "filename": "民眾陳情轉請權責單位處理公文範例.docx",
+      "docType": "函"
+    },
+    "noise-petition-reply": {
+      "path": "cases/noise-petition-reply.docx",
+      "filename": "民眾陳情案函復範例.docx",
+      "docType": "書函"
+    },
+    "meeting-notice": {
+      "path": "cases/meeting-notice.docx",
+      "filename": "開會通知單範例.docx",
+      "docType": "開會通知單"
+    },
+    "open-burning-notice": {
+      "path": "cases/open-burning-notice.docx",
+      "filename": "行政公告範例.docx",
+      "docType": "公告"
+    },
+    "procurement-sign": {
+      "path": "cases/procurement-sign.docx",
+      "filename": "簽辦採購案範例.docx",
+      "docType": "簽"
+    },
+    "low-income-review": {
+      "path": "cases/low-income-review.docx",
+      "filename": "社會救助資格審查結果通知範例.docx",
+      "docType": "函"
+    }
+  },
+  "citizens": {
+    "petition-noise": {
+      "path": "citizens/petition-noise.docx",
+      "filename": "陳情書範例－反映夜間噪音.docx",
+      "docType": "陳情書",
+      "family": "citizen"
+    },
+    "subsidy-application": {
+      "path": "citizens/subsidy-application.docx",
+      "filename": "申請書範例－申請租金補助.docx",
+      "docType": "申請書",
+      "family": "citizen"
+    },
+    "appeal-benefit": {
+      "path": "citizens/appeal-benefit.docx",
+      "filename": "申訴書範例－對補助審查結果提出申訴.docx",
+      "docType": "申訴書",
+      "family": "citizen"
+    },
+    "case-explanation": {
+      "path": "citizens/case-explanation.docx",
+      "filename": "說明書範例－補充案件經過與資料.docx",
+      "docType": "說明書",
+      "family": "citizen"
+    },
+    "certified-letter": {
+      "path": "citizens/certified-letter.docx",
+      "filename": "存證信函範例－通知返還租賃押金.docx",
+      "docType": "存證信函",
+      "family": "notice"
+    },
+    "certified-letter-debt": {
+      "path": "citizens/certified-letter-debt.docx",
+      "filename": "存證信函範例－催告返還借款.docx",
+      "docType": "存證信函",
+      "family": "notice"
+    },
+    "certified-letter-consumer-refund": {
+      "path": "citizens/certified-letter-consumer-refund.docx",
+      "filename": "存證信函範例－催告商品瑕疵退款.docx",
+      "docType": "存證信函",
+      "family": "notice"
+    },
+    "certified-letter-repair": {
+      "path": "citizens/certified-letter-repair.docx",
+      "filename": "存證信函範例－催告租屋漏水修繕.docx",
+      "docType": "存證信函",
+      "family": "notice"
+    },
+    "certified-letter-contract-termination": {
+      "path": "citizens/certified-letter-contract-termination.docx",
+      "filename": "存證信函範例－通知終止服務契約.docx",
+      "docType": "存證信函",
+      "family": "notice"
+    }
+  },
+  "templates": [
+    {
+      "slug": "official-letter",
+      "label": "函",
+      "docType": "函",
+      "note": "對上級用「請鑒核」，對平行或下級用「請查照」，期望語寫在主旨句末。",
+      "path": "templates/official-letter.docx",
+      "filename": "函空白範本.docx"
+    },
+    {
+      "slug": "official-memo",
+      "label": "書函",
+      "docType": "書函",
+      "note": "規範第六點：書函比照函辦理，用於洽詢、答復或不需正式行文的案件。",
+      "path": "templates/official-memo.docx",
+      "filename": "書函空白範本.docx"
+    },
+    {
+      "slug": "public-notice",
+      "label": "公告",
+      "docType": "公告",
+      "note": "公告沒有受文者，印信蓋於發文字號與公告內容之間右方，段名為主旨、依據、公告事項。",
+      "path": "templates/public-notice.docx",
+      "filename": "公告空白範本.docx"
+    },
+    {
+      "slug": "meeting-notice",
+      "label": "開會通知單",
+      "docType": "開會通知單",
+      "note": "開會事由、時間、地點、主持人、聯絡人及電話是固定欄位，不要塞進主旨。",
+      "path": "templates/meeting-notice.docx",
+      "filename": "開會通知單空白範本.docx"
+    },
+    {
+      "slug": "internal-sign",
+      "label": "簽",
+      "docType": "簽",
+      "note": "簽是對內文書，段名為主旨、說明、擬辦，結尾用「簽請核示」或「簽請鑒核」。",
+      "path": "templates/internal-sign.docx",
+      "filename": "簽空白範本.docx"
+    },
+    {
+      "slug": "citizen-petition",
+      "label": "陳情書",
+      "docType": "陳情書",
+      "note": "民眾對機關的書件，段名為事實與理由、請求事項、附件。",
+      "path": "templates/citizen-petition.docx",
+      "filename": "陳情書空白範本.docx"
+    },
+    {
+      "slug": "citizen-application",
+      "label": "申請書",
+      "docType": "申請書",
+      "note": "申請事由、依據與檢附文件分開寫，機關才不必來電補問。",
+      "path": "templates/citizen-application.docx",
+      "filename": "申請書空白範本.docx"
+    },
+    {
+      "slug": "certified-letter",
+      "label": "存證信函內文",
+      "docType": "存證信函",
+      "note": "格式已依中華郵政使用說明設定；用紙請至中華郵政官網下載，再把內文貼上。",
+      "path": "templates/certified-letter.docx",
+      "filename": "存證信函內文空白範本.docx"
+    }
+  ]
+}

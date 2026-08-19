@@ -1,0 +1,299 @@
+{
+  "source": {
+    "page": "https://www.archives.gov.tw/tw/arctw/156-3145.html",
+    "odt": "https://www.archives.gov.tw/wSite/public/Attachment/0/f1716517318514.odt",
+    "name": "政府文書格式參考規範(105年4月)",
+    "promulgated": "中華民國105年4月1日行政院院授發檔(資)字第1050008178號函修正"
+  },
+  "extractedFrom": "ODT",
+  "page": {
+    "name": "Mpm1",
+    "widthPt": 595.3,
+    "heightPt": 841.89,
+    "marginTopPt": 62.96,
+    "marginBottomPt": 72,
+    "marginLeftPt": 72,
+    "marginRightPt": 73.45
+  },
+  "styles": {
+    "archive_no": {
+      "fontSize": 10,
+      "marginTop": 0,
+      "marginBottom": 0,
+      "lineHeight": 10.01
+    },
+    "retention": {
+      "fontSize": 10,
+      "marginTop": 0,
+      "marginBottom": 0,
+      "lineHeight": 7
+    },
+    "issue_date": {
+      "fontSize": 12,
+      "lineHeight": 15,
+      "marginTop": 10.94,
+      "marginBottom": 0
+    },
+    "issue_no": {
+      "fontSize": 12,
+      "lineHeight": 15
+    },
+    "seal": {
+      "fontSize": 18,
+      "marginLeft": 0,
+      "textIndent": 207.01
+    },
+    "contact": {
+      "fontSize": 12,
+      "lineHeight": 15,
+      "marginLeft": 253.7,
+      "textIndent": -56.41
+    },
+    "receiver": {
+      "fontSize": 16,
+      "lineHeight": 25
+    },
+    "speed": {
+      "fontSize": 12,
+      "lineHeight": 15
+    },
+    "classification": {
+      "fontSize": 12,
+      "lineHeight": 15
+    },
+    "attachment": {
+      "fontSize": 12,
+      "lineHeight": 15
+    },
+    "subject": {
+      "fontSize": 16,
+      "lineHeight": 25,
+      "marginLeft": 49.66,
+      "textIndent": -49.66
+    },
+    "section_head": {
+      "fontSize": 16,
+      "marginLeft": 47.65,
+      "textIndent": -47.65,
+      "lineHeight": 25
+    },
+    "copy_to": {
+      "fontSize": 12,
+      "lineHeight": 15,
+      "marginLeft": 35.69,
+      "textIndent": -35.69,
+      "marginTop": 6.01,
+      "marginBottom": 0
+    },
+    "cc_to": {
+      "fontSize": 12,
+      "lineHeight": 15,
+      "marginLeft": 36,
+      "textIndent": -36
+    },
+    "signature": {
+      "fontSize": 12,
+      "lineHeight": 15,
+      "marginLeft": 36,
+      "textIndent": -36
+    },
+    "item": {
+      "fontSize": 16,
+      "marginLeft": 49.66,
+      "textIndent": -33.79,
+      "lineHeight": 25
+    },
+    "agency_address": {
+      "fontSize": 12,
+      "lineHeight": 15,
+      "marginLeft": 229.61,
+      "textIndent": -32.29
+    },
+    "basis_head": {
+      "fontSize": 16,
+      "marginLeft": 47.59,
+      "textIndent": -47.59,
+      "lineHeight": 25
+    },
+    "items_head": {
+      "fontSize": 16,
+      "marginLeft": 79.34,
+      "textIndent": -79.34,
+      "lineHeight": 25
+    },
+    "meeting_topic": {
+      "fontSize": 16,
+      "lineHeight": 25
+    },
+    "meeting_time": {
+      "fontSize": 16,
+      "lineHeight": 25
+    },
+    "meeting_place": {
+      "fontSize": 16,
+      "lineHeight": 25,
+      "marginLeft": 79.99,
+      "textIndent": -79.99
+    },
+    "meeting_chair": {
+      "fontSize": 16,
+      "lineHeight": 25
+    },
+    "meeting_contact": {
+      "fontSize": 16,
+      "lineHeight": 25
+    },
+    "attendees": {
+      "fontSize": 12,
+      "lineHeight": 15
+    },
+    "observers": {
+      "fontSize": 12,
+      "lineHeight": 15,
+      "marginLeft": 49.66,
+      "textIndent": -49.66
+    },
+    "remarks": {
+      "fontSize": 16,
+      "lineHeight": 25,
+      "marginLeft": 47.65,
+      "textIndent": -47.65
+    },
+    "stamp": {
+      "fontSize": 16,
+      "lineHeight": 25,
+      "marginLeft": 47.65,
+      "textIndent": -47.65
+    },
+    "agency_title": {
+      "fontSize": 20,
+      "lineHeight": 36,
+      "align": "center",
+      "bold": true
+    },
+    "sign_title": {
+      "fontSize": 20,
+      "lineHeight": 36,
+      "bold": true
+    }
+  },
+  "samples": {
+    "archive_no": "檔　　號：",
+    "retention": "保存年限：",
+    "issue_date": "發文日期：中華民國000年00月00日",
+    "issue_no": "發文字號：○○字第0000000000號",
+    "seal": "（印信位置）",
+    "contact": "聯絡方式：（承辦人、電話、傳真、e-mail）",
+    "receiver": "受文者：勞動部",
+    "speed": "速別：普通件",
+    "classification": "密等及解密條件或保密期限：",
+    "attachment": "附件：議程資料",
+    "subject": "主旨：請派員踴躍參加「2015網際網路趨勢研討會」，並轉知所屬，請查照。",
+    "section_head": "說明：",
+    "copy_to": "正本：行政院各部會行總處署、臺灣省政府、臺灣省諮議會、福建省政府、各直轄市政府、",
+    "cc_to": "副本：國家發展委員會資訊管理處、國家發展委員會檔案管理局、全國政府機關電子公布欄",
+    "signature": "主任委員  ○  ○  ○",
+    "item": "一、為探討全球重要域名發展新趨勢及其相關應用，財團法人臺灣網路資訊中心訂於本(1",
+    "agency_address": "地址：10020臺北市中正區寶慶路3號",
+    "basis_head": "依據：「行政程序法」第十五條及「公民投票法施行細則」第十三條。",
+    "items_head": "公告事項：",
+    "meeting_topic": "開會事由：行政院交議內政部「晶片國民身分證全面換發計畫(草案)」審議第1次會議",
+    "meeting_time": "開會時間：中華民國104年11月4日（星期三）下午3時",
+    "meeting_place": "開會地點：本會寶慶辦公區B136會議室(臺北市寶慶路3號B1樓)",
+    "meeting_chair": "主持人：○副主任委員○○",
+    "meeting_contact": "聯絡人及電話：○○○ 02-23165300分機1234",
+    "attendees": "出席者：內政部、外交部、財政部、法務部、交通部、衛生福利部、金融監督管理委員會、",
+    "observers": "列席者：",
+    "remarks": "備註：本次會議不列印紙本資料，請與會人員先行下載會議資料攜帶與會。",
+    "stamp": "（條戳）",
+    "agency_title": "（具名樣式「全銜」）",
+    "sign_title": "（比照全銜，靠左）"
+  },
+  "blocks": {
+    "letter": {
+      "docTypes": [
+        "函",
+        "書函"
+      ],
+      "note": "規範第六點；書函比照函辦理",
+      "order": [
+        "archive_no",
+        "retention",
+        "agency_title",
+        "agency_address",
+        "contact",
+        "receiver",
+        "issue_date",
+        "issue_no",
+        "speed",
+        "classification",
+        "attachment",
+        "subject",
+        "sections",
+        "copy_to",
+        "cc_to",
+        "signature"
+      ]
+    },
+    "notice": {
+      "docTypes": [
+        "公告"
+      ],
+      "note": "規範第七點；公告無受文者，印信蓋於發文字號與公告內容之間右方",
+      "order": [
+        "archive_no",
+        "retention",
+        "agency_title",
+        "issue_date",
+        "issue_no",
+        "seal",
+        "subject",
+        "basis",
+        "items",
+        "signature"
+      ]
+    },
+    "meeting": {
+      "docTypes": [
+        "開會通知單",
+        "會勘通知單"
+      ],
+      "note": "規範第八點",
+      "order": [
+        "archive_no",
+        "retention",
+        "agency_title",
+        "receiver",
+        "issue_date",
+        "issue_no",
+        "speed",
+        "classification",
+        "attachment",
+        "meeting_topic",
+        "meeting_time",
+        "meeting_place",
+        "meeting_chair",
+        "meeting_contact",
+        "attendees",
+        "observers",
+        "cc_to",
+        "remarks",
+        "stamp"
+      ]
+    },
+    "sign": {
+      "docTypes": [
+        "簽"
+      ],
+      "note": "規範第九點；年月日位置由各機關律定",
+      "order": [
+        "archive_no",
+        "retention",
+        "sign_title",
+        "subject",
+        "sections",
+        "signature"
+      ]
+    }
+  }
+}

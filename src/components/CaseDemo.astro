@@ -17,10 +17,13 @@ interface Props {
   checks: { id: string; title: string; severity: string; ok: boolean; detail?: string }[];
   receiver: string | null;
   family?: 'official' | 'citizen' | 'notice';
+  /** 正式格式的 Word 檔（由 scripts/build-docx.mjs 依政府文書格式參考規範產生）。 */
+  download?: { path: string; filename: string } | null;
 }
 import { SERVICE_LINKS } from '../site.config.js';
 
 const { scenario, draft, checks, receiver } = Astro.props;
+const download = Astro.props.download ?? null;
 const family = Astro.props.family ?? draft.document_family ?? 'official';
 const isOfficial = family === 'official';
 const isNotice = family === 'notice';
@@ -155,8 +158,21 @@ const passed = checks.filter((c) => c.ok).length;
       <button type="button" data-gate="edit">開啟編輯</button>
       <button type="button" data-gate="save">儲存並重新檢核</button>
       {isOfficial && <button type="button" data-gate="confirm">簽核確認</button>}
-      <button type="button" data-gate="export">{isOfficial ? '匯出純文字' : '匯出純文字／Word'}</button>
+      {download ? (
+        <a class="download" href={`${base}downloads/${download.path}`} download={download.filename}>
+          下載 Word（正式格式）
+        </a>
+      ) : (
+        <button type="button" data-gate="export">匯出文件</button>
+      )}
     </div>
+    {download && (
+      <p class="download-note">
+        {isNotice
+          ? '下載的是存證信函內文，字體、行高與字元間距已依中華郵政使用說明設定，貼進郵局官方用紙即可。'
+          : `下載的${title}已套用${isOfficial ? '政府文書格式參考規範' : '規範'}的紙張、邊界、字級與縮排，開啟後直接改成自己的內容。`}
+      </p>
+    )}
   </article>
 </section>
 
@@ -495,6 +511,27 @@ const passed = checks.filter((c) => c.ok).length;
   }
   .actions button:hover {
     background: var(--color-bg-light);
+  }
+  /* 下載是這裡唯一不用帳號就能完成的動作，用實心底色跟被攔截的按鈕分開。 */
+  .actions .download {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    background: var(--color-primary);
+    color: var(--color-white);
+    border: 1px solid var(--color-primary);
+    border-radius: 0.375rem;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+  }
+  .actions .download:hover {
+    background: var(--color-primary-a80);
+  }
+  .download-note {
+    font-size: var(--text-xs);
+    line-height: 1.8;
+    color: var(--color-ink-soft);
+    margin: 0;
+    padding: 0 1.25rem 1.25rem;
   }
 
   .gate {

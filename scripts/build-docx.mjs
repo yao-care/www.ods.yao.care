@@ -77,6 +77,9 @@ for (const caseMeta of CASES) {
     sections: draft.sections,
     receiver: draft.fields?.receiver ?? '',
     unit: draft.unit,
+    // 開會通知單的內容全在 fields（應用端自 2026-08-20 起直接產規範第八點的固定欄位）；
+    // caseMeta.meeting 只留作重烘前舊資料的後備。
+    fields: draft.fields ?? {},
     meeting: caseMeta.meeting,
   };
   const file = `cases/${caseMeta.slug}.docx`;

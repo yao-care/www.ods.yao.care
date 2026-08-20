@@ -30,7 +30,9 @@ export function meetingRemarks(draft, meeting = {}) {
 
 /**
  * 把「函形狀的草稿 + cases.js 的 meeting」組成規範第八點的欄位。
- * 值為空字串代表該欄位在規範裡存在但這則範例沒有內容，頁面與 Word 都留空待填。
+ * 只回**內容**欄位。「副本」與「正本」是信封欄位（跟檔號、發文日期、發文字號同一類），
+ * Word 上照規範第八點的順序排出來，但頁面不列——案例頁對「函」也只顯示主旨與段落，
+ * 不顯示正本副本，開會通知單沒有道理特別列一個。
  */
 export function meetingFields(draft, meeting = {}) {
   const remarks = meetingRemarks(draft, meeting);
@@ -46,7 +48,6 @@ export function meetingFields(draft, meeting = {}) {
     { label: '聯絡人及電話', value: pick('meeting_contact', meeting.contact) },
     { label: '出席者', value: pick('attendees', meeting.attendees ?? f.receiver) },
     { label: '列席者', value: f.observers ?? '' },
-    { label: '副本', value: '' },
     { label: '備註', items: remarks },
   ];
 }

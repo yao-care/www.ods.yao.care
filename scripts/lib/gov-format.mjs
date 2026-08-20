@@ -8,7 +8,7 @@
  * 存證信函另循中華郵政「存證信函格式使用說明」，見本檔末段。
  */
 import { p, blank } from './docx.mjs';
-import { meetingRemarks, stripExpectation } from '../../src/data/meeting.js';
+import { meetingFields, meetingRemarks } from '../../src/data/meeting.js';
 import format from '../../src/data/gov-format.json' with { type: 'json' };
 
 export const PAGE = format.page;
@@ -37,6 +37,12 @@ export function renderOfficial(doc) {
   const block = Object.values(format.blocks).find((b) => b.docTypes.includes(doc.docType))
     ?? format.blocks.letter;
   const meeting = doc.meeting ?? {};
+  // 開會通知單的欄位值統一由 src/data/meeting.js 取，與網頁同一份來源。
+  const meetingValue = (label) => {
+    const row = meetingFields(doc, meeting).find((f) => f.label === label);
+    if (!row) return '';
+    return row.items ? row.items.join('') : row.value;
+  };
   const out = [];
 
   for (const field of block.order) {
@@ -99,29 +105,30 @@ export function renderOfficial(doc) {
       // 開會通知單的固定欄位。草稿是函的形狀（時間地點寫在說明分項、主旨帶期望語），
       // 這裡依 cases.js 的 meeting 欄位拆進規範第八點的欄位；沒給就留空待填。
       case 'meeting_topic':
-        out.push(p(`開會事由：${meeting.topic ?? stripExpectation(doc.subject)}`, S.meeting_topic));
+        out.push(p(`開會事由：${meetingValue('開會事由')}`, S.meeting_topic));
         break;
       case 'meeting_time':
-        out.push(p(`開會時間：${meeting.time ?? '中華民國　　年　　月　　日（星期　）　　午　　時'}`, S.meeting_time));
+        out.push(p(`開會時間：${meetingValue('開會時間') || '中華民國　　年　　月　　日（星期　）　　午　　時'}`, S.meeting_time));
         break;
       case 'meeting_place':
-        out.push(p(`開會地點：${meeting.place ?? ''}`, S.meeting_place));
+        out.push(p(`開會地點：${meetingValue('開會地點')}`, S.meeting_place));
         break;
       case 'meeting_chair':
-        out.push(p(`主持人：${meeting.chair ?? ''}`, S.meeting_chair));
+        out.push(p(`主持人：${meetingValue('主持人')}`, S.meeting_chair));
         break;
       case 'meeting_contact':
-        out.push(p(`聯絡人及電話：${meeting.contact ?? ''}`, S.meeting_contact));
+        out.push(p(`聯絡人及電話：${meetingValue('聯絡人及電話')}`, S.meeting_contact));
         break;
       case 'attendees':
-        out.push(p(`出席者：${meeting.attendees ?? doc.receiver ?? ''}`, S.attendees));
+        out.push(p(`出席者：${meetingValue('出席者')}`, S.attendees));
         break;
       case 'observers':
-        out.push(p('列席者：', S.observers));
+        out.push(p(`列席者：${meetingValue('列席者')}`, S.observers));
         break;
       case 'remarks': {
-        // 開會通知單沒有說明段：草稿的說明／辦法併入備註，但已升格成固定欄位的分項要拿掉，
-        // 否則同一個時間地點會在通知單上出現兩次。
+        // 開會通知單沒有說明段：內容來自應用產出的 remarks 欄位；重烘前的舊資料
+        // 則由 meetingRemarks 從說明／辦法分項組出來（已升格成固定欄位的分項會被扣掉，
+        // 否則同一個時間地點會在通知單上出現兩次）。
         const items = meetingRemarks(doc, meeting);
         out.push(items.length ? sectionBlock({ title: '備註', items }, S.remarks) : p('備註：', S.remarks));
         break;

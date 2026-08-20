@@ -39,3 +39,9 @@ video {
   margin-inline: auto;
   padding-inline: clamp(1rem, 4vw, 2rem);
 }
+
+/* 錨點落點：導覽列是 sticky（min-height 4.75rem），沒有這一條的話，
+   點「本頁章節」跳過去標題會被壓在導覽列底下。留一點餘裕給呼吸空間。 */
+:target {
+  scroll-margin-top: 5.75rem;
+}

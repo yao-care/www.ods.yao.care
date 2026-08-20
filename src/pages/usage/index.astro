@@ -11,6 +11,7 @@
  * 官方 PDF 產生。**不要在這頁手寫規則**——網路流傳的用語表多轉錄自 99 年舊版，各校版本互有出入。
  */
 import ArticlePage from '../../layouts/ArticlePage.astro';
+import PageToc from '../../components/PageToc.astro';
 import terms from '../../data/gov-terms.json';
 
 const base = import.meta.env.BASE_URL.endsWith('/')
@@ -85,6 +86,15 @@ const faqPairs = [
   },
 ];
 
+// 章節的單一真實來源；錨點由 scripts/check-anchors.mjs 守門。
+const S = {
+  address: { id: 'address', label: '一、稱謂語：稱對方什麼、自稱什麼' },
+  expectation: { id: 'expectation', label: '二、期望語與准駁語' },
+  tricky: { id: 'tricky-chars', label: `三、最容易寫錯的 ${tricky.length} 組字` },
+  unified: { id: 'unified-chars', label: `四、法律統一用字表其餘 ${rest.length} 條` },
+  next: { id: 'next', label: '查完之後' },
+};
+
 const schema = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -136,7 +146,9 @@ const faq = {
     由建置腳本直接解析官方檔案產生，沒有經過改寫。
   </p>
 
-  <h2>一、稱謂語：稱對方什麼、自稱什麼</h2>
+  <PageToc items={Object.values(S)} />
+
+  <h2 id={S.address.id}>{S.address.label}</h2>
   <table>
     <thead><tr><th>行文關係</th><th>稱對方</th><th>自稱</th></tr></thead>
     <tbody>
@@ -158,7 +170,7 @@ const faq = {
     <blockquote>{usageRules.indirect}</blockquote>
   </details>
 
-  <h2>二、期望語與准駁語</h2>
+  <h2 id={S.expectation.id}>{S.expectation.label}</h2>
   <table>
     <thead><tr><th>對象／情況</th><th>用語</th></tr></thead>
     <tbody>
@@ -177,7 +189,7 @@ const faq = {
     才列入「辦法」段。訂有辦理或復文期限的，期限要寫進「主旨」。
   </p>
 
-  <h2>三、最容易寫錯的 {tricky.length} 組字</h2>
+  <h2 id={S.tricky.id}>{S.tricky.label}</h2>
   <p>法律統一用字表裡有附說明的都在這裡 —— 有說明，通常就代表它常被寫錯。</p>
   <table>
     <thead><tr><th>用字舉例</th><th>用</th><th>不用</th><th>說明</th></tr></thead>
@@ -193,7 +205,7 @@ const faq = {
     </tbody>
   </table>
 
-  <h2>四、法律統一用字表其餘 {rest.length} 條</h2>
+  <h2 id={S.unified.id}>{S.unified.label}</h2>
   <table>
     <thead><tr><th>用字舉例</th><th>用</th><th>不用</th></tr></thead>
     <tbody>
@@ -207,7 +219,7 @@ const faq = {
     </tbody>
   </table>
 
-  <h2>查完之後</h2>
+  <h2 id={S.next.id}>{S.next.label}</h2>
   <p>
     三段怎麼分、擬稿有哪些規定，看<a href={`${base}writing/`}>公文怎麼寫</a>。
     文別選錯的話，後面的期望語與段落結構都會跟著錯 —— 先看<a href={`${base}doc-types/`}>文別怎麼選</a>。

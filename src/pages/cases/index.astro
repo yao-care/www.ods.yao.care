@@ -4,11 +4,16 @@ import SiteHeader from '../../components/SiteHeader.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import { CASES, CATEGORIES } from '../../data/cases.js';
 import index from '../../data/scenarios.json';
+// 條目數取實際產物，不寫死 —— 函與開會通知單各有一組，數字改版時這頁跟著變。
+import letterSample from '../../data/scenarios/grant_report.json';
+import meetingSample from '../../data/scenarios/meeting.json';
 
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 const docTypeOf = (key) => index.items.find((i) => i.key === key)?.doc_type ?? '';
+const letterChecks = letterSample.checks.length;
+const meetingChecks = meetingSample.checks.length;
 
 // 案例庫是本站主體，但這個 hub 頁原本只有 BaseLayout 的全站兩條 schema，
 // 明細頁 /cases/<slug>/ 反而有 Article＋麵包屑。列表頁補 CollectionPage 才接得起來。
@@ -44,6 +49,42 @@ const schema = {
     },
   ],
 };
+
+// 列表頁原本只有 CollectionPage。「公文範例去哪裡找」「補助核銷公文怎麼寫」
+// 這類問句的落點就是這一頁，補上 FAQPage 才吃得到問句型結果。
+const faqPairs = [
+  {
+    q: '公文範例去哪裡找？',
+    a: `這一頁收了 ${CASES.length} 則地方機關的公文全文，涵蓋函、書函、公告、簽與開會通知單，`
+      + '每一則都是完整的一份文件，包含受文者、主旨、分項說明與期望語，並附逐條格式檢核結果。'
+      + '各文別的空白 Word 範本另外放在範本下載頁。',
+  },
+  {
+    q: '補助經費核銷的公文怎麼寫？',
+    a: '用「函」行文給補助機關，主旨寫明檢陳哪一年度、哪個計畫的核銷資料與期望語；'
+      + '說明段交代核定金額、實支金額與餘款繳回方式；金額依公文書橫式書寫數字使用原則處理，'
+      + '附件清單逐項列出。範例庫的補助經費核銷那則是完整全文。',
+  },
+  {
+    q: '這些範例可以直接拿來改嗎？',
+    a: '可以。每一則都提供 Word 檔下載，版面數值取自政府文書格式參考規範的原始檔，'
+      + '下載後直接編輯即可。範例中的機關、人名與案號都是虛構的，套用前要換成實際資料。',
+  },
+  {
+    q: '公文格式檢核會檢查幾條？',
+    a: `依文別而定：函、書函、公告、簽是 ${letterChecks} 條；`
+      + `開會通知單是固定欄位表單，不套主旨與段落那兩組，改查它自己的欄位，共 ${meetingChecks} 條。`,
+  },
+];
+const faq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqPairs.map((p) => ({
+    '@type': 'Question',
+    name: p.q,
+    acceptedAnswer: { '@type': 'Answer', text: p.a },
+  })),
+};
 ---
 
 <BaseLayout
@@ -54,8 +95,8 @@ const schema = {
   <main>
     <h1>公文範例庫</h1>
     <p class="lead">
-      每一則都是完整的公文全文，附上逐條格式檢核結果（函、簽、書函、公告 24 條；
-      開會通知單是固定欄位表單，另有 22 條）。點進去可以照實際流程試做一次。
+      每一則都是完整的公文全文，附上逐條格式檢核結果（函、簽、書函、公告 {letterChecks} 條；
+      開會通知單是固定欄位表單，另有 {meetingChecks} 條）。點進去可以照實際流程試做一次。
     </p>
 
     <p class="cross">
@@ -87,6 +128,7 @@ const schema = {
   </main>
   <SiteFooter />
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faq)} />
 </BaseLayout>
 
 <style>

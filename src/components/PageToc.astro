@@ -1,0 +1,58 @@
+---
+/**
+ * 本頁目錄（2026-08-20）。
+ *
+ * 為什麼加：實查上線後六支長參考頁（/writing/、/usage/、/checks/、/doc-types/、
+ * /citizens/which-route/、/citizens/certified-letter-guide/）的 HTML，`id=` 屬性數量
+ * 全部是 0 —— 沒有錨點就沒有段落深連結，Google 的「跳至相關部分」也沒有落點可指。
+ * 像 pinned query「公文數字寫法」對應的是 /writing/ 的第六節，在此之前連不進去。
+ *
+ * 用法：頁面在 frontmatter 宣告一份章節物件當單一真實來源，<h2> 的 id 與 label
+ * 都從那份取，目錄吃同一份陣列 —— 標題改字不會跟目錄對不上。
+ *   const S = { numbers: { id: 'numbers', label: '六、數字怎麼寫' }, … };
+ *   <PageToc items={Object.values(S)} />
+ *   <h2 id={S.numbers.id}>{S.numbers.label}</h2>
+ *
+ * 漂移由 scripts/check-anchors.mjs 在 astro build 之後守門：站內 #錨點連結
+ * 指到不存在的 id 就擋 build。
+ */
+interface Props {
+  items: { id: string; label: string }[];
+  label?: string;
+}
+const { items, label = '本頁章節' } = Astro.props;
+---
+
+<nav class="toc" aria-label={label}>
+  <p class="toc-title">{label}</p>
+  <ol>
+    {items.map((it) => (
+      <li><a href={`#${it.id}`}>{it.label}</a></li>
+    ))}
+  </ol>
+</nav>
+
+<style>
+  .toc {
+    margin-block: 2rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.375rem;
+    background: var(--color-bg-light);
+  }
+  .toc-title {
+    margin: 0 0 0.5rem;
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+  .toc ol {
+    margin: 0;
+    padding-inline-start: 1.25rem;
+    display: grid;
+    gap: 0.375rem;
+  }
+  .toc li {
+    font-size: var(--text-sm);
+    line-height: 1.7;
+  }
+</style>

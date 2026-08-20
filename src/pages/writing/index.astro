@@ -11,6 +11,7 @@
  * 解析行政院《文書處理手冊》官方 PDF 產生。**不要在這頁手寫規則。**
  */
 import ArticlePage from '../../layouts/ArticlePage.astro';
+import PageToc from '../../components/PageToc.astro';
 import terms from '../../data/gov-terms.json';
 import { CASES } from '../../data/cases.js';
 
@@ -85,6 +86,19 @@ const faqPairs = [
   },
 ];
 
+// 章節的單一真實來源：<h2> 的 id 與文字、目錄的連結全部取這一份。
+// 錨點存在與否由 scripts/check-anchors.mjs 在 build 後守門。
+const S = {
+  sections: { id: 'three-sections', label: '一、三段各自在回答什麼' },
+  letter: { id: 'letter-notes', label: `二、「函」的 ${drafting.letterNotes.length} 條撰擬要領` },
+  sign: { id: 'sign', label: '三、「簽」不是「函」：三段是主旨、說明、擬辦' },
+  announce: { id: 'announcement', label: '四、「公告」是第三種：主旨、依據、公告事項' },
+  cautions: { id: 'cautions', label: `五、擬稿的 ${drafting.cautions.length} 條注意事項` },
+  numbers: { id: 'numbers', label: '六、數字什麼時候用阿拉伯數字、什麼時候用中文數字' },
+  quality: { id: 'quality', label: '七、公文書的品質要求' },
+  examples: { id: 'examples', label: '看規則怎麼落到紙上' },
+};
+
 const schema = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -136,7 +150,9 @@ const faq = {
     稱謂語與期望語怎麼配對象，查<a href={`${base}usage/`}>公文用語表</a>。
   </p>
 
-  <h2>一、三段各自在回答什麼</h2>
+  <PageToc items={Object.values(S)} />
+
+  <h2 id={S.sections.id}>{S.sections.label}</h2>
   {SECTIONS.map((s) => (
     <section class="seg">
       <h3>{s.name}：{s.asks}</h3>
@@ -146,13 +162,13 @@ const faq = {
   ))}
   <p class="note">{drafting.sections.flexible}</p>
 
-  <h2>二、「函」的 {drafting.letterNotes.length} 條撰擬要領</h2>
+  <h2 id={S.letter.id}>{S.letter.label}</h2>
   <p>手冊對「函」的正文另外點名了這幾件事，都是承辦最常漏的。</p>
   <ol class="rules">
     {drafting.letterNotes.map((t) => <li>{t}</li>)}
   </ol>
 
-  <h2>三、「簽」不是「函」：三段是主旨、說明、擬辦</h2>
+  <h2 id={S.sign.id}>{S.sign.label}</h2>
   <p>
     這是最容易搞混的地方 —— 簽的第三段叫「<strong>擬辦</strong>」，不是「辦法」。
     簽是對內陳報長官核示用的上行文，重點在於你要建議長官怎麼決定。
@@ -177,7 +193,7 @@ const faq = {
     {sign.style.map((t) => <li>{t}</li>)}
   </ul>
 
-  <h2>四、「公告」是第三種：主旨、依據、公告事項</h2>
+  <h2 id={S.announce.id}>{S.announce.label}</h2>
   <p>
     公告既不是函的「辦法」，也不是簽的「擬辦」——它的三段是
     <strong>主旨、依據、公告事項</strong>。依據段引據法規條文名稱或機關來函；
@@ -188,12 +204,12 @@ const faq = {
     三種文別的段名對照，以及各文別的用印方式，整理在<a href={`${base}doc-types/`}>文別怎麼選</a>。
   </p>
 
-  <h2>五、擬稿的 {drafting.cautions.length} 條注意事項</h2>
+  <h2 id={S.cautions.id}>{S.cautions.label}</h2>
   <ol class="rules">
     {drafting.cautions.map((t) => <li>{t}</li>)}
   </ol>
 
-  <h2>六、數字什麼時候用阿拉伯數字、什麼時候用中文數字</h2>
+  <h2 id={S.numbers.id}>{S.numbers.label}</h2>
   <p>
     公文書橫式書寫數字使用原則的三條規則。金額寫成「新臺幣伍拾萬元整」屬於慣用語與防竄改
     的另一套要求，不在這三條之內。
@@ -207,13 +223,13 @@ const faq = {
     請看<a href={source.url} rel="noopener">官方原檔</a>。
   </p>
 
-  <h2>七、公文書的品質要求</h2>
+  <h2 id={S.quality.id}>{S.quality.label}</h2>
   <p>公文程式條例第 8 條要求「簡、淺、明、確」，手冊把它拆成七項作業要求。</p>
   <ul class="rules">
     {drafting.quality.map((t) => <li>{t}</li>)}
   </ul>
 
-  <h2>看規則怎麼落到紙上</h2>
+  <h2 id={S.examples.id}>{S.examples.label}</h2>
   <ul class="examples">
     {showcase.map((c) => (
       <li>
@@ -223,7 +239,7 @@ const faq = {
     ))}
   </ul>
   <p class="note">
-    每一則都附 24 條格式檢核逐條結果 —— 規則有沒有被遵守，看得到。
+    每一則都附<a href={`${base}checks/`}>格式檢核</a>逐條結果 —— 規則有沒有被遵守，看得到。
     完整清單在<a href={`${base}cases/`}>公文範例庫</a>；
     文別怎麼挑看<a href={`${base}doc-types/`}>文別怎麼選</a>；
     空白範本在<a href={`${base}templates/`}>範本下載</a>。

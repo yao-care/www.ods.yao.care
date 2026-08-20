@@ -1,5 +1,4 @@
 # GitHub Pages 部署（團隊共用手刻模式，源自 dreamer868 版；不用 withastro/action）
-# 建站時把 https://www.ods.yao.care 換成正式網址（含 https://，project pages 含 /repo 子路徑）。
 name: Deploy to GitHub Pages
 
 on:

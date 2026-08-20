@@ -10,6 +10,7 @@
  * ⚠️ 這頁是文書撰寫的參考，不是法律意見；個案是否為行政處分、期間如何起算，站上不判斷。
  */
 import ArticlePage from '../../layouts/ArticlePage.astro';
+import PageToc from '../../components/PageToc.astro';
 import { ROUTES, DEFINITIONS, ARTICLES, REGULATION_NOTE, SOURCES, VERIFIED_ON } from '../../data/remedies.js';
 import { CITIZEN_EXAMPLES } from '../../data/citizen-examples.js';
 
@@ -55,6 +56,15 @@ const faqPairs = [
       + '認為損害權利或利益者，也可以提起訴願。法令沒有規定期間的，自機關受理申請之日起算二個月。',
   },
 ];
+
+// 章節的單一真實來源；錨點由 scripts/check-anchors.mjs 守門。
+const S = {
+  routes: { id: 'routes', label: '一、四條路的差別' },
+  definitions: { id: 'definitions', label: '二、官方定義' },
+  pitfalls: { id: 'pitfalls', label: '三、最容易踩到的兩條' },
+  other_laws: { id: 'other-laws', label: '四、其他相關條文' },
+  next: { id: 'next', label: '決定好之後' },
+};
 
 const schema = {
   '@context': 'https://schema.org',
@@ -109,7 +119,9 @@ const faq = {
     先確認這條路還在，再決定要不要另外走陳情或申訴。
   </p>
 
-  <h2>一、四條路的差別</h2>
+  <PageToc items={Object.values(S)} />
+
+  <h2 id={S.routes.id}>{S.routes.label}</h2>
   <table>
     <thead><tr><th>管道</th><th>什麼情況</th><th>期限</th><th>遞給誰</th></tr></thead>
     <tbody>
@@ -124,7 +136,7 @@ const faq = {
     </tbody>
   </table>
 
-  <h2>二、官方定義</h2>
+  <h2 id={S.definitions.id}>{S.definitions.label}</h2>
   <p>
     教育部的官方問答把三者講得最清楚，以下逐字照抄
     （<a href={SOURCES.moe.url} rel="noopener">{SOURCES.moe.label}</a>）：
@@ -137,7 +149,7 @@ const faq = {
   ))}
   <p class="warn">{REGULATION_NOTE}</p>
 
-  <h2>三、最容易踩到的兩條</h2>
+  <h2 id={S.pitfalls.id}>{S.pitfalls.label}</h2>
   {deadlineArticles.map((a) => (
     <section class="art">
       <h3>{a.law}</h3>
@@ -149,7 +161,7 @@ const faq = {
     由它轉給訴願管轄機關，不是直接寄給上級。
   </p>
 
-  <h2>四、其他相關條文</h2>
+  <h2 id={S.other_laws.id}>{S.other_laws.label}</h2>
   {otherArticles.map((a) => (
     <section class="art">
       <h3>{a.law}</h3>
@@ -157,7 +169,7 @@ const faq = {
     </section>
   ))}
 
-  <h2>決定好之後</h2>
+  <h2 id={S.next.id}>{S.next.label}</h2>
   <ul class="examples">
     {citizenSide.map((e) => (
       <li>

@@ -11,6 +11,7 @@
  * **不要在這裡手寫金額**，資費會調整。
  */
 import ArticlePage from '../../layouts/ArticlePage.astro';
+import PageToc from '../../components/PageToc.astro';
 import { CITIZEN_EXAMPLES } from '../../data/citizen-examples.js';
 import { CERTIFY_FEE, POSTAGE, FORM_RULES, TYPESETTING, SOURCES, VERIFIED_ON } from '../../data/postal.js';
 import downloads from '../../data/downloads.json';
@@ -52,6 +53,16 @@ const faqPairs = [
       + '郵局只做內容證明，不判斷你寫的對不對，也沒有強制力，不會強迫對方照做。',
   },
 ];
+
+// 章節的單一真實來源；錨點由 scripts/check-anchors.mjs 守門。
+const S = {
+  cost: { id: 'cost', label: '一、費用怎麼算' },
+  paper: { id: 'paper', label: '二、用紙上印的四條規定' },
+  sending: { id: 'sending', label: '三、交寄流程' },
+  effect: { id: 'effect', label: '四、有什麼效力：常見的誤會' },
+  format: { id: 'format', label: '五、內文格式怎麼設定' },
+  example: { id: 'example', label: '先看一份範例' },
+};
 
 const schema = {
   '@context': 'https://schema.org',
@@ -107,7 +118,9 @@ const faq = {
     空白內文範本在<a href={`${base}templates/`}>範本下載</a>。
   </p>
 
-  <h2>一、費用怎麼算</h2>
+  <PageToc items={Object.values(S)} />
+
+  <h2 id={S.cost.id}>{S.cost.label}</h2>
   <p>兩筆錢分開算：<strong>存證費</strong>付給郵局做內容證明，<strong>郵資</strong>付寄送。</p>
 
   <h3>存證費</h3>
@@ -138,7 +151,7 @@ const faq = {
     <a href={CERTIFY_FEE.source.url} rel="noopener">{CERTIFY_FEE.source.label}</a>。
   </p>
 
-  <h2>二、用紙上印的四條規定</h2>
+  <h2 id={S.paper.id}>{S.paper.label}</h2>
   <p>
     這四條就印在郵局存證信函用紙的「備註」欄，是最權威的來源 ——
     它印在你要交寄的那張紙上。
@@ -150,7 +163,7 @@ const faq = {
     </section>
   ))}
 
-  <h2>三、交寄流程</h2>
+  <h2 id={S.sending.id}>{S.sending.label}</h2>
   <ol>
     <li>到<a href={SOURCES.form.url} rel="noopener">中華郵政下載專區</a>取得官方用紙，或到郵局購買。</li>
     <li>填好內容，一式三份。寄件人是機關、團體、學校、公司、商號的話，加蓋單位圖章與法定代理人簽章。</li>
@@ -163,7 +176,7 @@ const faq = {
     <a href={SOURCES.online.url} rel="noopener">存證信函網路交寄</a>。
   </p>
 
-  <h2>四、有什麼效力：常見的誤會</h2>
+  <h2 id={S.effect.id}>{S.effect.label}</h2>
   <dl class="myths">
     <div>
       <dt>「寄了存證信函對方就得照做」</dt>
@@ -182,7 +195,7 @@ const faq = {
     </div>
   </dl>
 
-  <h2>五、內文格式怎麼設定</h2>
+  <h2 id={S.format.id}>{S.format.label}</h2>
   <p>官方使用說明對貼進用紙的內文有明確設定：</p>
   <blockquote>{TYPESETTING.quote}</blockquote>
   {blank && (
@@ -193,7 +206,7 @@ const faq = {
     </p>
   )}
 
-  <h2>先看一份範例</h2>
+  <h2 id={S.example.id}>{S.example.label}</h2>
   <ul class="examples">
     {notices.map((e) => (
       <li>

@@ -2,10 +2,15 @@
 import ArticlePage from '../../layouts/ArticlePage.astro';
 import { SERVICE_LINKS } from '../../site.config.js';
 import { ORGANIZATION, breadcrumb } from '../../data/schema.js';
+import PageToc from '../../components/PageToc.astro';
 
 // 收單 Worker（見 workers/apply-form/README.md；2026-08-14 部署並端到端驗證過）。
 // 留空時表單自動改走信件，不會變成按了沒反應的死按鈕。
 const ENDPOINT = 'https://ods-apply-form.lightman-chang.workers.dev';
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
 
 // 這頁是漏斗終點卻長期只有全站節點，Google 也只認得帶 UTM 的那一版（見 site.config.js）。
 // 補 ContactPage＋麵包屑，讓它在結構上就是「申請入口」而不是又一篇文章。
@@ -36,16 +41,75 @@ const schema = {
     breadcrumb([['機關申請試用', pageUrl]]),
   ],
 };
+
+// 這頁在 2026-08-20 實查時仍停在 `Discovered - currently not indexed`，
+// 而且它是被 www.yao.care/ai/ods/（當天 08:35 才被爬過的已收錄頁）直接連過來的 ——
+// 連得到卻不收錄，缺的是頁面本身的份量：原本除了表單只有四段短文。
+// 下面補的是承辦真的會先問的事，順帶把它接回案例庫與資料處理頁。
+const S = {
+  form: { id: 'form', label: '填表申請' },
+  which: { id: 'which', label: '先確認你屬於哪一種' },
+  prepare: { id: 'prepare', label: '申請前先準備這些' },
+  next: { id: 'next', label: '接下來會發生什麼' },
+  trial: { id: 'trial', label: '不必等開通，現在就能試' },
+  faq: { id: 'faq', label: '常見問題' },
+};
+
+const faqPairs = [
+  {
+    q: '機關一定要申請嗎？可以自己註冊嗎？',
+    a: '機關要走申請。原因是機關帳號會配置貴機關的專屬網址，並視需要接上既有稿件，'
+      + '這兩件事沒辦法在自助流程裡完成。社區發展協會、學校家長會、農會這類小型受補助單位，'
+      + '以及需要寫對機關書件或存證信函的個人與企業，都可以直接在 app.ods.yao.care 自助建立工作區，不用申請。',
+  },
+  {
+    q: '申請要準備什麼資料？',
+    a: '機關全銜、聯絡人姓名與職稱課室、電子郵件是必要的，聯絡電話與「想先解決什麼」可選填。'
+      + '不需要先備妥採購文件；採購或資安審查要用的說明文件另外向 service@yao.care 索取。',
+  },
+  {
+    q: '同仁怎麼加入？要一個一個開帳號嗎？',
+    a: '不用。開通之後我們會給一組邀請連結，由貴機關自行加入同仁。'
+      + '這組連結 72 小時內有效，而且只能使用一次。',
+  },
+  {
+    q: '機關的稿件會不會和其他單位混在一起？',
+    a: '不會。各機關的工作區資料實體隔離。稿件送到模型之前會先做去識別化，'
+      + '遮罩對照表存在機關自己的資料庫，並於 24 小時內刪除。每一次產生、編輯、簽核、匯出都留稽核軌跡，'
+      + '整包匯出含資料字典，可以帶著走。',
+  },
+  {
+    q: '採購或資安審查需要的文件怎麼取得？',
+    a: '寄到 service@yao.care 說明貴機關的審查項目即可，我們會依貴機關的檢核表逐項回覆。',
+  },
+  {
+    q: '還沒申請，可以先看看實際做出來長什麼樣嗎？',
+    a: '可以，而且不用註冊。站上每一則公文範例都是完整全文，附逐條格式檢核結果，'
+      + '可以直接在頁面上照實際流程試做一次；各文別的空白 Word 範本也可以直接下載。',
+  },
+];
+const faq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqPairs.map((p) => ({
+    '@type': 'Question',
+    name: p.q,
+    acceptedAnswer: { '@type': 'Answer', text: p.a },
+  })),
+};
 ---
 
 <ArticlePage
-  schemas={[schema]}
+  schemas={[schema, faq]}
   title="機關申請試用｜公文 AI"
   description="機關可申請專屬網址；小型單位、一般民眾與個人／企業可直接在 app.ods.yao.care 自助建立工作區。"
   heading="機關申請試用"
   lead="機關帳號由我們開通 —— 因為要配置貴機關的專屬網址並接上既有稿件。留下聯絡方式，我們會與您聯繫。"
 >
+  <PageToc items={Object.values(S)} />
+
   <section>
+    <h2 id={S.form.id}>{S.form.label}</h2>
     <form data-form data-endpoint={ENDPOINT}>
       <label>
         <span>機關全銜<em>必填</em></span>
@@ -84,30 +148,108 @@ const schema = {
     </form>
   </section>
 
+  <p class="note">
+    不想填表就寄到 <a href="mailto:service@yao.care">service@yao.care</a>，
+    信裡寫機關全銜與聯絡方式即可。採購或資安審查需要的說明文件也從這個信箱索取。
+  </p>
+
   <section>
-    <h2>直接來信也可以</h2>
+    <h2 id={S.which.id}>{S.which.label}</h2>
     <p>
-      不想填表就寄到 <a href="mailto:service@yao.care">service@yao.care</a>，
-      信裡寫機關全銜與聯絡方式即可。採購或資安審查需要的說明文件也從這個信箱索取。
+      三種使用者走的是不同的路。只有第一種需要填上面那張表 ——
+      另外兩種現在就可以自己開工作區，不必等我們。
+    </p>
+    <table>
+      <thead>
+        <tr><th></th><th>機關</th><th>小型受補助單位</th><th>一般民眾／個人或企業</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>典型對象</td>
+          <td>鄉鎮市公所、縣市府各處室</td>
+          <td>社區發展協會、學校家長會、農會、民間團體</td>
+          <td>申請人、房東、房客、商家</td>
+        </tr>
+        <tr>
+          <td>主要要寫的</td>
+          <td>函、書函、公告、簽、開會通知單</td>
+          <td>對上級機關的申請、核銷與計畫書件</td>
+          <td>對機關的申請書、陳情書、申訴書；對個人或企業的存證信函</td>
+        </tr>
+        <tr>
+          <td>網址</td>
+          <td>貴機關專屬子網址</td>
+          <td>共用 app.ods.yao.care</td>
+          <td>共用 app.ods.yao.care</td>
+        </tr>
+        <tr>
+          <td>怎麼開通</td>
+          <td>填表申請，由服務方建立後以邀請連結加入同仁</td>
+          <td>自助註冊</td>
+          <td>自助建立個人工作區</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      後兩種請直接<a {...SERVICE_LINKS.selfRegister('apply_self_register')}>自助建立工作區</a>；
+      功能逐項說明在<a href={`${base}product/`}>功能與導入</a>。
     </p>
   </section>
 
   <section>
-    <h2>小型單位與一般民眾不用等我們</h2>
-    <p>
-      社區發展協會、學校家長會、農會這類單位，以及需要撰寫對機關書件或存證信函的個人／企業，
-      都可以直接<a {...SERVICE_LINKS.selfRegister('apply_self_register')}>自助建立工作區</a>，不需要申請。
-    </p>
+    <h2 id={S.prepare.id}>{S.prepare.label}</h2>
+    <ul>
+      <li><strong>機關全銜與課室</strong>：專屬網址與帳號都以此建立，寫正式全銜。</li>
+      <li><strong>一位聯絡人</strong>：後續的邀請連結與匯入事宜都寄給這個人。</li>
+      <li>
+        <strong>想先解決什麼</strong>：例如核銷公文常被退、開會通知單格式對不上、
+        想接上這幾年的既有稿件。寫得越具體，第一次聯繫就能談到重點。
+      </li>
+      <li>
+        <strong>不需要先備妥的</strong>：採購文件、資安檢核表、既有稿件本身。
+        審查文件向 service@yao.care 索取即可；稿件匯入在開通之後才處理。
+      </li>
+    </ul>
   </section>
 
   <section>
-    <h2>接下來會發生什麼</h2>
+    <h2 id={S.next.id}>{S.next.label}</h2>
     <ol>
       <li>我們收到申請後與您確認機關名稱、課室與使用人數</li>
       <li>開通帳號並配置貴機關的專屬網址</li>
       <li>給您一組邀請連結，由貴機關自行加入同仁（連結 72 小時內有效、只能用一次）</li>
       <li>視需要協助把既有稿件匯入</li>
     </ol>
+    <p class="note">
+      資料怎麼處理、去識別化失敗時會怎樣、稽核軌跡留什麼，
+      逐項寫在<a href={`${base}security/`}>資料處理方式</a>；採購與資安審查通常先看那一頁。
+    </p>
+  </section>
+
+  <section>
+    <h2 id={S.trial.id}>{S.trial.label}</h2>
+    <p>
+      不需要註冊也能看到實際做出來的東西。站上每一則範例都是完整全文並附逐條格式檢核結果，
+      可以直接在頁面上照流程試做一次：
+    </p>
+    <ul>
+      <li><a href={`${base}cases/`}>公文範例庫</a>：函、書函、公告、簽與開會通知單的機關公文全文。</li>
+      <li><a href={`${base}citizens/`}>民眾書件與存證信函</a>：申請書、陳情書、申訴書、說明書與存證信函。</li>
+      <li><a href={`${base}templates/`}>Word 範本下載</a>：各文別空白範本與填好內容的範例檔，直接下載編輯。</li>
+      <li><a href={`${base}checks/`}>格式檢核</a>：逐條說明每一項在檢查什麼、為什麼會被退件。</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 id={S.faq.id}>{S.faq.label}</h2>
+    <dl class="faq">
+      {faqPairs.map((p) => (
+        <>
+          <dt>{p.q}</dt>
+          <dd>{p.a}</dd>
+        </>
+      ))}
+    </dl>
   </section>
 </ArticlePage>
 
@@ -160,6 +302,20 @@ const schema = {
 </script>
 
 <style>
+  .note {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+  .faq dt {
+    font-weight: 600;
+    margin-top: 1.5rem;
+  }
+  .faq dd {
+    margin: 0.5rem 0 0;
+    font-size: var(--text-base);
+    line-height: 1.9;
+    color: var(--color-ink-soft);
+  }
   form {
     display: grid;
     gap: 1.25rem;

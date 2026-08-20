@@ -1,5 +1,6 @@
 ---
 import ArticlePage from '../../layouts/ArticlePage.astro';
+import PageToc from '../../components/PageToc.astro';
 import sample from '../../data/scenarios/grant_report.json';
 import meetingSample from '../../data/scenarios/meeting.json';
 import downloads from '../../data/downloads.json';
@@ -13,26 +14,31 @@ const checks = sample.checks;
 
 const GROUPS = [
   {
+    id: 'subject',
     name: '主旨',
     ids: ['subject_present', 'subject_single_paragraph', 'subject_length', 'subject_expectation', 'subject_period', 'subject_no_section_name'],
     why: '主旨要一段到底、句末帶期望語。分項或漏期望語是最常見的退件原因。',
   },
   {
+    id: 'sections',
     name: '文別與段落',
     ids: ['doc_type_valid', 'classification_valid', 'section_titles_valid', 'section_not_empty', 'section_item_period', 'section_item_count', 'section_item_length'],
     why: '說明、辦法的段名與分項寫法有固定規矩，一項只講一件事。',
   },
   {
+    id: 'privacy',
     name: '個資與代稱',
     ids: ['no_mask_token', 'no_placeholder', 'no_raw_id_number', 'no_raw_mobile'],
     why: '去識別化的代稱如果殘留在稿件裡，或身分證號、手機號直接寫進公文，都不能送出。',
   },
   {
+    id: 'wording',
     name: '用字與格式',
     ids: ['roc_year', 'currency_format', 'no_colloquial', 'no_simplified', 'fullwidth_punctuation', 'no_extra_blank'],
     why: '民國紀年、國字大寫金額、全形標點、無簡體字 —— 這幾條機器抓比人快。',
   },
   {
+    id: 'receiver',
     name: '收發',
     ids: ['receiver_required'],
     why: '函必須有受文者；簽與公告則沒有。',
@@ -44,7 +50,29 @@ const grouped = GROUPS.map((g) => ({ ...g, items: g.ids.map((id) => byId[id]).fi
 const covered = new Set(GROUPS.flatMap((g) => g.ids));
 const others = checks.filter((c) => !covered.has(c.id));
 
-// 這頁是一篇說明 24 條檢核的參考文章，但原本沒有 Article／麵包屑，
+// 條目數一律取實際產物的長度（`checks.length`），不寫死 —— 檢核規則改版時這頁跟著變，
+// 而且開會通知單另有一組（`meetingSample.checks.length`），寫死會兩邊打架。
+const count = checks.length;
+const meetingCount = meetingSample.checks.length;
+const meetingOwn = meetingSample.checks.filter((c) => c.id.startsWith('meeting_'));
+const subjectCount = GROUPS.find((g) => g.id === 'subject').ids.length;
+const sectionCount = GROUPS.find((g) => g.id === 'sections').ids.length;
+
+const title = `公文格式檢核 ${count} 條`;
+const description =
+  `主旨、段落、個資代稱、用字格式、收發共 ${count} 條公文格式檢核，逐條說明為什麼會被退件。`;
+
+// 章節的單一真實來源；錨點由 scripts/check-anchors.mjs 守門。
+const S = {
+  ...Object.fromEntries(
+    grouped.map((g) => [g.id, { id: g.id, label: `${g.name}（${g.items.length} 條）` }]),
+  ),
+  ...(others.length ? { others: { id: 'others', label: '其他' } } : {}),
+  meeting: { id: 'meeting', label: `開會通知單另有一組（${meetingCount} 條）` },
+  live: { id: 'live', label: '看實際跑出來的結果' },
+};
+
+// 這頁是一篇說明檢核條目的參考文章，但原本沒有 Article／麵包屑，
 // Google 只看得到全站共用的 Organization／WebSite。
 const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
 const schema = {
@@ -54,9 +82,8 @@ const schema = {
       '@type': 'Article',
       '@id': `${pageUrl}#article`,
       mainEntityOfPage: pageUrl,
-      headline: '公文格式檢核 24 條',
-      description:
-        '主旨、段落、個資代稱、用字格式、收發共 24 條公文格式檢核，逐條說明為什麼會被退件。',
+      headline: title,
+      description,
       author: { '@type': 'Organization', name: '藥提醒科技有限公司', url: 'https://www.yao.care/' },
       publisher: { '@type': 'Organization', name: '藥提醒科技有限公司', url: 'https://www.yao.care/' },
       inLanguage: 'zh-Hant-TW',
@@ -70,22 +97,65 @@ const schema = {
     },
   ],
 };
+
+// 這頁原本沒有 FAQPage —— 但「公文為什麼被退件」「主旨可以分項嗎」這類問句查詢
+// 的落點就是這頁，樞紐頁不掛 FAQ 等於把問句型結果讓給別人。
+const faqPairs = [
+  {
+    q: '公文格式檢核會檢查哪些項目？',
+    a: `函、書函、公告、簽共 ${count} 條，分成主旨（${subjectCount} 條）、文別與段落（${sectionCount} 條）、`
+      + '個資與代稱、用字與格式、收發五組。開會通知單是固定欄位表單，不套主旨與段落那兩組，'
+      + `改查它自己的欄位，合計 ${meetingCount} 條。`,
+  },
+  {
+    q: '公文主旨可以分項嗎？',
+    a: '不行。主旨要一段到底、不分項，文字緊接段名冒號之右書寫，句末帶概括的期望語。'
+      + '需要分項敘述的事實、理由或作法，放到說明段或辦法段。',
+  },
+  {
+    q: '公文裡出現簡體字會怎樣？',
+    a: '簡體字屬於不通過就不得送簽的等級。檢核用的是逐字比對的簡體專用字集合，'
+      + '刻意放行「后、里、面、台、出、合、同」這類本身就是正體字、只是同時也是別字簡化形的雙身分字，'
+      + '以免在合法公文上誤報。',
+  },
+  {
+    q: '身分證號或手機號可以直接寫進公文嗎？',
+    a: '不行，檢核會擋。稿件送進模型前先做去識別化，代稱如果殘留在成稿裡同樣不得送出。'
+      + '對民眾的處分或通知，用代稱加上案號辨識即可。',
+  },
+  {
+    q: '金額和年份要怎麼寫？',
+    a: '年份用民國紀年，金額依公文書橫式書寫數字使用原則處理；'
+      + '屬於防竄改需求的款項另以國字大寫書寫。這幾條機器抓得比人快，逐條結果在每一則公文範例上看得到。',
+  },
+];
+const faq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqPairs.map((p) => ({
+    '@type': 'Question',
+    name: p.q,
+    acceptedAnswer: { '@type': 'Answer', text: p.a },
+  })),
+};
 ---
 
 <ArticlePage
-  schemas={[schema]}
-  title="公文格式檢核 24 條｜公文 AI"
-  description="主旨、段落、個資代稱、用字格式、收發共 24 條公文格式檢核，逐條說明為什麼會被退件。"
-  heading="格式檢核 24 條"
-  lead="每一份草稿產出後都會跑這 24 條。critical 等級不通過就不讓送簽，warn 等級會標出來讓承辦自己判斷。"
+  schemas={[schema, faq]}
+  title={`${title}｜公文 AI`}
+  description={description}
+  heading={`格式檢核 ${count} 條`}
+  lead={`每一份草稿產出後都會跑這 ${count} 條。critical 等級不通過就不讓送簽，warn 等級會標出來讓承辦自己判斷。`}
 >
   <p class="cross">
     這裡檢查的是格式。三段怎麼分看<a href={`${base}writing/`}>公文怎麼寫</a>，
     用字與稱謂語查<a href={`${base}usage/`}>公文用語表</a>。
   </p>
+  <PageToc items={Object.values(S)} />
+
   {grouped.map((g) => (
     <section>
-      <h2>{g.name}（{g.items.length} 條）</h2>
+      <h2 id={g.id}>{g.name}（{g.items.length} 條）</h2>
       <p>{g.why}</p>
       <table>
         <thead>
@@ -107,44 +177,42 @@ const schema = {
 
   {others.length > 0 && (
     <section>
-      <h2>其他</h2>
+      <h2 id={S.others.id}>其他</h2>
       <ul>{others.map((c) => <li>{c.title}</li>)}</ul>
     </section>
   )}
 
   <section>
-    <h2>開會通知單另有一組（{meetingSample.checks.length} 條）</h2>
+    <h2 id={S.meeting.id}>開會通知單另有一組（{meetingCount} 條）</h2>
     <p>
-      這 24 條是「函」的檢核。開會通知單依<a href={downloads.source.page} rel="noopener">{downloads.source.name}</a>
-      第八點是固定欄位表單 —— 沒有主旨、沒有說明或辦法 —— 所以上面的 6 條主旨檢核與
-      5 條段落檢核對它不適用，改查它自己的欄位。
+      這 {count} 條是「函」的檢核。開會通知單依<a href={downloads.source.page} rel="noopener">{downloads.source.name}</a>
+      第八點是固定欄位表單 —— 沒有主旨、沒有說明或辦法 —— 所以上面的 {subjectCount} 條主旨檢核與
+      {sectionCount} 條段落檢核對它不適用，改查它自己的欄位。
     </p>
     <table>
       <thead><tr><th>檢核項目</th><th>等級</th></tr></thead>
       <tbody>
-        {meetingSample.checks
-          .filter((c) => c.id.startsWith('meeting_'))
-          .map((c) => (
+        {meetingOwn.map((c) => (
             <tr>
               <td>{c.title}</td>
               <td class={c.severity === 'critical' ? 'critical' : 'warn'}>
                 {c.severity === 'critical' ? '不通過不得送簽' : '提醒'}
               </td>
             </tr>
-          ))}
+        ))}
       </tbody>
     </table>
     <p class="note">
-      其餘 13 條通用文字檢核（個資殘留、簡體字、民國紀年、全形標點…）兩邊都跑，
-      合計 {meetingSample.checks.length} 條。
+      其餘 {meetingCount - meetingOwn.length} 條通用文字檢核（個資殘留、簡體字、民國紀年、全形標點…）
+      兩邊都跑，合計 {meetingCount} 條。
     </p>
   </section>
 
   <section>
-    <h2>看實際跑出來的結果</h2>
+    <h2 id={S.live.id}>看實際跑出來的結果</h2>
     <p>
       每一則<a href={`${base}cases/`}>公文範例</a>都附了逐條結果，可以直接看哪些通過、哪些被標記。
-      開會通知單那則跑的是上面那組 {meetingSample.checks.length} 條。
+      開會通知單那則跑的是上面那組 {meetingCount} 條。
     </p>
   </section>
 </ArticlePage>

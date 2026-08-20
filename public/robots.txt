@@ -1,5 +1,6 @@
-# robots.txt — 開放一般與 AI 爬蟲；Sitemap 行供 Google 等自動發現
-# 建站時把 https://www.ods.yao.care 換成正式網址（含 https://）
+# robots.txt —— 全站開放，一般搜尋引擎與 AI 爬蟲一視同仁。
+# 沒有 Disallow 是刻意的：本站的價值就在於公文全文與檢核結果被讀到、被引用。
+# 供 AI 助理讀站的索引另見 /llms.txt 與 /llms-full.txt（build 時由 src/data/llms.js 產生）。
 User-agent: *
 Allow: /
 

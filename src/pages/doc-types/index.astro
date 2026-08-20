@@ -1,5 +1,6 @@
 ---
 import ArticlePage from '../../layouts/ArticlePage.astro';
+import PageToc from '../../components/PageToc.astro';
 import { CASES } from '../../data/cases.js';
 import index from '../../data/scenarios.json';
 import downloads from '../../data/downloads.json';
@@ -12,6 +13,7 @@ const base = import.meta.env.BASE_URL.endsWith('/')
 
 const TYPES = [
   {
+    id: 'letter',
     name: '函',
     sections: '主旨、說明、辦法（辦法段名可改用建議／請求／擬辦／核示事項）',
     when: '機關之間往來、對民眾有所答復或請求，最常用的一種。',
@@ -19,6 +21,7 @@ const TYPES = [
     keys: ['grant_report', 'subsidy_apply', 'repair', 'low_income'],
   },
   {
+    id: 'memo',
     name: '書函',
     sections: '主旨、說明、辦法（結構與文字用語比照函）',
     when: '公務尚在磋商、徵詢意見或單純通報的階段；案情簡單、不需正式行文的答復或洽辦。',
@@ -26,6 +29,7 @@ const TYPES = [
     keys: ['petition_reply'],
   },
   {
+    id: 'announcement',
     name: '公告',
     sections: '主旨、依據、公告事項（僅補充主旨的事實或理由時，段名改用說明）',
     when: '對不特定多數人宣布事項，例如禁令、招標、時程。',
@@ -33,6 +37,7 @@ const TYPES = [
     keys: ['notice'],
   },
   {
+    id: 'sign',
     name: '簽',
     sections: '主旨、說明、擬辦（不是「辦法」）',
     when: '對內陳報長官核示，不對外發文。',
@@ -40,6 +45,7 @@ const TYPES = [
     keys: ['sign'],
   },
   {
+    id: 'meeting',
     name: '開會通知單',
     sections: '固定欄位（開會事由、時間、地點、主持人、出席者…），用印蓋機關或承辦單位條戳',
     when: '召集會議，時間、地點、出席人員都有固定欄位。',
@@ -60,6 +66,15 @@ const citizensOf = (docType) => CITIZEN_EXAMPLES.filter((e) => e.draft.doc_type 
 
 const caseOf = (key) => CASES.find((c) => c.key === key);
 const docTypeOf = (key) => index.items.find((i) => i.key === key)?.doc_type ?? '';
+
+// 章節的單一真實來源；錨點由 scripts/check-anchors.mjs 守門。
+const S = {
+  ...Object.fromEntries(TYPES.map((t) => [t.id, { id: t.id, label: t.name }])),
+  seals: { id: 'seals', label: '用印：函與書函最實際的差別' },
+  citizens: { id: 'citizens', label: '民眾自己要寫的書件' },
+  templates: { id: 'templates', label: '空白範本下載' },
+  expectation: { id: 'expectation', label: '期望語對照' },
+};
 
 // 文別指南是一篇文章，原本同樣缺 Article／麵包屑。
 const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
@@ -85,10 +100,53 @@ const schema = {
     },
   ],
 };
+
+// 文別的差別本來就是問句型查詢（「函和書函差在哪」「什麼時候用簽」），
+// 這頁卻只有 Article 沒有 FAQPage，等於把那些結果讓給別人。
+const faqPairs = [
+  {
+    q: '函和書函差在哪裡？',
+    a: '結構與文字用語比照辦理，兩者的主旨、說明、辦法寫法相同。實際差別在使用時機與用印：'
+      + '函用於正式的機關往來與對民眾的答復，署機關首長職銜姓名；'
+      + '書函用於公務尚在磋商、徵詢意見或單純通報的階段，蓋機關或承辦單位條戳。',
+  },
+  {
+    q: '什麼時候要用「簽」而不是「函」？',
+    a: '簽是對內陳報長官核示用的，不對外發文，也沒有受文者。'
+      + '它的三段是主旨、說明、擬辦（不是「辦法」），結尾用「簽請核示」或「陳請鑒核」，'
+      + '不用對外的期望語。政策性或重大興革案件通常要先簽後稿。',
+  },
+  {
+    q: '公告和函可以互換嗎？',
+    a: '不行。公告是對不特定多數人宣布事項，沒有受文者，三段是主旨、依據、公告事項，'
+      + '而且沒有「辦法」段。要對特定機關或特定當事人行文才用函。',
+  },
+  {
+    q: '開會通知單要寫主旨嗎？',
+    a: '不用。開會通知單依政府文書格式參考規範第八點是固定欄位表單 —— 開會事由、開會時間、'
+      + '開會地點、主持人、出席者、聯絡人各有欄位，沒有主旨、也沒有說明或辦法。'
+      + '把開會事項寫進主旨反而不合格式。',
+  },
+  {
+    q: '民眾寫給機關要用什麼文別？',
+    a: '民眾不用公文文別。反映問題請機關查處用陳情書，申請資格或補助用申請書，'
+      + '對已做出的處理結果有意見用申訴書，機關要求補件用說明書；'
+      + '個人或企業之間留下正式通知紀錄則用存證信函。',
+  },
+];
+const faq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqPairs.map((p) => ({
+    '@type': 'Question',
+    name: p.q,
+    acceptedAnswer: { '@type': 'Answer', text: p.a },
+  })),
+};
 ---
 
 <ArticlePage
-  schemas={[schema]}
+  schemas={[schema, faq]}
   title="公文文別怎麼選：函、書函、公告、簽、開會通知單｜公文 AI"
   description="五種常用文別的使用時機、主旨寫法與期望語差異，每一種都附完整範例。"
   heading="文別怎麼選"
@@ -98,9 +156,11 @@ const schema = {
     選好文別之後，三段怎麼分看<a href={`${base}writing/`}>公文怎麼寫</a>；
     稱謂語與期望語怎麼配對象、哪些字容易寫錯，查<a href={`${base}usage/`}>公文用語表</a>。
   </p>
+  <PageToc items={Object.values(S)} />
+
   {TYPES.map((t) => (
     <section>
-      <h2>{t.name}</h2>
+      <h2 id={t.id}>{t.name}</h2>
       <p><strong>什麼時候用：</strong>{t.when}</p>
       <p><strong>三段怎麼分：</strong>{t.sections}</p>
       <p><strong>主旨與期望語：</strong>{t.subject}</p>
@@ -114,7 +174,7 @@ const schema = {
   ))}
 
   <section class="seals">
-    <h2>用印：函與書函最實際的差別</h2>
+    <h2 id={S.seals.id}>{S.seals.label}</h2>
     <p>
       文別選錯，用印就跟著錯。以下逐條出自
       <a href={govTerms._source.url} rel="noopener">{govTerms._source.issuer}《{govTerms._source.name}》{govTerms._source.edition}</a>。
@@ -126,7 +186,7 @@ const schema = {
 
 
   <section>
-    <h2>民眾自己要寫的書件</h2>
+    <h2 id={S.citizens.id}>{S.citizens.label}</h2>
     <p>
       公文不只存在於機關之間。向機關申請、陳情、申訴，或要正式通知另一個人與企業時，
       一樣有固定的段落與必填欄位。這五種涵蓋一般民眾會遇到的大部分情況。
@@ -147,7 +207,7 @@ const schema = {
   </section>
 
   <section>
-    <h2>空白範本下載</h2>
+    <h2 id={S.templates.id}>{S.templates.label}</h2>
     <p>
       版面取自{downloads.source.name}（{downloads.source.promulgated}）的原始檔，
       欄位順序、字級、行距與縮排都照規範走：A4、四邊 2.5 公分邊界、中文標楷體、
@@ -171,7 +231,7 @@ const schema = {
   </section>
 
   <section>
-    <h2>期望語對照</h2>
+    <h2 id={S.expectation.id}>{S.expectation.label}</h2>
     <table>
       <thead><tr><th>行文對象</th><th>期望語</th></tr></thead>
       <tbody>

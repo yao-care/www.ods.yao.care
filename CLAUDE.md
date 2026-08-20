@@ -109,7 +109,8 @@ cp -r /tmp/…/out/scenarios /tmp/…/out/scenarios.json /tmp/…/out/knowledge.
 
 檢核條目數也依文別而定：函／簽／書函／公告 24 條，開會通知單 22 條（不套主旨類 6 條與
 段落類 5 條，改查上面那組固定欄位）。頁面上不要再寫死「24 條」，用 `payload.checks.length`；
-CaseDemo 的進度文字也走 `data-check-count`，不寫死。
+CaseDemo 的進度文字也走 `data-check-count`，不寫死。`/checks/` 與 `/cases/` 的標題、
+說明與 FAQ 也一律 import `scenarios/grant_report.json` 與 `scenarios/meeting.json` 取 `checks.length`。
 
 ## 體驗器的設計（`src/components/CaseDemo.astro`）
 
@@ -136,6 +137,31 @@ node -e "import('/root/seo-ops/lib/google.mjs').then(async g=>{
 
 `/templates/` 是為「公文格式 word」「公文範本下載」這類高意圖字開的落地頁，
 同時也是全站每一頁都連得到的 Word 下載入口（導覽列「格式與用語」群組內）。
+
+**站外那一條也算內鏈**：`www.yao.care/ai/ods/` 是 ODS 在 yao.care 的產品落地頁，實測它每天都被爬
+（2026-08-20 08:35），是本站最快的被發現管道。那頁原本只描述機關側，同日補上民眾書件與
+`/writing/`／`/usage/`／`/templates/` 的產品段落 —— **改的是 `/root/www.yao.care`，兩邊要一起維持**。
+注意 seo-ops 的紅線是「不為了 SEO 從自家站連自家站」，所以那頁只寫產品實際提供什麼，不做互推連結牆。
+
+## 長頁一定要有錨點（2026-08-20 的教訓）
+
+上線後實查 `/writing/`、`/usage/`、`/checks/`、`/doc-types/`、`/citizens/which-route/`、
+`/citizens/certified-letter-guide/` 六支長參考頁，`id=` 屬性數量**全部是 0** ——
+沒有錨點就沒有段落深連結，Google 的「跳至相關部分」也沒有落點可指；
+像 pinned query「公文數字寫法」對應的是 `/writing/` 第六節，在此之前連不進去。
+
+作法：頁面 frontmatter 宣告一份章節物件當**單一真實來源**，`<h2>` 的 `id` 與文字都從那份取，
+`src/components/PageToc.astro` 吃同一份陣列產出「本頁章節」：
+
+```astro
+const S = { numbers: { id: 'numbers', label: '六、數字怎麼寫' }, … };
+<PageToc items={Object.values(S)} />
+<h2 id={S.numbers.id}>{S.numbers.label}</h2>
+```
+
+漂移由 `pnpm check:anchors`（在 `astro build` **之後**跑，掃 `dist/**/*.html`）守門：
+同頁 `href="#x"` 找不到 `id="x"` 就擋 build。導覽列是 sticky，錨點落點靠 `global.css`
+的 `:target { scroll-margin-top }`，改導覽列高度記得一起改。
 
 ## CTA 一律用乾淨網址，入口位置用 `data-cta`（2026-08-20 的教訓）
 
@@ -208,7 +234,8 @@ pnpm build:docx           # 每次 build 自動跑：json + 案例資料 → pub
 
 ```bash
 pnpm dev              # 開發（起了就要記得 kill，主機紅線）
-pnpm build            # check-design && check-content && check-zh-hant && build-docx && astro build
+pnpm build            # check-design && check-content && check-zh-hant && check-scenarios && build-docx && astro build && check-anchors
+pnpm check:anchors    # 只跑錨點守門（要先有 dist/）
 pnpm check:design
 pnpm check:content:all
 pnpm check:zh-hant    # 只跑簡體字守門

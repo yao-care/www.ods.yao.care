@@ -1,0 +1,255 @@
+---
+/**
+ * 存證信函怎麼寄：費用、份數、用紙規定、寄送流程、效力。
+ *
+ * 為什麼有這一頁（2026-08-20）：站上五個存證信函範例頁只回答「格式對不對」，
+ * 但實搜「存證信函怎麼寫／格式／範例」的人問的是費用、要幾份、怎麼寄、寄了有什麼用——
+ * 前排全是律師事務所與法律內容站，本站對那些字的覆蓋率是 0。
+ * 判定過程見 docs/keyword-validation/2026-08-20-pinned-14.md。
+ *
+ * 這頁的每一個數字與規定都出自 src/data/postal.js，那裡逐條記了官方出處與查證日期。
+ * **不要在這裡手寫金額**，資費會調整。
+ */
+import ArticlePage from '../../layouts/ArticlePage.astro';
+import { CITIZEN_EXAMPLES } from '../../data/citizen-examples.js';
+import { CERTIFY_FEE, POSTAGE, FORM_RULES, TYPESETTING, SOURCES, VERIFIED_ON } from '../../data/postal.js';
+import downloads from '../../data/downloads.json';
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+
+const notices = CITIZEN_EXAMPLES.filter((e) => e.family === 'notice');
+const blank = downloads.templates.find((t) => t.docType === '存證信函') ?? null;
+const description =
+  '存證信函的存證費、郵資、要準備幾份、塗改字數上限、郵局保存年限與交寄流程，'
+  + '數字逐條出自中華郵政官方資費與用紙規定。';
+
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+
+const faqPairs = [
+  {
+    q: '存證信函要多少錢？',
+    a: `存證費首頁 ${CERTIFY_FEE.firstPage} 元，續頁每頁或附件每張 ${CERTIFY_FEE.extraPage} 元；`
+      + '另外要付郵資，存證信函以掛號交寄，掛號費每件加 20 元，附回執再另計。'
+      + '實際金額由郵局櫃檯依頁數與重量計收。',
+  },
+  {
+    q: '存證信函要準備幾份？',
+    a: '每件一式三份：一份寄給收件人、一份由郵局保存、一份寄件人自存。有副本收件人時再加印。',
+  },
+  {
+    q: '存證信函寫錯可以塗改嗎？',
+    a: '可以，但每頁塗改增刪至多不得逾二十字，而且要在用紙的備註欄填註「在第幾頁第幾行第幾格下塗改增刪幾字」並蓋寄件人印章。超過就要重寫。',
+  },
+  {
+    q: '存證信函寄出後多久失效？',
+    a: '郵局保存的那一份副本，自交寄之日起三年期滿後銷燬。三年內都可以向郵局申請查閱副本。',
+  },
+  {
+    q: '存證信函有什麼法律效力？有強制力嗎？',
+    a: '它的效力是保存證據：證明「你在某一天寄出了這些內容」，加掛回執還能證明對方何時收到。'
+      + '郵局只做內容證明，不判斷你寫的對不對，也沒有強制力，不會強迫對方照做。',
+  },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Article',
+      '@id': `${pageUrl}#article`,
+      mainEntityOfPage: pageUrl,
+      headline: '存證信函怎麼寄：費用、份數、用紙規定與流程',
+      description,
+      author: { '@type': 'Organization', name: '藥提醒科技有限公司', url: 'https://www.yao.care/' },
+      publisher: { '@type': 'Organization', name: '藥提醒科技有限公司', url: 'https://www.yao.care/' },
+      inLanguage: 'zh-Hant-TW',
+      citation: Object.values(SOURCES).map((s) => ({
+        '@type': 'CreativeWork',
+        name: s.label,
+        url: s.url,
+      })),
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: '首頁', item: 'https://www.ods.yao.care/' },
+        { '@type': 'ListItem', position: 2, name: '民眾文件', item: 'https://www.ods.yao.care/citizens/' },
+        { '@type': 'ListItem', position: 3, name: '存證信函怎麼寄', item: pageUrl },
+      ],
+    },
+  ],
+};
+
+const faq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqPairs.map((p) => ({
+    '@type': 'Question',
+    name: p.q,
+    acceptedAnswer: { '@type': 'Answer', text: p.a },
+  })),
+};
+---
+
+<ArticlePage
+  schemas={[schema, faq]}
+  title="存證信函怎麼寄：費用、份數、用紙規定與流程｜公文 AI"
+  description={description}
+  heading="存證信函怎麼寄"
+  lead="寫好內容只是一半。存證信函要送到郵局辦證明手續才生效，用紙、份數、塗改字數都有規定，費用也不只是郵票錢。"
+>
+  <p class="cross">
+    要看內容怎麼寫，<a href={`${base}citizens/`}>民眾文件</a>有五份存證信函範例可以直接試做；
+    空白內文範本在<a href={`${base}templates/`}>範本下載</a>。
+  </p>
+
+  <h2>一、費用怎麼算</h2>
+  <p>兩筆錢分開算：<strong>存證費</strong>付給郵局做內容證明，<strong>郵資</strong>付寄送。</p>
+
+  <h3>存證費</h3>
+  <table>
+    <thead><tr><th>項目</th><th>金額</th></tr></thead>
+    <tbody>
+      <tr><td>首頁</td><td>{CERTIFY_FEE.firstPage} 元</td></tr>
+      <tr><td>每續一頁，或附件每張</td><td>{CERTIFY_FEE.extraPage} 元</td></tr>
+    </tbody>
+  </table>
+
+  <h3>郵資</h3>
+  <p class="note">{POSTAGE.effective}。存證信函以掛號交寄。</p>
+  <table>
+    <thead><tr><th>項目</th><th>金額</th></tr></thead>
+    <tbody>
+      {POSTAGE.rows.map((r) => (
+        <tr>
+          <td>{r.label}</td>
+          <td>{r.amount} 元{r.note ? `（${r.note}）` : ''}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  <p class="note">
+    頁數與重量決定實際金額，最終由郵局櫃檯計收。要精確金額請查
+    <a href={POSTAGE.source.url} rel="noopener">{POSTAGE.source.label}</a>與
+    <a href={CERTIFY_FEE.source.url} rel="noopener">{CERTIFY_FEE.source.label}</a>。
+  </p>
+
+  <h2>二、用紙上印的四條規定</h2>
+  <p>
+    這四條就印在郵局存證信函用紙的「備註」欄，是最權威的來源 ——
+    它印在你要交寄的那張紙上。
+  </p>
+  {FORM_RULES.map((r) => (
+    <section class="rule">
+      <h3>{r.title}</h3>
+      <blockquote>{r.quote}</blockquote>
+    </section>
+  ))}
+
+  <h2>三、交寄流程</h2>
+  <ol>
+    <li>到<a href={SOURCES.form.url} rel="noopener">中華郵政下載專區</a>取得官方用紙，或到郵局購買。</li>
+    <li>填好內容，一式三份。寄件人是機關、團體、學校、公司、商號的話，加蓋單位圖章與法定代理人簽章。</li>
+    <li>三份都蓋寄件人印章；多頁的還要蓋騎縫章，用紙上有標「騎縫郵戳」的位置。</li>
+    <li>帶三份到郵局窗口辦理證明手續。郵局核對三份內容完全相同後蓋證明。</li>
+    <li>以掛號交寄；要證明對方收到就加掛回執。</li>
+  </ol>
+  <p class="note">
+    不想跑郵局的話，中華郵政有
+    <a href={SOURCES.online.url} rel="noopener">存證信函網路交寄</a>。
+  </p>
+
+  <h2>四、有什麼效力：常見的誤會</h2>
+  <dl class="myths">
+    <div>
+      <dt>「寄了存證信函對方就得照做」</dt>
+      <dd>不會。郵局證明的是內容與寄出日期，不判斷你寫得對不對，也不強迫對方履行。</dd>
+    </div>
+    <div>
+      <dt>「用紙可以自己排版印出來」</dt>
+      <dd>不行。官方明文「{TYPESETTING.prohibition}」。本站只產內文，用紙請用官方的。</dd>
+    </div>
+    <div>
+      <dt>「寫得越兇越有用」</dt>
+      <dd>
+        內容會被完整保存三年，也可能成為對方手上的證據。把事實、請求與期限寫清楚就夠，
+        不需要威嚇或人身攻擊。
+      </dd>
+    </div>
+  </dl>
+
+  <h2>五、內文格式怎麼設定</h2>
+  <p>官方使用說明對貼進用紙的內文有明確設定：</p>
+  <blockquote>{TYPESETTING.quote}</blockquote>
+  {blank && (
+    <p>
+      本站的
+      <a href={`${base}downloads/${blank.path}`} download>{blank.filename}</a>
+      已經照這些值設定好，下載後把內容貼進官方用紙就會落在格子內。
+    </p>
+  )}
+
+  <h2>先看一份範例</h2>
+  <ul class="examples">
+    {notices.map((e) => (
+      <li>
+        <a href={`${base}citizens/${e.slug}/`}>{e.seoTitle}</a>
+        <span>{e.lead}</span>
+      </li>
+    ))}
+  </ul>
+
+  <p class="verified">
+    本頁費用與規定查證日期：{VERIFIED_ON}。資費會調整，請以官方公告為準。
+  </p>
+</ArticlePage>
+
+<style>
+  .cross {
+    background: var(--color-bg-light);
+    padding: 1rem 1.25rem;
+    border-radius: 0.375rem;
+  }
+  .rule blockquote,
+  main blockquote {
+    margin: 0.5rem 0 0;
+    padding: 0.75rem 1rem;
+    border-inline-start: 3px solid var(--color-primary);
+    background: var(--color-bg-light);
+    color: var(--color-ink-soft);
+    font-size: var(--text-sm);
+    line-height: 1.9;
+  }
+  .myths dt {
+    font-weight: 600;
+  }
+  .myths dd {
+    margin: 0.25rem 0 1.25rem;
+    color: var(--color-ink-soft);
+  }
+  .examples {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+  .examples li {
+    display: grid;
+    gap: 0.25rem;
+  }
+  .examples span {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+  .note {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+  .verified {
+    margin-top: 3rem;
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+</style>

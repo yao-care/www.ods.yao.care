@@ -180,6 +180,13 @@ const faq = {
       民眾文件會依文件族群檢查主旨、段落、請求事項、個資與必要欄位；不會套用機關公文的期望語或簽核規則。
     </p>
 
+    {isNotice && (
+      <p class="guide-link">
+        寫好只是一半：存證費怎麼算、要準備幾份、塗改字數上限、交寄流程與郵局保存年限，
+        看<a href={`${base}citizens/certified-letter-guide/`}>存證信函怎麼寄</a>。
+      </p>
+    )}
+
     {sameFamily.length > 0 && (
       <>
         <h2>{isNotice ? '其他存證信函範例' : '其他民眾書件範例'}</h2>
@@ -230,6 +237,14 @@ const faq = {
 </BaseLayout>
 
 <style>
+  .guide-link {
+    background: var(--color-bg-light);
+    padding: 1rem 1.25rem;
+    border-radius: 0.375rem;
+    font-size: var(--text-sm);
+    line-height: 1.9;
+  }
+
   main {
     max-width: 60rem;
     margin: 0 auto;

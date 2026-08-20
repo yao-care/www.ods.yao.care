@@ -101,6 +101,7 @@ const faq = {
 ---
 
 <BaseLayout
+  schemas={[articleSchema, faq]}
   title={`${example.seoTitle}｜公文 AI`}
   description={description}
 >
@@ -239,8 +240,6 @@ const faq = {
     </section>
   </main>
   <SiteFooter />
-  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
-  <script type="application/ld+json" set:html={JSON.stringify(faq)} />
 </BaseLayout>
 
 <style>

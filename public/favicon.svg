@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs><clipPath id="r"><rect width="64" height="64" rx="12.8" ry="12.8"/></clipPath></defs>
+  <g clip-path="url(#r)">
+    <rect width="64" height="64" fill="#154470"/>
+    <rect y="57.6" width="64" height="6.4" fill="#b95c3a"/>
+    <text x="32" y="30" fill="#ffffff" font-size="33" font-weight="700"
+          text-anchor="middle" dominant-baseline="central"
+          font-family="'Noto Sans CJK TC','Noto Sans TC','PingFang TC','Microsoft JhengHei',sans-serif">公</text>
+  </g>
+</svg>

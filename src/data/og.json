@@ -1,0 +1,126 @@
+{
+  "/": {
+    "file": "og/home.png",
+    "title": "公文 AI｜機關公文、民眾書件與存證信函"
+  },
+  "/apply/": {
+    "file": "og/apply.png",
+    "title": "機關申請試用｜公文 AI"
+  },
+  "/cases/": {
+    "file": "og/cases.png",
+    "title": "公文範例庫｜公文 AI"
+  },
+  "/cases/grant-settlement/": {
+    "file": "og/cases-grant-settlement.png",
+    "title": "補助經費核銷公文範例｜公文 AI"
+  },
+  "/cases/low-income-review/": {
+    "file": "og/cases-low-income-review.png",
+    "title": "社會救助資格審查結果通知範例｜公文 AI"
+  },
+  "/cases/meeting-notice/": {
+    "file": "og/cases-meeting-notice.png",
+    "title": "開會通知單範例｜公文 AI"
+  },
+  "/cases/noise-petition-reply/": {
+    "file": "og/cases-noise-petition-reply.png",
+    "title": "民眾陳情案函復範例｜公文 AI"
+  },
+  "/cases/open-burning-notice/": {
+    "file": "og/cases-open-burning-notice.png",
+    "title": "行政公告範例｜公文 AI"
+  },
+  "/cases/procurement-sign/": {
+    "file": "og/cases-procurement-sign.png",
+    "title": "簽辦採購案範例｜公文 AI"
+  },
+  "/cases/road-repair/": {
+    "file": "og/cases-road-repair.png",
+    "title": "民眾陳情轉請權責單位處理公文範例｜公文 AI"
+  },
+  "/cases/subsidy-application/": {
+    "file": "og/cases-subsidy-application.png",
+    "title": "申請中央補助計畫公文範例｜公文 AI"
+  },
+  "/checks/": {
+    "file": "og/checks.png",
+    "title": "公文格式檢核 24 條｜公文 AI"
+  },
+  "/citizens/": {
+    "file": "og/citizens.png",
+    "title": "民眾正式書件與存證信函｜公文 AI"
+  },
+  "/citizens/appeal-benefit/": {
+    "file": "og/citizens-appeal-benefit.png",
+    "title": "申訴書範例｜對補助審查結果提出申訴｜公文 AI"
+  },
+  "/citizens/case-explanation/": {
+    "file": "og/citizens-case-explanation.png",
+    "title": "說明書範例｜補充案件經過與資料｜公文 AI"
+  },
+  "/citizens/certified-letter-consumer-refund/": {
+    "file": "og/citizens-certified-letter-consumer-refund.png",
+    "title": "存證信函範例｜催告商品瑕疵退款｜公文 AI"
+  },
+  "/citizens/certified-letter-contract-termination/": {
+    "file": "og/citizens-certified-letter-contract-termination.png",
+    "title": "存證信函範例｜通知終止服務契約｜公文 AI"
+  },
+  "/citizens/certified-letter-debt/": {
+    "file": "og/citizens-certified-letter-debt.png",
+    "title": "存證信函範例｜催告返還借款｜公文 AI"
+  },
+  "/citizens/certified-letter-guide/": {
+    "file": "og/citizens-certified-letter-guide.png",
+    "title": "存證信函怎麼寄：費用、份數、用紙規定與流程｜公文 AI"
+  },
+  "/citizens/certified-letter-repair/": {
+    "file": "og/citizens-certified-letter-repair.png",
+    "title": "存證信函範例｜催告租屋漏水修繕｜公文 AI"
+  },
+  "/citizens/certified-letter/": {
+    "file": "og/citizens-certified-letter.png",
+    "title": "存證信函範例｜通知返還租賃押金｜公文 AI"
+  },
+  "/citizens/petition-noise/": {
+    "file": "og/citizens-petition-noise.png",
+    "title": "陳情書範例｜反映夜間噪音｜公文 AI"
+  },
+  "/citizens/subsidy-application/": {
+    "file": "og/citizens-subsidy-application.png",
+    "title": "申請書範例｜申請租金補助｜公文 AI"
+  },
+  "/citizens/which-route/": {
+    "file": "og/citizens-which-route.png",
+    "title": "陳情、請願、訴願、申訴怎麼選｜公文 AI"
+  },
+  "/doc-types/": {
+    "file": "og/doc-types.png",
+    "title": "公文文別怎麼選：函、書函、公告、簽、開會通知單｜公文 AI"
+  },
+  "/product/": {
+    "file": "og/product.png",
+    "title": "功能與導入方式｜公文 AI"
+  },
+  "/security/": {
+    "file": "og/security.png",
+    "title": "資料處理方式：去識別化與資料落地｜公文 AI"
+  },
+  "/templates/": {
+    "file": "og/templates.png",
+    "title": "公文格式 Word 範本下載｜函、公告、開會通知單、簽、存證信函"
+  },
+  "/terms/": {
+    "file": "og/terms.png",
+    "title": "公文用語與法規速查｜公文 AI"
+  },
+  "/usage/": {
+    "file": "og/usage.png",
+    "title": "公文用語表：稱謂語、期望語與法律統一用字｜公文 AI"
+  },
+  "/writing/": {
+    "file": "og/writing.png",
+    "title": "公文怎麼寫：函的三段、簽的三段與擬稿規定｜公文 AI"
+  }
+}

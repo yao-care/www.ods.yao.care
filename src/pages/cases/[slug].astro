@@ -76,6 +76,7 @@ const faq = {
 ---
 
 <BaseLayout
+  schemas={[articleSchema, faq]}
   title={`${caseMeta.seoTitle}｜公文 AI`}
   description={caseDescription}
 >
@@ -177,8 +178,6 @@ const faq = {
     </section>
   </main>
   <SiteFooter />
-  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
-  <script type="application/ld+json" set:html={JSON.stringify(faq)} />
 </BaseLayout>
 
 <style>

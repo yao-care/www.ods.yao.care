@@ -240,6 +240,38 @@ Word 下載另有 `file_download` 事件（file_name／file_extension／link_url
 同站 `/downloads/**` 的點擊原本會被 `cta_click` 的判斷整個略過，一筆都沒送，
 而「公文格式 word」正是站上意圖最高的一組字。
 
+## 站徽與分享圖是產生的（不要手改，也不要在 build 時產）
+
+`public/favicon.{ico,svg}`、`public/apple-touch-icon.png`、`public/og/*.png` 與清單
+`src/data/og.json` 全部由 `pnpm gen:brand`（`scripts/gen-brand-images.py`）產生，**產物要 commit**。
+
+```bash
+pnpm build       # 先有 dist/，標題才有得取
+pnpm gen:brand   # 產站徽與每頁 1200×630 分享圖 + src/data/og.json
+pnpm build       # 再跑一次，讓 check-og 對帳
+```
+
+為什麼不在 build 時產：這站的 Word 產生器刻意零 npm 相依，CI 上也就沒有 Pillow 與中文字型；
+為了幾張幾乎不變的圖讓 GitHub Actions 每次 `apt install fonts-noto-cjk` 不划算。
+改走 `gov-format.json`／`simplified-chars.json` 同一套路 —— 本機產、產物進版控、漂移由守門擋。
+
+**兩個 Discover 硬條件缺一不可**（2026-08-20 查到站上兩個都沒有）：圖寬 ≥1200px，
+且頁面要有 `max-image-preview:large`。只給圖不開 meta，只會拿到縮圖版位，等於白做。
+
+- 分享圖與 favicon 的 meta、`<link rel="icon">` 全部集中在 `BaseLayout.astro`，不要在單頁重複。
+- **單頁 JSON-LD 一律走 `schemas` prop**，不要自己在 slot 裡塞 `<script type="application/ld+json">`。
+  BaseLayout 會用 `withImage()` 統一把 `image` 補進 Article／CollectionPage／ContactPage；
+  繞過它的頁面就拿不到（`cases/`、`cases/[slug]`、`citizens/[slug]`、`templates/` 原本都是這樣漏掉的）。
+- 品牌色不寫死在腳本裡，`gen-brand-images.py` 從 `src/styles/variables.css` 的 hex fallback 讀。
+- 字型路徑也不寫死，用 `fc-match` 問系統要。
+
+`pnpm check:og`（在 `astro build` **之後**跑）拿實際 `<title>` 對帳 `src/data/og.json`：
+**改了頁面標題卻沒重跑 `gen:brand`，分享出去的卡片還是舊標題，畫面上完全看不出來** —— 所以用 build 擋。
+一併驗 `og:image` 指到的檔案存在、頁面有 `max-image-preview:large`。
+
+`src/pages/404.astro` 會產成 `dist/404.html`，GitHub Pages 直接吃。它借用首頁那張圖、
+不進 sitemap，也在 `src/data/llms.js` 的路由對帳裡排除 —— 404 不是內容。
+
 ## `llms.txt`／`llms-full.txt` 是產生的（不要手改）
 
 兩支由 `src/pages/llms.txt.js`、`src/pages/llms-full.txt.js` 於 build 時從 `src/data/llms.js` 產生，
@@ -285,8 +317,10 @@ pnpm build:docx           # 每次 build 自動跑：json + 案例資料 → pub
 
 ```bash
 pnpm dev              # 開發（起了就要記得 kill，主機紅線）
-pnpm build            # check-design && check-content && check-zh-hant && check-scenarios && build-docx && astro build && check-anchors
+pnpm build            # check-design && check-content && check-zh-hant && check-scenarios && build-docx && astro build && check-anchors && check-og
 pnpm check:anchors    # 只跑錨點守門（要先有 dist/）
+pnpm check:og         # 只跑分享圖守門（要先有 dist/）
+pnpm gen:brand        # 重產站徽與分享圖（改標題或改品牌色後，需 python3 pillow + noto CJK）
 pnpm check:design
 pnpm check:content:all
 pnpm check:zh-hant    # 只跑簡體字守門

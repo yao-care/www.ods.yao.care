@@ -1,0 +1,73 @@
+---
+/**
+ * 404。GitHub Pages 會直接吃 dist/404.html，所以放在這裡就會生效。
+ *
+ * 為什麼要有（2026-08-20）：在此之前打錯網址看到的是 GitHub 的預設英文頁
+ * 「Page not found · GitHub Pages」—— 跟本站毫無關係，也沒有任何回站內的路。
+ * 狀態碼本來就是正確的 404，所以這不是 SEO 問題，是使用者與品牌的缺口。
+ *
+ * 這頁刻意不進 sitemap、不進 llms.txt（見 src/data/llms.js 的排除）。
+ */
+import ArticlePage from '../layouts/ArticlePage.astro';
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+
+const ROUTES = [
+  { href: `${base}cases/`, name: '公文範例庫', blurb: '函、書函、公告、簽與開會通知單的機關公文全文，附逐條格式檢核。' },
+  { href: `${base}citizens/`, name: '民眾書件與存證信函', blurb: '申請書、陳情書、申訴書、說明書與存證信函範例。' },
+  { href: `${base}templates/`, name: 'Word 範本下載', blurb: '各文別空白範本與填好內容的範例檔，下載後直接編輯。' },
+  { href: `${base}writing/`, name: '公文怎麼寫', blurb: '函與簽的三段、擬稿規定與數字用法。' },
+  { href: `${base}usage/`, name: '公文用語表', blurb: '稱謂語、期望語與法律統一用字。' },
+  { href: `${base}doc-types/`, name: '文別怎麼選', blurb: '五種常用文別的使用時機與差別。' },
+];
+---
+
+<ArticlePage
+  title="找不到這一頁｜公文 AI"
+  description="這個網址不存在或已經移動。從公文範例庫、民眾書件、Word 範本下載重新找起。"
+  heading="找不到這一頁"
+  lead="這個網址不存在，或內容已經搬過位置。下面幾個是站上最常被用到的入口。"
+>
+  <ul class="routes">
+    {ROUTES.map((r) => (
+      <li>
+        <a href={r.href}>{r.name}</a>
+        <span>{r.blurb}</span>
+      </li>
+    ))}
+  </ul>
+
+  <p class="note">
+    確定這個網址以前是通的？寄到 <a href="mailto:service@yao.care">service@yao.care</a> 告訴我們，
+    我們把它接回正確的位置。
+  </p>
+</ArticlePage>
+
+<style>
+  .routes {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+    margin-block: 2rem;
+  }
+  .routes li {
+    display: grid;
+    gap: 0.25rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.375rem;
+    background: var(--color-white);
+  }
+  .routes span {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+  .note {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+    margin-top: 2rem;
+  }
+</style>

@@ -3,6 +3,7 @@ import '../styles/variables.css';
 import '../styles/global.css';
 import Analytics from '../components/Analytics.astro';
 import { ORG_SAME_AS } from '../site.config.js';
+import ogManifest from '../data/og.json';
 
 interface Props {
   title: string;
@@ -11,8 +12,36 @@ interface Props {
   schemas?: unknown[];
 }
 const { title, description, schemas = [] } = Astro.props;
+// 站內絕對路徑一律用 base 組：模式 A 時 BASE_URL='/'（行為不變），模式 B 才不會掉到主機根目錄。
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const siteUrl = new URL('/', Astro.site).href;
+
+// 分享圖：每頁一張 1200×630，由 scripts/gen-brand-images.py 產生並 commit，
+// 清單在 src/data/og.json。1200 寬是 Google Discover 大圖版位的硬門檻，
+// 而且要配下面的 max-image-preview:large 才吃得到；缺一不可。
+// 對不到的路由（例如 404）退回首頁那張，不留空的 og:image。
+const ogEntry = ogManifest[Astro.url.pathname] ?? ogManifest['/'];
+const ogImage = new URL(`${base}${ogEntry.file}`, Astro.site).href;
+/**
+ * 把分享圖補進單頁 schema 的主節點。
+ * 為什麼在這裡做而不是每頁手加：Article／CollectionPage／ContactPage 分散在十幾支檔，
+ * 逐一加等於開十幾個會漂移的點；而且圖是 BaseLayout 決定的，決定權跟寫入權放同一處。
+ */
+const IMAGEABLE = new Set(['Article', 'CollectionPage', 'ContactPage', 'WebPage']);
+const withImage = (schema) => {
+  if (!schema || typeof schema !== 'object') return schema;
+  const nodes = Array.isArray(schema['@graph']) ? schema['@graph'] : [schema];
+  for (const node of nodes) {
+    if (IMAGEABLE.has(node?.['@type']) && !node.image) {
+      node.image = { '@type': 'ImageObject', url: ogImage, width: 1200, height: 630 };
+    }
+  }
+  return schema;
+};
+
 const siteSchema = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -35,10 +64,6 @@ const siteSchema = {
     },
   ],
 };
-// 站內絕對路徑一律用 base 組：模式 A 時 BASE_URL='/'（行為不變），模式 B 才不會掉到主機根目錄。
-const base = import.meta.env.BASE_URL.endsWith('/')
-  ? import.meta.env.BASE_URL
-  : `${import.meta.env.BASE_URL}/`;
 ---
 
 <!doctype html>
@@ -50,12 +75,31 @@ const base = import.meta.env.BASE_URL.endsWith('/')
     {description && <meta name="description" content={description} />}
     <link rel="canonical" href={canonical} />
     <link rel="sitemap" href={`${base}sitemap-index.xml`} />
+
+    <!-- 沒有這一行，Discover 與搜尋結果只會給縮圖版位，1200 寬的圖等於白做 -->
+    <meta name="robots" content="max-image-preview:large" />
+
+    <link rel="icon" href={`${base}favicon.ico`} sizes="48x48" />
+    <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={`${base}apple-touch-icon.png`} />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="公文 AI" />
+    <meta property="og:locale" content="zh_TW" />
     <meta property="og:title" content={title} />
     {description && <meta property="og:description" content={description} />}
     <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    {description && <meta name="twitter:description" content={description} />}
+    <meta name="twitter:image" content={ogImage} />
     <script type="application/ld+json" set:html={JSON.stringify(siteSchema)} />
     {schemas.map((schema) => (
-      <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+      <script type="application/ld+json" set:html={JSON.stringify(withImage(schema))} />
     ))}
     <Analytics />
   </head>

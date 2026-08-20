@@ -111,7 +111,11 @@ const faq = {
 };
 ---
 
-<BaseLayout title="公文格式 Word 範本下載｜函、公告、開會通知單、簽、存證信函" description={description}>
+<BaseLayout
+  schemas={[schema, faq]}
+  title="公文格式 Word 範本下載｜函、公告、開會通知單、簽、存證信函"
+  description={description}
+>
   <SiteHeader />
   <main>
     <h1>公文格式 Word 範本下載</h1>
@@ -219,8 +223,6 @@ const faq = {
 
   </main>
   <SiteFooter />
-  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
-  <script type="application/ld+json" set:html={JSON.stringify(faq)} />
 </BaseLayout>
 
 <style>

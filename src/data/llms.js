@@ -84,7 +84,8 @@ export function assertCoversAllRoutes() {
   const routes = pageFiles
     .map((f) => f.replace('../pages', '').replace(/\/index\.astro$/, '/').replace(/\.astro$/, '/'))
     .filter((r) => !r.includes('[')) // 動態路由由資料展開
-    .filter((r) => r.endsWith('/')); // 排除 llms.txt.js 這類檔案端點
+    .filter((r) => r.endsWith('/')) // 排除 llms.txt.js 這類檔案端點
+    .filter((r) => r !== '/404/'); // 404 不是內容，不該出現在 AI 助理的站台索引裡
   const listed = new Set(allPaths());
   const missing = routes.filter((r) => !listed.has(r));
   if (missing.length) {

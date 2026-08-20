@@ -77,6 +77,9 @@ const schema = {
   heading="格式檢核 24 條"
   lead="每一份草稿產出後都會跑這 24 條。critical 等級不通過就不讓送簽，warn 等級會標出來讓承辦自己判斷。"
 >
+  <p class="cross">
+    這裡檢查的是格式；用字與稱謂語該怎麼選，查<a href={`${base}usage/`}>公文用語表</a>。
+  </p>
   {grouped.map((g) => (
     <section>
       <h2>{g.name}（{g.items.length} 條）</h2>

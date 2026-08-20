@@ -1,0 +1,289 @@
+{
+ "_generated": "2026-08-20",
+ "_source": {
+  "name": "文書處理手冊",
+  "issuer": "行政院",
+  "edition": "中華民國 104 年 7 月",
+  "url": "https://www.ey.gov.tw/Page/9277F759E41CCD91",
+  "file": "https://www.ey.gov.tw/File/17244366FC77E57C/c689d069-9a0d-47b3-b9cd-fac6da2d9234?A=C"
+ },
+ "_note": "全部取自官方 PDF，未經改寫。網路流傳的用語表多轉錄自 99 年舊版且各校互有出入，不採用。",
+ "usageRules": {
+  "expectation": "期望、目的及准駁用語，得視需要酌用「請」、「希」、「查照」、「鑒核」或「核示」、「備查」、「照辦」、「辦理見復」、「轉行照辦」、「應予照准」、「未便照准」等。",
+  "decisiveness": "准駁性、建議性、採擇性、判斷性之公文用語，必須明確肯定。",
+  "direct": "１、有隸屬關係之機關：上級對下級稱「貴」；下級對上級稱「鈞」；自稱「本」。 ２、對無隸屬關係之機關：上級稱「大」；平行稱「貴」；自稱「本」。 ３、對機關首長間：上級對下級稱「貴」；自稱「本」；下級對上級稱「鈞長」，自稱「本」。 ４、機關（或首長）對屬員稱「臺端」。 ５、機關對人民稱「先生」、「女士」或通稱「君」、「臺端」；對團體稱「貴」，自稱「本」。 ６、行文數機關或單位時，如於文內同時提及，可通稱為「貴機關」或「貴單位」。",
+  "indirect": "１、對機關、團體稱「全銜」或「簡銜」，如一再提及，必要時得稱「該」；對職員稱「職銜」。 ２、對個人一律稱「先生」、「女士」或「君」。"
+ },
+ "unifiedChars": [
+  {
+   "example": "公布、分布、頒布",
+   "use": "布",
+   "avoidCp": "4F48",
+   "note": ""
+  },
+  {
+   "example": "徵兵、徵稅、稽徵",
+   "use": "徵",
+   "avoidCp": "5F81",
+   "note": ""
+  },
+  {
+   "example": "部分、身分",
+   "use": "分",
+   "avoidCp": "4EFD",
+   "note": ""
+  },
+  {
+   "example": "帳、帳目、帳戶",
+   "use": "帳",
+   "avoidCp": "8CEC",
+   "note": ""
+  },
+  {
+   "example": "韭菜",
+   "use": "韭",
+   "avoidCp": "97EE",
+   "note": ""
+  },
+  {
+   "example": "礦、礦物、礦藏",
+   "use": "礦",
+   "avoidCp": "945B",
+   "note": ""
+  },
+  {
+   "example": "釐訂、釐定",
+   "use": "釐",
+   "avoidCp": "5398",
+   "note": ""
+  },
+  {
+   "example": "使館、領館、圖書館",
+   "use": "館",
+   "avoidCp": "8218",
+   "note": ""
+  },
+  {
+   "example": "穀、穀物",
+   "use": "穀",
+   "avoidCp": "8C37",
+   "note": ""
+  },
+  {
+   "example": "行蹤、失蹤",
+   "use": "蹤",
+   "avoidCp": "8E2A",
+   "note": ""
+  },
+  {
+   "example": "妨礙、障礙、阻礙",
+   "use": "礙",
+   "avoidCp": "788D",
+   "note": ""
+  },
+  {
+   "example": "賸餘",
+   "use": "賸",
+   "avoidCp": "5269",
+   "note": ""
+  },
+  {
+   "example": "占、占有、獨占",
+   "use": "占",
+   "avoidCp": "4F54",
+   "note": ""
+  },
+  {
+   "example": "牴觸",
+   "use": "牴",
+   "avoidCp": "62B5",
+   "note": ""
+  },
+  {
+   "example": "雇員、雇主、雇工",
+   "use": "雇",
+   "avoidCp": "50F1",
+   "note": "名詞用「雇」"
+  },
+  {
+   "example": "僱、僱用、聘僱",
+   "use": "僱",
+   "avoidCp": "96C7",
+   "note": "動詞用「僱」"
+  },
+  {
+   "example": "贓物",
+   "use": "贓",
+   "avoidCp": "81DF",
+   "note": ""
+  },
+  {
+   "example": "黏貼",
+   "use": "黏",
+   "avoidCp": "7C98",
+   "note": ""
+  },
+  {
+   "example": "計畫",
+   "use": "畫",
+   "avoidCp": "5283",
+   "note": "名詞用「畫」"
+  },
+  {
+   "example": "策劃、規劃、擘劃",
+   "use": "劃",
+   "avoidCp": "756B",
+   "note": "動詞用「劃」"
+  },
+  {
+   "example": "蒐集",
+   "use": "蒐",
+   "avoidCp": "641C",
+   "note": ""
+  },
+  {
+   "example": "菸葉、菸酒",
+   "use": "菸",
+   "avoidCp": "7159",
+   "note": ""
+  },
+  {
+   "example": "儘先、儘量",
+   "use": "儘",
+   "avoidCp": "76E1",
+   "note": ""
+  },
+  {
+   "example": "麻類、亞麻",
+   "use": "麻",
+   "avoidCp": "8534",
+   "note": ""
+  },
+  {
+   "example": "電表、水表",
+   "use": "表",
+   "avoidCp": "9336",
+   "note": ""
+  },
+  {
+   "example": "擦刮",
+   "use": "刮",
+   "avoidCp": "62EC",
+   "note": ""
+  },
+  {
+   "example": "拆除",
+   "use": "拆",
+   "avoidCp": "64A4",
+   "note": ""
+  },
+  {
+   "example": "磷、硫化磷",
+   "use": "磷",
+   "avoidCp": "71D0",
+   "note": ""
+  },
+  {
+   "example": "貫徹",
+   "use": "徹",
+   "avoidCp": "6F88",
+   "note": ""
+  },
+  {
+   "example": "澈底",
+   "use": "澈",
+   "avoidCp": "5FB9",
+   "note": ""
+  },
+  {
+   "example": "祗",
+   "use": "祗",
+   "avoidCp": "53EA",
+   "note": "副詞"
+  },
+  {
+   "example": "並",
+   "use": "並",
+   "avoidCp": "5E76",
+   "note": "連接詞"
+  },
+  {
+   "example": "聲請",
+   "use": "聲",
+   "avoidCp": "7533",
+   "note": "對法院用「聲請」對行政機關用「申請」"
+  },
+  {
+   "example": "申請",
+   "use": "申",
+   "avoidCp": "8072",
+   "note": "對法院用「聲請」對行政機關用「申請」"
+  },
+  {
+   "example": "關於、對於",
+   "use": "於",
+   "avoidCp": "4E8E",
+   "note": ""
+  },
+  {
+   "example": "給與",
+   "use": "與",
+   "avoidCp": "4E88",
+   "note": "給與實物給予名位、榮譽等抽象事物"
+  },
+  {
+   "example": "給予、授予",
+   "use": "予",
+   "avoidCp": "8207",
+   "note": "給與實物給予名位、榮譽等抽象事物"
+  },
+  {
+   "example": "紀錄",
+   "use": "紀",
+   "avoidCp": "8A18",
+   "note": "名詞用「紀錄」"
+  },
+  {
+   "example": "記錄",
+   "use": "記",
+   "avoidCp": "7D00",
+   "note": "動詞用「記錄」"
+  },
+  {
+   "example": "事蹟、史蹟、遺蹟",
+   "use": "蹟",
+   "avoidCp": "8DE1",
+   "note": ""
+  },
+  {
+   "example": "蹤跡",
+   "use": "跡",
+   "avoidCp": "8E5F",
+   "note": ""
+  },
+  {
+   "example": "糧食",
+   "use": "糧",
+   "avoidCp": "7CAE",
+   "note": ""
+  },
+  {
+   "example": "覆核",
+   "use": "覆",
+   "avoidCp": "8907",
+   "note": ""
+  },
+  {
+   "example": "復查",
+   "use": "復",
+   "avoidCp": "8907",
+   "note": ""
+  },
+  {
+   "example": "複驗",
+   "use": "複",
+   "avoidCp": "5FA9",
+   "note": ""
+  }
+ ]
+}

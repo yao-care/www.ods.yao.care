@@ -14,6 +14,10 @@ const categories = [...new Set(knowledge.items.map((k) => k.category))];
   heading="用語與法規速查"
   lead="草擬時系統會從這些條目裡挑相關的引用進說明段。這裡列的是示範用的公版內容；機關導入後會換成貴機關自己的法規與作業規定。"
 >
+  <p class="cross">
+    找的是稱謂語、期望語或統一用字的話，那些在<a href={`${base}usage/`}>公文用語表</a>，
+    整份取自行政院文書處理手冊。
+  </p>
   {categories.map((cat) => (
     <section>
       <h2>{cat}</h2>

@@ -1,0 +1,263 @@
+---
+/**
+ * 公文用語表：稱謂語、期望語與准駁語、法律統一用字。
+ *
+ * 為什麼有這一頁（2026-08-20）：實搜「公文用語」，前排清一色是各校秘書室的用語表 PDF ——
+ * 使用者要的是「查表：這個情況該用哪個詞」，不是讀一篇文章，也不是看一則範例。
+ * 本站原本只在案例裡零星提到期望語，沒有可查的表。
+ * 判定過程見 docs/keyword-validation/2026-08-20-pinned-14.md。
+ *
+ * 資料來自 src/data/gov-terms.json，由 scripts/fetch-gov-terms.py 解析行政院《文書處理手冊》
+ * 官方 PDF 產生。**不要在這頁手寫規則**——網路流傳的用語表多轉錄自 99 年舊版，各校版本互有出入。
+ */
+import ArticlePage from '../../layouts/ArticlePage.astro';
+import terms from '../../data/gov-terms.json';
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+
+const { usageRules, _source: source, _generated: generated } = terms;
+
+// 「曾見用字」在資料檔裡存的是碼點（那一欄列的是不該寫的字，其中幾個本身是簡體，
+// 直接放進原始碼會被 check-zh-hant 擋下，而且擋得對）。這裡還原成字元再顯示。
+const unifiedChars = terms.unifiedChars.map((r) => ({
+  ...r,
+  avoid: String.fromCodePoint(parseInt(r.avoidCp, 16)),
+}));
+
+/**
+ * 稱謂語速查表。每一列都是把手冊「十八、(三)直接稱謂用語」那段話拆成「誰對誰」「稱對方」
+ * 「自稱」三欄，方便掃讀；原文一字不改地附在表格下方，兩者對照著看。
+ */
+const ADDRESS_ROWS = [
+  { relation: '有隸屬關係　上級 → 下級', them: '貴', self: '本' },
+  { relation: '有隸屬關係　下級 → 上級', them: '鈞', self: '本' },
+  { relation: '無隸屬關係　上級 → 對方', them: '大', self: '本' },
+  { relation: '無隸屬關係　平行機關', them: '貴', self: '本' },
+  { relation: '機關首長間　上級 → 下級', them: '貴', self: '本' },
+  { relation: '機關首長間　下級 → 上級', them: '鈞長', self: '本' },
+  { relation: '機關（或首長）→ 屬員', them: '臺端', self: '本' },
+  { relation: '機關 → 人民', them: '先生／女士／君／臺端', self: '本' },
+  { relation: '機關 → 團體', them: '貴', self: '本' },
+];
+
+/** 期望語看對象。這三個是手冊點名可用、也是承辦最常挑錯的。 */
+const EXPECTATION_ROWS = [
+  { target: '對上級機關', phrase: '請鑒核、請核示' },
+  { target: '對平行機關', phrase: '請查照' },
+  { target: '對下級機關', phrase: '請查照辦理、請照辦、請轉行照辦' },
+  { target: '要對方限期回覆', phrase: '請辦理見復（期限寫進主旨）' },
+  { target: '准駁', phrase: '應予照准、未便照准' },
+];
+
+/** 45 條統一用字裡，有「說明」的那 12 條是最容易寫錯的，獨立成一區先講。 */
+const tricky = unifiedChars.filter((r) => r.note);
+const rest = unifiedChars.filter((r) => !r.note);
+
+const description =
+  '公文的稱謂語（貴、鈞、大、本、臺端該怎麼配）、期望語與准駁語，'
+  + `以及 ${unifiedChars.length} 條法律統一用字，全部取自行政院文書處理手冊官方版本。`;
+
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+
+const faqPairs = [
+  {
+    q: '對上級機關要用「貴」還是「鈞」？',
+    a: '下級對上級稱「鈞」，自稱「本」；上級對下級才稱「貴」。對機關首長，下級對上級稱「鈞長」。',
+  },
+  {
+    q: '期望語該用「請鑒核」還是「請查照」？',
+    a: '看行文對象：對上級用「請鑒核」或「請核示」，平行機關用「請查照」，下級用「請查照辦理」。'
+      + '概括的期望語列入主旨，不在辦法段重複。',
+  },
+  {
+    q: '「計畫」還是「計劃」？',
+    a: '名詞用「計畫」，動詞用「策劃、規劃、擘劃」。這是法律統一用字表的規定。',
+  },
+  {
+    q: '「紀錄」還是「記錄」？',
+    a: '名詞用「紀錄」，動詞用「記錄」。',
+  },
+  {
+    q: '向機關提出的是「申請」還是「聲請」？',
+    a: '對法院用「聲請」，對行政機關用「申請」。',
+  },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Article',
+      '@id': `${pageUrl}#article`,
+      mainEntityOfPage: pageUrl,
+      headline: '公文用語表：稱謂語、期望語與法律統一用字',
+      description,
+      author: { '@type': 'Organization', name: '藥提醒科技有限公司', url: 'https://www.yao.care/' },
+      publisher: { '@type': 'Organization', name: '藥提醒科技有限公司', url: 'https://www.yao.care/' },
+      inLanguage: 'zh-Hant-TW',
+      citation: {
+        '@type': 'Legislation',
+        name: `${source.issuer}《${source.name}》${source.edition}`,
+        url: source.url,
+      },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: '首頁', item: 'https://www.ods.yao.care/' },
+        { '@type': 'ListItem', position: 2, name: '公文用語表', item: pageUrl },
+      ],
+    },
+  ],
+};
+
+const faq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqPairs.map((p) => ({
+    '@type': 'Question',
+    name: p.q,
+    acceptedAnswer: { '@type': 'Answer', text: p.a },
+  })),
+};
+---
+
+<ArticlePage
+  schemas={[schema, faq]}
+  title="公文用語表：稱謂語、期望語與法律統一用字｜公文 AI"
+  description={description}
+  heading="公文用語表"
+  lead="稱謂語與期望語配錯對象是最常見的退件原因之一。這頁是拿來查的，不是拿來讀的。"
+>
+  <p class="cross">
+    整份資料取自<a href={source.url} rel="noopener">{source.issuer}《{source.name}》{source.edition}</a>官方版本，
+    由建置腳本直接解析官方檔案產生，沒有經過改寫。
+  </p>
+
+  <h2>一、稱謂語：稱對方什麼、自稱什麼</h2>
+  <table>
+    <thead><tr><th>行文關係</th><th>稱對方</th><th>自稱</th></tr></thead>
+    <tbody>
+      {ADDRESS_ROWS.map((r) => (
+        <tr>
+          <td>{r.relation}</td>
+          <td class="term">{r.them}</td>
+          <td class="term">{r.self}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  <details>
+    <summary>手冊原文（直接稱謂用語）</summary>
+    <blockquote>{usageRules.direct}</blockquote>
+  </details>
+  <details>
+    <summary>手冊原文（間接稱謂用語）</summary>
+    <blockquote>{usageRules.indirect}</blockquote>
+  </details>
+
+  <h2>二、期望語與准駁語</h2>
+  <table>
+    <thead><tr><th>對象／情況</th><th>用語</th></tr></thead>
+    <tbody>
+      {EXPECTATION_ROWS.map((r) => (
+        <tr><td>{r.target}</td><td class="term">{r.phrase}</td></tr>
+      ))}
+    </tbody>
+  </table>
+  <details>
+    <summary>手冊原文</summary>
+    <blockquote>{usageRules.expectation}</blockquote>
+    <blockquote>{usageRules.decisiveness}</blockquote>
+  </details>
+  <p class="note">
+    手冊另有規定：概括的期望語列入「主旨」，不在「辦法」段內重複；具體要求對方有所作為時，
+    才列入「辦法」段。訂有辦理或復文期限的，期限要寫進「主旨」。
+  </p>
+
+  <h2>三、最容易寫錯的 {tricky.length} 組字</h2>
+  <p>法律統一用字表裡有附說明的都在這裡 —— 有說明，通常就代表它常被寫錯。</p>
+  <table>
+    <thead><tr><th>用字舉例</th><th>用</th><th>不用</th><th>說明</th></tr></thead>
+    <tbody>
+      {tricky.map((r) => (
+        <tr>
+          <td>{r.example}</td>
+          <td class="term">{r.use}</td>
+          <td class="avoid">{r.avoid}</td>
+          <td>{r.note}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+
+  <h2>四、法律統一用字表其餘 {rest.length} 條</h2>
+  <table>
+    <thead><tr><th>用字舉例</th><th>用</th><th>不用</th></tr></thead>
+    <tbody>
+      {rest.map((r) => (
+        <tr>
+          <td>{r.example}</td>
+          <td class="term">{r.use}</td>
+          <td class="avoid">{r.avoid}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+
+  <h2>查完之後</h2>
+  <p>
+    文別選錯的話，後面的期望語與段落結構都會跟著錯 —— 先看<a href={`${base}doc-types/`}>文別怎麼選</a>。
+    要看這些用語實際落在公文裡長什麼樣，<a href={`${base}cases/`}>公文範例庫</a>每一則都是完整全文；
+    空白範本在<a href={`${base}templates/`}>範本下載</a>。
+    機關自己的法規依據怎麼帶進說明段，看<a href={`${base}terms/`}>用語與法規速查</a>。
+  </p>
+
+  <p class="verified">
+    資料產生日期：{generated}。來源：{source.issuer}《{source.name}》{source.edition}。
+    手冊改版時重跑 <code>pnpm gen:gov-terms</code>。
+  </p>
+</ArticlePage>
+
+<style>
+  .cross {
+    background: var(--color-bg-light);
+    padding: 1rem 1.25rem;
+    border-radius: 0.375rem;
+  }
+  .term {
+    font-weight: 600;
+  }
+  .avoid {
+    color: var(--color-ink-muted);
+    text-decoration: line-through;
+  }
+  details {
+    margin: 1rem 0 2rem;
+  }
+  summary {
+    font-size: var(--text-sm);
+    cursor: pointer;
+    color: var(--color-ink-soft);
+  }
+  blockquote {
+    margin: 0.75rem 0 0;
+    padding: 0.75rem 1rem;
+    border-inline-start: 3px solid var(--color-primary);
+    background: var(--color-bg-light);
+    color: var(--color-ink-soft);
+    font-size: var(--text-sm);
+    line-height: 2;
+  }
+  .note {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+  .verified {
+    margin-top: 3rem;
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+</style>

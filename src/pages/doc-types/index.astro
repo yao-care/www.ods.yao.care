@@ -88,6 +88,9 @@ const schema = {
   heading="文別怎麼選"
   lead="選錯文別，後面的期望語與段落結構都會跟著錯。這五種涵蓋地方機關日常九成以上的行文。"
 >
+  <p class="cross">
+    稱謂語與期望語怎麼配對象、哪些字容易寫錯，查<a href={`${base}usage/`}>公文用語表</a>。
+  </p>
   {TYPES.map((t) => (
     <section>
       <h2>{t.name}</h2>

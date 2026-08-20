@@ -88,6 +88,17 @@ cp -r /tmp/…/out/scenarios /tmp/…/out/scenarios.json /tmp/…/out/knowledge.
 產品改版後重跑重烘，兩邊才不會漂移。JSON 結構刻意與 `/guest/scenarios` API 一致，
 日後要改成打即時 API，前端不用改解析。
 
+同一次 `--llm` 也會產出 `ods.yao.care/src/lib/demo-drafts.json`，那是**線上 Guest 體驗**
+播種用的成品 —— 兩邊因此吃同一份，訪客從行銷站點進應用不會看到品質落差。
+重烘後要一起處理：應用端 commit `demo-drafts.json` 並 `seed-demo.js --force` ＋ `pm2 restart ods`，
+本站 copy `scenarios/`、`scenarios.json`、`knowledge.json`。
+
+兩道守門盯著這件事：
+- 本站 `pnpm check:scenarios`（在 build 內）驗 engine 必須是 `llm`、檢核不得有未通過、
+  開會通知單不得有主旨或段落。
+- 應用端 `npm test` 的「烘好的展示成品與現行檢核規則一致」會把每一篇重跑 `validateDraft`
+  跟烘好的結果比對 —— 改了檢核規則卻沒重烘，那裡會 fail。
+
 `src/data/cases.js` 是本站自己的欄位（slug、搜尋用標題、分類、常踩的點），與上面互補。
 
 開會通知單自 2026-08-20 起由應用端直接產規範第八點的固定欄位（`draft.fields` 的

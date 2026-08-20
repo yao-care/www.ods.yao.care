@@ -23,6 +23,15 @@ interface Props {
 import { SERVICE_LINKS } from '../site.config.js';
 
 const { scenario, draft, checks, receiver } = Astro.props;
+/**
+ * 開會通知單的固定欄位（cases.js 的 meeting）。給了就用固定欄位渲染，不用主旨／說明／辦法。
+ *
+ * 為什麼要有這個分支（2026-08-20）：政府文書格式參考規範第八點的開會通知單是固定欄位表單
+ * ——開會事由、開會時間、開會地點、主持人、聯絡人及電話、出席者、列席者、備註——
+ * **沒有主旨、沒有說明、沒有辦法**。下載的 Word 早就照規範排好了（scripts/lib/gov-format.mjs），
+ * 但頁面一直顯示函的形狀，跟同一頁的 watchOut「時間、地點寫進主旨反而不合格式」自相矛盾。
+ */
+const meeting = Astro.props.meeting ?? null;
 const download = Astro.props.download ?? null;
 const family = Astro.props.family ?? draft.document_family ?? 'official';
 const isOfficial = family === 'official';
@@ -130,19 +139,43 @@ const passed = checks.filter((c) => c.ok).length;
     </header>
 
     <div class="doc">
-      <p class="subject"><strong>主旨：</strong>{draft.subject}</p>
-      {draft.sections.map((s) => (
-        <div class="section">
-          <p class="section-title"><strong>{s.title}：</strong></p>
-          <ol>{s.items.map((it) => <li>{it}</li>)}</ol>
-        </div>
-      ))}
+      {meeting ? (
+        <dl class="fixed-fields">
+          <div><dt>開會事由</dt><dd>{meeting.topic}</dd></div>
+          <div><dt>開會時間</dt><dd>{meeting.time}</dd></div>
+          <div><dt>開會地點</dt><dd>{meeting.place}</dd></div>
+          <div><dt>主持人</dt><dd>{meeting.chair}</dd></div>
+          <div><dt>聯絡人及電話</dt><dd>{meeting.contact}</dd></div>
+          <div><dt>出席者</dt><dd>{meeting.attendees}</dd></div>
+          {meeting.remarks && <div><dt>備註</dt><dd>{meeting.remarks}</dd></div>}
+        </dl>
+      ) : (
+        <>
+          <p class="subject"><strong>主旨：</strong>{draft.subject}</p>
+          {draft.sections.map((s) => (
+            <div class="section">
+              <p class="section-title"><strong>{s.title}：</strong></p>
+              <ol>{s.items.map((it) => <li>{it}</li>)}</ol>
+            </div>
+          ))}
+        </>
+      )}
     </div>
 
     <div class="checks">
       <p class="checks-head">
-        {isOfficial ? '格式檢核' : '民眾文件檢核'} <strong>{passed}/{checks.length}</strong> 通過
+        {meeting
+          ? '格式檢核（下方 24 條是「函」的檢核）'
+          : (isOfficial ? '格式檢核' : '民眾文件檢核')}
+        {!meeting && <> <strong>{passed}/{checks.length}</strong> 通過</>}
       </p>
+      {meeting && (
+        <p class="checks-note">
+          開會通知單是固定欄位表單，沒有主旨與段落，所以這 24 條裡的 6 條主旨檢核與 4 條段落檢核
+          對它並不適用。目前應用產出的草稿是「函」的形狀，這裡列出的是對那份草稿跑出來的結果，
+          不是對上面這張通知單的判定。
+        </p>
+      )}
       <ul>
         {checks.map((c) => (
           <li class={c.ok ? 'ok' : 'bad'}>
@@ -305,6 +338,29 @@ const passed = checks.filter((c) => c.ok).length;
 </script>
 
 <style>
+  .fixed-fields {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0;
+  }
+  .fixed-fields > div {
+    display: grid;
+    grid-template-columns: 8rem 1fr;
+    gap: 0.5rem;
+  }
+  .fixed-fields dt {
+    font-weight: 600;
+  }
+  .fixed-fields dd {
+    margin: 0;
+  }
+  .checks-note {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+    line-height: 1.9;
+    margin-block: 0.5rem 1rem;
+  }
+
   .demo {
     border: 1px solid var(--color-line);
     border-radius: 0.5rem;

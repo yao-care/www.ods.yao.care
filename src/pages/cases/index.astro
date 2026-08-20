@@ -21,7 +21,7 @@ const schema = {
       '@id': `${pageUrl}#page`,
       name: '公文範例庫',
       description:
-        `核銷、陳情轉請、開會通知、公告、簽稿等 ${CASES.length} 則公文範例全文，每一則都附 24 條格式檢核結果。`,
+        `核銷、陳情轉請、開會通知、公告、簽稿等 ${CASES.length} 則公文範例全文，每一則都附逐條格式檢核結果。`,
       inLanguage: 'zh-Hant-TW',
       isPartOf: { '@type': 'WebSite', url: 'https://www.ods.yao.care/' },
       mainEntity: {
@@ -48,13 +48,14 @@ const schema = {
 
 <BaseLayout
   title="公文範例庫｜公文 AI"
-  description="核銷、陳情轉請、開會通知、公告、簽稿等公文範例全文，每一則都附 24 條格式檢核結果。"
+  description="核銷、陳情轉請、開會通知、公告、簽稿等公文範例全文，每一則都附逐條格式檢核結果。"
 >
   <SiteHeader />
   <main>
     <h1>公文範例庫</h1>
     <p class="lead">
-      每一則都是完整的公文全文，附上 24 條格式檢核逐條結果。點進去可以照實際流程試做一次。
+      每一則都是完整的公文全文，附上逐條格式檢核結果（函、簽、書函、公告 24 條；
+      開會通知單是固定欄位表單，另有 22 條）。點進去可以照實際流程試做一次。
     </p>
 
     <p class="cross">

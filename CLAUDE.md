@@ -89,8 +89,15 @@ cp -r /tmp/…/out/scenarios /tmp/…/out/scenarios.json /tmp/…/out/knowledge.
 日後要改成打即時 API，前端不用改解析。
 
 `src/data/cases.js` 是本站自己的欄位（slug、搜尋用標題、分類、常踩的點），與上面互補。
-開會通知單那筆另有 `meeting`：應用產出的草稿是**函的形狀**（時間地點寫在說明分項、主旨帶期望語），
-排成正式通知單要拆進規範第八點的固定欄位，這些值放這裡而不是去改 scenarios 的 JSON。
+
+開會通知單自 2026-08-20 起由應用端直接產規範第八點的固定欄位（`draft.fields` 的
+`meeting_topic`／`meeting_time`／`meeting_place`／`meeting_chair`／`meeting_contact`／
+`attendees`／`observers`／`remarks`），`subject` 為空字串、`sections` 為空陣列 ——
+**它不是三段式，沒有主旨也沒有說明／辦法**。網頁與 Word 共用 `src/data/meeting.js` 重排；
+`cases.js` 的 `meeting` 只留作重烘前舊資料的後備。
+
+檢核條目數也依文別而定：函／簽／書函／公告 24 條，開會通知單 22 條（不套主旨類 6 條與
+段落類 5 條，改查上面那組固定欄位）。頁面上不要再寫死「24 條」，用 `payload.checks.length`。
 
 ## 體驗器的設計（`src/components/CaseDemo.astro`）
 

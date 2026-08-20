@@ -1,6 +1,8 @@
 ---
 import ArticlePage from '../../layouts/ArticlePage.astro';
 import sample from '../../data/scenarios/grant_report.json';
+import meetingSample from '../../data/scenarios/meeting.json';
+import downloads from '../../data/downloads.json';
 
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
@@ -111,10 +113,38 @@ const schema = {
   )}
 
   <section>
+    <h2>開會通知單另有一組（{meetingSample.checks.length} 條）</h2>
+    <p>
+      這 24 條是「函」的檢核。開會通知單依<a href={downloads.source.page} rel="noopener">{downloads.source.name}</a>
+      第八點是固定欄位表單 —— 沒有主旨、沒有說明或辦法 —— 所以上面的 6 條主旨檢核與
+      5 條段落檢核對它不適用，改查它自己的欄位。
+    </p>
+    <table>
+      <thead><tr><th>檢核項目</th><th>等級</th></tr></thead>
+      <tbody>
+        {meetingSample.checks
+          .filter((c) => c.id.startsWith('meeting_'))
+          .map((c) => (
+            <tr>
+              <td>{c.title}</td>
+              <td class={c.severity === 'critical' ? 'critical' : 'warn'}>
+                {c.severity === 'critical' ? '不通過不得送簽' : '提醒'}
+              </td>
+            </tr>
+          ))}
+      </tbody>
+    </table>
+    <p class="note">
+      其餘 13 條通用文字檢核（個資殘留、簡體字、民國紀年、全形標點…）兩邊都跑，
+      合計 {meetingSample.checks.length} 條。
+    </p>
+  </section>
+
+  <section>
     <h2>看實際跑出來的結果</h2>
     <p>
-      每一則<a href={`${base}cases/`}>公文範例</a>都附了這 24 條的逐條結果，
-      可以直接看哪些通過、哪些被標記。
+      每一則<a href={`${base}cases/`}>公文範例</a>都附了逐條結果，可以直接看哪些通過、哪些被標記。
+      開會通知單那則跑的是上面那組 {meetingSample.checks.length} 條。
     </p>
   </section>
 </ArticlePage>

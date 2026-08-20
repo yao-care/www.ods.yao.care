@@ -173,16 +173,12 @@ const passed = checks.filter((c) => c.ok).length;
 
     <div class="checks">
       <p class="checks-head">
-        {meeting
-          ? '格式檢核（下方 24 條是「函」的檢核）'
-          : (isOfficial ? '格式檢核' : '民眾文件檢核')}
-        {!meeting && <> <strong>{passed}/{checks.length}</strong> 通過</>}
+        {isOfficial ? '格式檢核' : '民眾文件檢核'} <strong>{passed}/{checks.length}</strong> 通過
       </p>
       {meeting && (
         <p class="checks-note">
-          開會通知單是固定欄位表單，沒有主旨與段落，所以這 24 條裡的 6 條主旨檢核與 4 條段落檢核
-          對它並不適用。目前應用產出的草稿是「函」的形狀，這裡列出的是對那份草稿跑出來的結果，
-          不是對上面這張通知單的判定。
+          開會通知單是固定欄位表單，沒有主旨與段落，所以不套用函的 6 條主旨檢核與 5 條段落檢核，
+          改查規範第八點的固定欄位（開會事由、時間、地點、主持人、聯絡人及電話、出席者），共 {checks.length} 條。
         </p>
       )}
       <ul>

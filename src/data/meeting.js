@@ -5,9 +5,9 @@
  * 主持人、聯絡人及電話、出席者、列席者、副本、備註，**沒有主旨、沒有說明、沒有辦法**。
  * 欄位與順序見 src/data/gov-format.json 的 `blocks.meeting`（從官方 ODT 量出來的）。
  *
- * 應用端目前產出的草稿是「函」的形狀（主旨帶期望語、時間地點寫在說明分項裡），
- * 所以要在這裡拆進固定欄位。cases.js 的 `meeting` 提供拆好的值，
- * `absorbedPrefixes` 列出因此不該再重複進備註的分項。
+ * 應用端（ods.yao.care）自 2026-08-20 起就直接產這些固定欄位（`draft.fields`），
+ * 這裡優先讀它。`cases.js` 的 `meeting` 只作為舊資料的後備——重烘前的 scenarios
+ * 產的是「函」的形狀（主旨帶期望語、時間地點寫在說明分項裡），那時要靠它拆。
  *
  * 為什麼要抽出來（2026-08-20）：原本只有 scripts/lib/gov-format.mjs 做這件事，於是
  * 下載的 Word 是對的、網頁卻還顯示函的形狀，兩邊不一致。共用同一支就不會再漂移。
@@ -20,6 +20,8 @@ export function stripExpectation(subject = '') {
 
 /** 備註＝草稿的說明／辦法分項，扣掉已升格成固定欄位的那些（否則時間地點會出現兩次）。 */
 export function meetingRemarks(draft, meeting = {}) {
+  const fromApp = String(draft.fields?.remarks ?? '').trim();
+  if (fromApp) return [fromApp];
   const absorbed = meeting.absorbedPrefixes ?? [];
   return (draft.sections ?? [])
     .flatMap((s) => s.items)
@@ -33,14 +35,17 @@ export function meetingRemarks(draft, meeting = {}) {
 export function meetingFields(draft, meeting = {}) {
   const remarks = meetingRemarks(draft, meeting);
 
+  const f = draft.fields ?? {};
+  const pick = (appKey, legacy) => f[appKey] || legacy || '';
+
   return [
-    { label: '開會事由', value: meeting.topic ?? stripExpectation(draft.subject) },
-    { label: '開會時間', value: meeting.time ?? '' },
-    { label: '開會地點', value: meeting.place ?? '' },
-    { label: '主持人', value: meeting.chair ?? '' },
-    { label: '聯絡人及電話', value: meeting.contact ?? '' },
-    { label: '出席者', value: meeting.attendees ?? draft.fields?.receiver ?? '' },
-    { label: '列席者', value: '' },
+    { label: '開會事由', value: pick('meeting_topic', meeting.topic ?? stripExpectation(draft.subject)) },
+    { label: '開會時間', value: pick('meeting_time', meeting.time) },
+    { label: '開會地點', value: pick('meeting_place', meeting.place) },
+    { label: '主持人', value: pick('meeting_chair', meeting.chair) },
+    { label: '聯絡人及電話', value: pick('meeting_contact', meeting.contact) },
+    { label: '出席者', value: pick('attendees', meeting.attendees ?? f.receiver) },
+    { label: '列席者', value: f.observers ?? '' },
     { label: '副本', value: '' },
     { label: '備註', items: remarks },
   ];

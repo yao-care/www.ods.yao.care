@@ -21,6 +21,7 @@ interface Props {
   download?: { path: string; filename: string } | null;
 }
 import { SERVICE_LINKS } from '../site.config.js';
+import { meetingFields } from '../data/meeting.js';
 
 const { scenario, draft, checks, receiver } = Astro.props;
 /**
@@ -32,6 +33,9 @@ const { scenario, draft, checks, receiver } = Astro.props;
  * 但頁面一直顯示函的形狀，跟同一頁的 watchOut「時間、地點寫進主旨反而不合格式」自相矛盾。
  */
 const meeting = Astro.props.meeting ?? null;
+// 欄位與順序照規範第八點，與下載的 Word 共用同一支（src/data/meeting.js）。
+// 上一版只渲染有值的六個欄位，漏了規範裡同樣存在的「列席者」「副本」與「備註」。
+const meetingRows = meeting ? meetingFields(draft, meeting) : [];
 const download = Astro.props.download ?? null;
 const family = Astro.props.family ?? draft.document_family ?? 'official';
 const isOfficial = family === 'official';
@@ -141,13 +145,18 @@ const passed = checks.filter((c) => c.ok).length;
     <div class="doc">
       {meeting ? (
         <dl class="fixed-fields">
-          <div><dt>開會事由</dt><dd>{meeting.topic}</dd></div>
-          <div><dt>開會時間</dt><dd>{meeting.time}</dd></div>
-          <div><dt>開會地點</dt><dd>{meeting.place}</dd></div>
-          <div><dt>主持人</dt><dd>{meeting.chair}</dd></div>
-          <div><dt>聯絡人及電話</dt><dd>{meeting.contact}</dd></div>
-          <div><dt>出席者</dt><dd>{meeting.attendees}</dd></div>
-          {meeting.remarks && <div><dt>備註</dt><dd>{meeting.remarks}</dd></div>}
+          {meetingRows.map((f) => (
+            <div>
+              <dt>{f.label}</dt>
+              <dd>
+                {f.items
+                  ? (f.items.length
+                      ? <ol>{f.items.map((it) => <li>{it}</li>)}</ol>
+                      : <span class="blank">（待填）</span>)
+                  : (f.value || <span class="blank">（待填）</span>)}
+              </dd>
+            </div>
+          ))}
         </dl>
       ) : (
         <>
@@ -338,6 +347,14 @@ const passed = checks.filter((c) => c.ok).length;
 </script>
 
 <style>
+  .fixed-fields .blank {
+    color: var(--color-ink-muted);
+  }
+  .fixed-fields ol {
+    margin: 0;
+    padding-inline-start: 1.5rem;
+  }
+
   .fixed-fields {
     display: grid;
     gap: 0.75rem;

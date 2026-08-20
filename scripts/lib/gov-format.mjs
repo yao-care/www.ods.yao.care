@@ -8,6 +8,7 @@
  * 存證信函另循中華郵政「存證信函格式使用說明」，見本檔末段。
  */
 import { p, blank } from './docx.mjs';
+import { meetingRemarks, stripExpectation } from '../../src/data/meeting.js';
 import format from '../../src/data/gov-format.json' with { type: 'json' };
 
 export const PAGE = format.page;
@@ -15,10 +16,6 @@ const S = format.styles;
 
 const CN = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二', '十三', '十四', '十五'];
 const num = (i) => `${CN[i] ?? String(i + 1)}、`;
-
-/** 開會事由不帶期望語（那是函的東西），主旨末尾的「請查照。」等要去掉。 */
-const stripExpectation = (subject) =>
-  String(subject ?? '').replace(/[，,]?\s*(請|敬請|並請)[^，。]{0,8}[。．.]?\s*$/, '。');
 
 const DATE_PLACEHOLDER = '中華民國　　年　　月　　日';
 const SERIAL_PLACEHOLDER = '○○字第○○○○○○○○○○號';
@@ -125,10 +122,7 @@ export function renderOfficial(doc) {
       case 'remarks': {
         // 開會通知單沒有說明段：草稿的說明／辦法併入備註，但已升格成固定欄位的分項要拿掉，
         // 否則同一個時間地點會在通知單上出現兩次。
-        const absorbed = meeting.absorbedPrefixes ?? [];
-        const items = doc.sections
-          .flatMap((s) => s.items)
-          .filter((item) => !absorbed.some((prefix) => item.startsWith(prefix)));
+        const items = meetingRemarks(doc, meeting);
         out.push(items.length ? sectionBlock({ title: '備註', items }, S.remarks) : p('備註：', S.remarks));
         break;
       }

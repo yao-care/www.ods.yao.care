@@ -13,6 +13,7 @@
   ・手冊本文「十九、(一)(二)」→ 簽的擬辦方式（先簽後稿／簽稿併陳／以稿代簽）與簽之撰擬
   ・附錄 2 法律統一用字表 → 用字舉例／統一用字／曾見用字／說明
   ・附錄 5 公文書橫式書寫數字使用原則 → 四條原則逐字
+  ・手冊本文用印章節 → 各文別的用印方式（函看行文方向、書函蓋條戳）
 
 附錄 3 法律統一用語表刻意不收：那張表的儲存格跨列，pdftotext 取不出可靠結構；而且它談的是
 法律條文的寫法（「第九十八條」不寫為「第九八條」之類），不是承辦寫公文會用到的東西。
@@ -183,6 +184,19 @@ def parse_numbers(text: str) -> list[str]:
     return [clean(items[i + 1]) for i in range(1, len(items) - 1, 2)]
 
 
+def parse_seals(text: str) -> list[str]:
+    """各文別的用印與簽署方式，逐條原文。
+
+    這是函與書函最實際的差別之一：函要署機關首長職銜姓名、蓋職章或職銜簽字章，
+    書函只蓋機關或承辦單位條戳。文別選錯，用印就跟著錯。
+
+    不做「文別：規則」的拆解——第 4 條是「書函、開會通知單、會勘通知單…等公文，
+    蓋用機關或承辦單位條戳」，一條涵蓋多個文別且沒有冒號，硬拆會失真。
+    """
+    block = section(text, '２、呈：用機關首長全銜', '(四) 一般公文蓋用機關印信之位置')
+    return numbered(depaginate(block))
+
+
 def parse_address_rules(text: str) -> dict:
     """手冊本文「十八、公文用語規定」——逐字照抄，不改寫。"""
     block = clean(section(text, '十八、公文用語規定如下：', '十九、簽、稿之撰擬說明'))
@@ -209,6 +223,7 @@ def main() -> None:
         'drafting': parse_drafting(text),
         'sign': parse_sign(text),
         'numberRules': parse_numbers(text),
+        'seals': parse_seals(text),
         'unifiedChars': parse_chars(text),
     }
     OUT.write_text(json.dumps(data, ensure_ascii=False, indent=1) + '\n', encoding='utf-8')
@@ -216,7 +231,8 @@ def main() -> None:
     print(f'✅ {OUT}：統一用字 {len(data["unifiedChars"])} 條／稱謂與期望語規定 4 段'
           f'／作業要求 {len(d["quality"])} 條／擬稿注意事項 {len(d["cautions"])} 條'
           f'／函之撰擬要領 {len(d["letterNotes"])} 條'
-          f'／簽之撰擬 {len(data["sign"]["sections"])} 條／數字原則 {len(data["numberRules"])} 條')
+          f'／簽之撰擬 {len(data["sign"]["sections"])} 條／數字原則 {len(data["numberRules"])} 條'
+          f'／用印 {len(data["seals"])} 條')
 
 
 if __name__ == '__main__':

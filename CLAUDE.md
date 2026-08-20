@@ -127,28 +127,60 @@ CaseDemo 的進度文字也走 `data-check-count`，不寫死。`/checks/` 與 `
 民眾端 10 頁上線後只有 2 頁被 Google 爬，8 頁停在 Discovered／unknown，`referringUrls` 全 0；
 同期機關端 9 頁全部 indexed。差別只在內鏈：機關端有首頁直連＋文別頁直連＋案例互連三條路，
 民眾端只有 `/citizens/` 一個入口。**新增任何一批頁面時，同一回合就要補上這三條路**，
-只靠 sitemap 不會被爬。查法：
+只靠 sitemap 不會被爬。
+
+**收錄與內鏈的現況一律用這支查**（全站逐頁，`referringUrls` 為 0 就是「Google 眼中沒人連它」，
+那才是卡 Discovered 的原因；單頁把 sitemap 那行換成該網址即可）：
 
 ```bash
-node -e "import('/root/seo-ops/lib/google.mjs').then(async g=>{
-  const r=await g.inspectUrl('/root/.config/yaocare/ga4-sa.json','sc-domain:yao.care','<完整網址>');
-  console.log(r.coverageState, r.lastCrawlTime, r.referringUrls);})"
+node -e "
+import('/root/seo-ops/lib/google.mjs').then(async g=>{
+  const SA='/root/.config/yaocare/ga4-sa.json', SITE='sc-domain:yao.care';
+  const xml=await (await fetch('https://www.ods.yao.care/sitemap-0.xml')).text();
+  for (const u of [...xml.matchAll(/<loc>([^<]+)/g)].map(m=>m[1])) {
+    const r=await g.inspectUrl(SA,SITE,u);
+    console.log([r.coverageState,(r.lastCrawlTime||'-').slice(0,10),
+      'ref='+(r.referringUrls||[]).length, u].join(' | '));
+  }})"
 ```
+
+⚠️ 這支一頁約 3–4 秒（URL Inspection API 有速率限制），全站跑要幾分鐘，別放在前景等。
 
 `/templates/` 是為「公文格式 word」「公文範本下載」這類高意圖字開的落地頁，
 同時也是全站每一頁都連得到的 Word 下載入口（導覽列「格式與用語」群組內）。
 
-**站外那一條也算內鏈**：`www.yao.care/ai/ods/` 是 ODS 在 yao.care 的產品落地頁，實測它每天都被爬
-（2026-08-20 08:35），是本站最快的被發現管道。那頁原本只描述機關側，同日補上民眾書件與
-`/writing/`／`/usage/`／`/templates/` 的產品段落 —— **改的是 `/root/www.yao.care`，兩邊要一起維持**。
+**站外那一條也算內鏈**：`www.yao.care/ai/ods/` 是 ODS 在 yao.care 的產品落地頁，
+2026-08-20 實查時它當天就被重爬過，是本站最快的被發現管道；那頁同日補上民眾書件與參考內容的
+產品段落（此前只描述機關側）—— **改的是 `/root/www.yao.care`，兩邊要一起維持**。
 注意 seo-ops 的紅線是「不為了 SEO 從自家站連自家站」，所以那頁只寫產品實際提供什麼，不做互推連結牆。
+現況查法（那頁現在連過來幾條、有沒有被重爬）：
+
+```bash
+curl -s https://www.yao.care/ai/ods/ | grep -o 'href="https://www\.ods\.yao\.care[^"]*"' | sort | uniq -c
+node -e "import('/root/seo-ops/lib/google.mjs').then(async g=>{
+  const r=await g.inspectUrl('/root/.config/yaocare/ga4-sa.json','sc-domain:yao.care','https://www.yao.care/ai/ods/');
+  console.log(r.coverageState, r.lastCrawlTime);})"
+```
 
 ## 長頁一定要有錨點（2026-08-20 的教訓）
 
-上線後實查 `/writing/`、`/usage/`、`/checks/`、`/doc-types/`、`/citizens/which-route/`、
-`/citizens/certified-letter-guide/` 六支長參考頁，`id=` 屬性數量**全部是 0** ——
+上線後逐頁查已上線的 HTML，長參考頁的 `id=` 屬性數量**全部是 0** ——
 沒有錨點就沒有段落深連結，Google 的「跳至相關部分」也沒有落點可指；
-像 pinned query「公文數字寫法」對應的是 `/writing/` 第六節，在此之前連不進去。
+像 pinned query「公文數字寫法」對應的是 `/writing/` 裡的一節，在此之前連不進去。
+
+**判準不是清單，是頁型**：只要一頁有多個 `<h2>` 章節、是拿來「查」的參考頁（不是列表頁、不是案例明細），
+就該有錨點與「本頁章節」。哪些頁現在有、有幾個，一律查：
+
+```bash
+# 已 build 的產物（開發時用這個，最快）。注意不能用 `grep -c`——Astro 壓過的 HTML
+# 一頁擠成一行，grep -c 數的是行數，每頁都會印 1；也不能用 dist/**/ ——
+# 預設沒開 globstar，只吃得到一層，兩層深的 /citizens/<slug>/ 會被漏掉。
+find dist -name index.html | while read f; do
+  n=$(grep -o ' id="' "$f" | wc -l); [ "$n" -gt 0 ] && echo "$n ${f#dist}"; done | sort -rn
+# 線上實況（同樣的計數方式，逐頁抓）
+for u in $(curl -s https://www.ods.yao.care/sitemap-0.xml | grep -o '<loc>[^<]*' | sed 's/<loc>//'); do
+  echo "$(curl -s "$u" | grep -o ' id=\"' | wc -l) $u"; done | sort -rn
+```
 
 作法：頁面 frontmatter 宣告一份章節物件當**單一真實來源**，`<h2>` 的 `id` 與文字都從那份取，
 `src/components/PageToc.astro` 吃同一份陣列產出「本頁章節」：
@@ -162,6 +194,25 @@ const S = { numbers: { id: 'numbers', label: '六、數字怎麼寫' }, … };
 漂移由 `pnpm check:anchors`（在 `astro build` **之後**跑，掃 `dist/**/*.html`）守門：
 同頁 `href="#x"` 找不到 `id="x"` 就擋 build。導覽列是 sticky，錨點落點靠 `global.css`
 的 `:target { scroll-margin-top }`，改導覽列高度記得一起改。
+
+## sitemap 的 `lastmod` 是易碎品，別零星 commit（2026-08-20 的教訓）
+
+`scripts/lib/lastmod.mjs` 取的是「全域檔（`src/layouts`、`src/components`、`src/styles`、
+`src/site.config.js`）與該頁相依資料的 git commit 時間**取最大值**」。這代表：
+**只要動到 `src/components/` 或 `src/layouts/`，全站每一頁的 `lastmod` 都會一起跳成那次 commit 的時間。**
+
+那是誠實的（版面確實影響每一頁），但如果連續幾天每天推一點小修，這個欄位就退化成 build 時間，
+等於天天對 Google 宣稱「全站都改了」，幾次之後它就不信這個欄位 ——
+而這個欄位正是上線初期唯一能催重爬的訊號（沒有它的那幾天，Google 每天下載 sitemap，
+逐頁查 URL Inspection 卻停在同一個爬取時間）。
+
+**規矩：內容或版面要改就攢起來一次推，不要為了「順手」分成好幾個 commit。**
+查現在全站是不是同一個時間（全部相同＝最近一次動到全域檔）：
+
+```bash
+curl -s https://www.ods.yao.care/sitemap-0.xml | grep -o '<lastmod>[^<]*' | sort | uniq -c
+git -C /root/www.ods.yao.care log -1 --format=%cI -- src/layouts src/components src/styles src/site.config.js
+```
 
 ## CTA 一律用乾淨網址，入口位置用 `data-cta`（2026-08-20 的教訓）
 

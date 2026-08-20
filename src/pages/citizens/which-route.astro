@@ -1,0 +1,232 @@
+---
+/**
+ * 不服機關的決定時，該走陳情、請願、訴願還是申訴。
+ *
+ * 為什麼有這一頁（2026-08-20）：站上有陳情書與申訴書範例，卻沒有告訴使用者「這件事該走
+ * 哪一條」。實搜「陳情 訴願 申訴 差別」，前排是教育部、法務部的官方問答與多個法律內容站。
+ * 這是選錯就沒救的決策點——訴願有三十日法定期間——比範例本身更前面、也更重要。
+ *
+ * 所有法條與定義來自 src/data/remedies.js，逐條出自法規原文與官方說明。
+ * ⚠️ 這頁是文書撰寫的參考，不是法律意見；個案是否為行政處分、期間如何起算，站上不判斷。
+ */
+import ArticlePage from '../../layouts/ArticlePage.astro';
+import { ROUTES, DEFINITIONS, ARTICLES, REGULATION_NOTE, SOURCES, VERIFIED_ON } from '../../data/remedies.js';
+import { CITIZEN_EXAMPLES } from '../../data/citizen-examples.js';
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+
+const citizenSide = CITIZEN_EXAMPLES.filter((e) => e.family === 'citizen');
+const deadlineArticles = ARTICLES.filter((a) => a.emphasis);
+const otherArticles = ARTICLES.filter((a) => !a.emphasis);
+
+const description =
+  '不服機關的決定時，陳情、請願、訴願與申訴分別在什麼情況下用、有沒有期限、要遞給誰，'
+  + '定義與期間逐條出自訴願法、行政程序法與教育部官方說明。';
+
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+
+const faqPairs = [
+  {
+    q: '陳情跟訴願差在哪裡？',
+    a: '訴願針對的是行政處分——機關做了決定，你認為違法或不當而且損害了你的權利或利益。'
+      + '陳情則是建議行政興革、查詢法令、舉發違失或維護權益，範圍寬得多，也沒有法定期間。'
+      + '關鍵差別是訴願有三十日的期間，陳情沒有。',
+  },
+  {
+    q: '訴願有幾天期限？',
+    a: '訴願法第 14 條：訴願之提起，應自行政處分達到或公告期滿之次日起三十日內為之。'
+      + '注意是從「次日」起算，不是當天。',
+  },
+  {
+    q: '訴願書要寄給誰？',
+    a: '訴願法第 58 條規定，訴願人應繕具訴願書，經由「原行政處分機關」向訴願管轄機關提起。'
+      + '也就是先遞給做出這個決定的那個機關，不是直接寄給上級。',
+  },
+  {
+    q: '對政府發布的法規有意見，可以提訴願嗎？',
+    a: '不行。依教育部的官方說明，人民對於政府發布之法規，縱認其影響自己權益而有不同意見時，'
+      + '僅能向主管機關請願或陳情，而非向訴願管轄機關提起訴願。',
+  },
+  {
+    q: '機關一直不處理我的申請，可以怎麼辦？',
+    a: '訴願法第 2 條：機關對依法申請之案件，於法定期間內應作為而不作為，'
+      + '認為損害權利或利益者，也可以提起訴願。法令沒有規定期間的，自機關受理申請之日起算二個月。',
+  },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Article',
+      '@id': `${pageUrl}#article`,
+      mainEntityOfPage: pageUrl,
+      headline: '陳情、請願、訴願、申訴怎麼選',
+      description,
+      author: { '@type': 'Organization', name: '藥提醒科技有限公司', url: 'https://www.yao.care/' },
+      publisher: { '@type': 'Organization', name: '藥提醒科技有限公司', url: 'https://www.yao.care/' },
+      inLanguage: 'zh-Hant-TW',
+      citation: Object.values(SOURCES).map((s) => ({
+        '@type': 'CreativeWork',
+        name: s.label,
+        url: s.url,
+      })),
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: '首頁', item: 'https://www.ods.yao.care/' },
+        { '@type': 'ListItem', position: 2, name: '民眾文件', item: 'https://www.ods.yao.care/citizens/' },
+        { '@type': 'ListItem', position: 3, name: '陳情、請願、訴願、申訴怎麼選', item: pageUrl },
+      ],
+    },
+  ],
+};
+
+const faq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqPairs.map((p) => ({
+    '@type': 'Question',
+    name: p.q,
+    acceptedAnswer: { '@type': 'Answer', text: p.a },
+  })),
+};
+---
+
+<ArticlePage
+  schemas={[schema, faq]}
+  title="陳情、請願、訴願、申訴怎麼選｜公文 AI"
+  description={description}
+  heading="陳情、請願、訴願、申訴怎麼選"
+  lead="寫得再好，走錯管道也沒用。四條路的差別不在文件格式，在於針對的是什麼、有沒有期限、以及要遞給誰。"
+>
+  <p class="warn">
+    <strong>時間先看：訴願只有三十日。</strong>
+    如果機關已經做了決定而你不服，訴願法第 14 條的期間從處分達到或公告期滿的<strong>次日</strong>起算。
+    先確認這條路還在，再決定要不要另外走陳情或申訴。
+  </p>
+
+  <h2>一、四條路的差別</h2>
+  <table>
+    <thead><tr><th>管道</th><th>什麼情況</th><th>期限</th><th>遞給誰</th></tr></thead>
+    <tbody>
+      {ROUTES.map((r) => (
+        <tr>
+          <td class="route">{r.name}</td>
+          <td>{r.when}</td>
+          <td>{r.deadline}</td>
+          <td>{r.where}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+
+  <h2>二、官方定義</h2>
+  <p>
+    教育部的官方問答把三者講得最清楚，以下逐字照抄
+    （<a href={SOURCES.moe.url} rel="noopener">{SOURCES.moe.label}</a>）：
+  </p>
+  {DEFINITIONS.map((d) => (
+    <section class="def">
+      <h3>{d.name}</h3>
+      <blockquote>{d.quote}</blockquote>
+    </section>
+  ))}
+  <p class="warn">{REGULATION_NOTE}</p>
+
+  <h2>三、最容易踩到的兩條</h2>
+  {deadlineArticles.map((a) => (
+    <section class="art">
+      <h3>{a.law}</h3>
+      <blockquote>{a.quote}</blockquote>
+    </section>
+  ))}
+  <p class="note">
+    第 58 條那條特別容易寄錯：訴願書要先遞給<strong>做出這個決定的機關</strong>，
+    由它轉給訴願管轄機關，不是直接寄給上級。
+  </p>
+
+  <h2>四、其他相關條文</h2>
+  {otherArticles.map((a) => (
+    <section class="art">
+      <h3>{a.law}</h3>
+      <blockquote>{a.quote}</blockquote>
+    </section>
+  ))}
+
+  <h2>決定好之後</h2>
+  <ul class="examples">
+    {citizenSide.map((e) => (
+      <li>
+        <a href={`${base}citizens/${e.slug}/`}>{e.seoTitle}</a>
+        <span>{e.lead}</span>
+      </li>
+    ))}
+  </ul>
+  <p class="note">
+    要通知的對象是個人或企業而不是機關的話，那是
+    <a href={`${base}citizens/certified-letter-guide/`}>存證信函</a>，走的是完全不同的程序。
+  </p>
+
+  <p class="verified">
+    法條查證日期：{VERIFIED_ON}。
+    出處：<a href={SOURCES.petitionLaw.url} rel="noopener">{SOURCES.petitionLaw.label}</a>（{SOURCES.petitionLaw.note}）、
+    <a href={SOURCES.apLaw.url} rel="noopener">{SOURCES.apLaw.label}</a>、
+    <a href={SOURCES.moe.url} rel="noopener">{SOURCES.moe.label}</a>。
+    本頁是文書撰寫的參考，不是法律意見；你的案件是不是行政處分、期間怎麼起算，
+    需要專業判斷時請洽律師或該管機關。
+  </p>
+</ArticlePage>
+
+<style>
+  .warn {
+    background: var(--color-bg-light);
+    border-inline-start: 3px solid var(--color-warn);
+    padding: 1rem 1.25rem;
+    border-radius: 0.375rem;
+    line-height: 1.9;
+  }
+  .route {
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .def,
+  .art {
+    margin-block: 1.5rem;
+  }
+  blockquote {
+    margin: 0.5rem 0 0;
+    padding: 0.75rem 1rem;
+    border-inline-start: 3px solid var(--color-primary);
+    background: var(--color-bg-light);
+    color: var(--color-ink-soft);
+    font-size: var(--text-sm);
+    line-height: 2;
+  }
+  .examples {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+  .examples li {
+    display: grid;
+    gap: 0.25rem;
+  }
+  .examples span {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+  .note {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+  .verified {
+    margin-top: 3rem;
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+</style>

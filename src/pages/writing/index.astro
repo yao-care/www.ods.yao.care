@@ -1,6 +1,6 @@
 ---
 /**
- * 公文怎麼寫：主旨、說明、辦法三段怎麼分，以及擬稿的官方規定。
+ * 公文怎麼寫：函的主旨／說明／辦法、簽的主旨／說明／擬辦，以及擬稿的官方規定。
  *
  * 為什麼有這一頁（2026-08-20）：實搜「公文範例」，前排是政大、清大、成大、中央
  * 秘書室的**教學** PDF（公文用字、稱謂、上行平行下行文的期望語差異、核稿要點）——
@@ -18,7 +18,7 @@ const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 
-const { drafting, _source: source, _generated: generated } = terms;
+const { drafting, sign, numberRules, _source: source, _generated: generated } = terms;
 
 /** 三段各自的官方原文，配上一句白話說明它實際上在回答什麼問題。 */
 const SECTIONS = [
@@ -46,8 +46,8 @@ const caseByKey = Object.fromEntries(CASES.map((c) => [c.key, c]));
 const showcase = ['grant_report', 'subsidy_apply', 'petition_reply'].map((k) => caseByKey[k]).filter(Boolean);
 
 const description =
-  '主旨、說明、辦法三段各自回答什麼問題，以及擬稿的 14 條注意事項與函的 7 條撰擬要領，'
-  + '逐條取自行政院文書處理手冊官方版本。';
+  '函的主旨、說明、辦法與簽的主旨、說明、擬辦分別怎麼寫，先簽後稿與簽稿併陳的分野，'
+  + '以及擬稿注意事項與數字用法，逐條取自行政院文書處理手冊官方版本。';
 
 const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
 
@@ -68,6 +68,18 @@ const faqPairs = [
       + '以便查考。引敘原文時直接語氣要改成間接語氣，「貴」「鈞」要改成「本」「該」。',
   },
   {
+    q: '簽跟函的三段一樣嗎？',
+    a: '不一樣。函是主旨、說明、辦法；簽是主旨、說明、擬辦。擬辦是簽的重點所在，'
+      + '要針對案情提出具體處理意見或解決方案。手冊還規定各段應截然劃分：'
+      + '說明段不提擬辦意見，擬辦段不重複說明。',
+  },
+  {
+    q: '什麼時候要先簽後稿？',
+    a: '政策性或重大興革案件、牽涉較廣而會商未獲結論的案件、擬提決策會議討論的案件、'
+      + '重要人事案件，以及其他性質重要必須先行簽請核定的案件。'
+      + '案情簡單或例行承轉的，以稿代簽即可。',
+  },
+  {
     q: '一份來文講了好幾件事怎麼辦？',
     a: '擬稿以一文一事為原則。來文如果是一文數事，可以分成數文答復。',
   },
@@ -80,7 +92,7 @@ const schema = {
       '@type': 'Article',
       '@id': `${pageUrl}#article`,
       mainEntityOfPage: pageUrl,
-      headline: '公文怎麼寫：主旨、說明、辦法三段怎麼分',
+      headline: '公文怎麼寫：函的三段、簽的三段與擬稿規定',
       description,
       author: { '@type': 'Organization', name: '藥提醒科技有限公司', url: 'https://www.yao.care/' },
       publisher: { '@type': 'Organization', name: '藥提醒科技有限公司', url: 'https://www.yao.care/' },
@@ -114,10 +126,10 @@ const faq = {
 
 <ArticlePage
   schemas={[schema, faq]}
-  title="公文怎麼寫：主旨、說明、辦法三段怎麼分｜公文 AI"
+  title="公文怎麼寫：函的三段、簽的三段與擬稿規定｜公文 AI"
   description={description}
   heading="公文怎麼寫"
-  lead="三段式不是填空題。搞清楚每一段在回答什麼問題，剩下的就是把話講清楚。"
+  lead="三段式不是填空題，而且函和簽的第三段還不一樣。搞清楚每一段在回答什麼問題，剩下的就是把話講清楚。"
 >
   <p class="cross">
     這頁講規則。要看規則落在真實公文裡長什麼樣，<a href={`${base}cases/`}>公文範例庫</a>每一則都是完整全文；
@@ -140,12 +152,51 @@ const faq = {
     {drafting.letterNotes.map((t) => <li>{t}</li>)}
   </ol>
 
-  <h2>三、擬稿的 {drafting.cautions.length} 條注意事項</h2>
+  <h2>三、「簽」不是「函」：三段是主旨、說明、擬辦</h2>
+  <p>
+    這是最容易搞混的地方 —— 簽的第三段叫「<strong>擬辦</strong>」，不是「辦法」。
+    簽是對內陳報長官核示用的上行文，重點在於你要建議長官怎麼決定。
+  </p>
+  <ul class="rules">
+    {sign.sections.map((t) => <li>{t}</li>)}
+  </ul>
+
+  <h3>什麼時候先簽後稿、什麼時候簽稿併陳</h3>
+  <p><strong>先簽後稿</strong>（先簽請核准，再擬公文稿）：</p>
+  <ul class="rules">
+    {sign.modes.signFirst.map((t) => <li>{t}</li>)}
+  </ul>
+  <p><strong>簽稿併陳</strong>（簽與稿一起陳核）：</p>
+  <ul class="rules">
+    {sign.modes.together.map((t) => <li>{t}</li>)}
+  </ul>
+  <p class="note"><strong>以稿代簽</strong>：{sign.modes.draftOnly}</p>
+
+  <h3>簽的款式</h3>
+  <ul class="rules">
+    {sign.style.map((t) => <li>{t}</li>)}
+  </ul>
+
+  <h2>四、擬稿的 {drafting.cautions.length} 條注意事項</h2>
   <ol class="rules">
     {drafting.cautions.map((t) => <li>{t}</li>)}
   </ol>
 
-  <h2>四、公文書的品質要求</h2>
+  <h2>五、數字什麼時候用阿拉伯數字、什麼時候用中文數字</h2>
+  <p>
+    公文書橫式書寫數字使用原則的三條規則。金額寫成「新臺幣伍拾萬元整」屬於慣用語與防竄改
+    的另一套要求，不在這三條之內。
+  </p>
+  <ol class="rules">
+    {numberRules.map((t) => <li>{t}</li>)}
+  </ol>
+  <p class="note">
+    完整的數字用法舉例一覽表在手冊附錄 5，
+    本站不重製那張表（兩層表頭的合併儲存格，機器解出來的對照關係不可靠）——
+    請看<a href={source.url} rel="noopener">官方原檔</a>。
+  </p>
+
+  <h2>六、公文書的品質要求</h2>
   <p>公文程式條例第 8 條要求「簡、淺、明、確」，手冊把它拆成七項作業要求。</p>
   <ul class="rules">
     {drafting.quality.map((t) => <li>{t}</li>)}

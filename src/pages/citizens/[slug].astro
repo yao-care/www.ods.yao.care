@@ -162,7 +162,14 @@ const faq = {
               <span>{blankTemplate.note}</span>
             </li>
           )}
-          {isNotice && (
+          {!isNotice && (
+      <p class="guide-link">
+        寫之前先確認走對管道：陳情、請願、訴願與申訴的期限與受理機關都不一樣，
+        訴願只有三十日。看<a href={`${base}citizens/which-route/`}>陳情、請願、訴願、申訴怎麼選</a>。
+      </p>
+    )}
+
+    {isNotice && (
             <li>
               <a href={downloads.postalGuide} rel="noopener">中華郵政存證信函官方用紙</a>
               <span>用紙、使用說明與網路交寄說明都在這一頁（外部連結）</span>

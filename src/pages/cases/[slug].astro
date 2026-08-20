@@ -27,7 +27,9 @@ const blankTemplate = downloads.templates.find((t) => t.docType === payload.draf
 
 const related = CASES.filter((c) => c.category === caseMeta.category && c.slug !== caseMeta.slug);
 const failed = payload.checks.filter((c) => !c.ok);
-const caseDescription = `${caseMeta.lead} 提供完整${payload.draft.doc_type}範例全文、24 條格式檢核結果與可自行編輯的 Word 檔。`;
+const caseDescription = caseMeta.meeting
+  ? `${caseMeta.lead} 依政府文書格式參考規範第八點排成固定欄位，附可自行編輯的 Word 檔。`
+  : `${caseMeta.lead} 提供完整${payload.draft.doc_type}範例全文、24 條格式檢核結果與可自行編輯的 Word 檔。`;
 const caseUrl = new URL(Astro.url.pathname, Astro.site).href;
 
 const articleSchema = {
@@ -88,7 +90,15 @@ const faq = {
     <dl class="facts">
       <div><dt>文別</dt><dd>{payload.draft.doc_type}</dd></div>
       <div><dt>受文者</dt><dd>{listing?.receiver ?? '無'}</dd></div>
-      <div><dt>格式檢核</dt><dd>{payload.checks.length - failed.length}/{payload.checks.length} 通過</dd></div>
+      {/* 開會通知單是固定欄位表單，24 條裡的主旨與段落檢核對它不適用，不掛通過數。 */}
+      <div>
+        <dt>格式檢核</dt>
+        <dd>
+          {caseMeta.meeting
+            ? '固定欄位表單，24 條中的主旨與段落檢核不適用'
+            : `${payload.checks.length - failed.length}/${payload.checks.length} 通過`}
+        </dd>
+      </div>
     </dl>
 
     <h2>試做這個案例</h2>

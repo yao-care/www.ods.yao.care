@@ -17,7 +17,9 @@
   --color-text: #1F1F1F;         /* 主文字 */
   --color-white: #ffffff;
   --color-ink-soft: #555555;     /* 次要文字 */
-  --color-ink-muted: #999999;    /* 註記/弱化文字 */
+  --color-ink-muted: #6f6f6f;    /* 註記/弱化文字（2026-08-20：原 #999999 在白底只有 2.85:1，
+                                    連 WCAG AA 大字的 3.0 都沒過，而它在 17 處是當文字顏色用的。
+                                    改成白底 5.02:1、淺灰底 4.57:1，兩種底都過 AA 內文標準） */
   --color-line: #dddddd;         /* 邊線/分隔 */
 
   /* ── 語意色：與應用端 public/css/tokens.css 同值，兩邊視覺一致 ──
@@ -64,7 +66,7 @@
     --color-text: oklch(0.239 0 0);
     --color-white: oklch(1 0 0);
     --color-ink-soft: oklch(0.45 0 0);
-    --color-ink-muted: oklch(0.683 0 0);
+    --color-ink-muted: oklch(0.5417 0 0);
     --color-line: oklch(0.898 0 0);
     --color-critical: oklch(0.55 0.22 25);
     --color-warn: oklch(0.52 0.14 80);

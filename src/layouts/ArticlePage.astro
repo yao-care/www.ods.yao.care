@@ -16,7 +16,7 @@ const { title, description, heading, lead, schemas = [] } = Astro.props;
 
 <BaseLayout title={title} description={description} schemas={schemas}>
   <SiteHeader />
-  <main>
+  <main id="main">
     <h1>{heading}</h1>
     {lead && <p class="lead">{lead}</p>}
     <slot />

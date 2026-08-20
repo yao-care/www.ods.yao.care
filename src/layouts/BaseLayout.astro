@@ -104,6 +104,13 @@ const siteSchema = {
     <Analytics />
   </head>
   <body>
+    <!--
+      跳過導覽（2026-08-20）。導覽列有 25 個連結，沒有這一條的話，純鍵盤或螢幕閱讀器
+      使用者每進一頁都要 tab 過那 25 個才碰得到內文。機關的無障礙檢核也會看這一項。
+      平常視覺上不存在，一拿到焦點才出現在左上角。
+      #main 在每一頁都要有落點 —— 由 pnpm check:anchors 自動守門。
+    -->
+    <a class="skip-link" href="#main">跳到主要內容</a>
     <slot />
   </body>
 </html>

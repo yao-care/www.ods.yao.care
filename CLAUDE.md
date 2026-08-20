@@ -313,11 +313,43 @@ pnpm build:docx           # 每次 build 自動跑：json + 案例資料 → pub
 - `public/downloads/` 是產物，已 gitignore；`src/data/downloads.json`（下載清單）要 commit，
   頁面靠它產生連結。
 
+## 無障礙：這站已經過的兩關（2026-08-20）
+
+- **跳過導覽**：導覽列有 25 個連結（查法 `curl -s https://www.ods.yao.care/ | grep -o '<a ' | wc -l` 之類，
+  或直接數 `<header>` 內的 `<a>`）。沒有 skip link 的話，純鍵盤與螢幕閱讀器使用者每進一頁都要
+  tab 過那一整排才碰得到內文。`BaseLayout` 的 `.skip-link` 指向 `#main`，
+  **每一頁的 `<main>` 都要有 `id="main"`** —— 這件事由 `pnpm check:anchors` 自動守門（它驗所有同頁錨點都有落點）。
+  樣式用 `left: -9999px` 移出畫面而不是 `display:none`，後者鍵盤聚焦不到，等於沒做。
+- **色彩對比**：`pnpm check:contrast` 讀 `variables.css` 的 hex fallback，算 15 組實際成對出現的
+  前景／背景，未達 WCAG AA 內文 4.5:1 就擋 build。**新增會成對出現的顏色時，同一回合把它加進那支的 `PAIRS`。**
+  改顏色時 hex 與 oklch 兩份要一起改（同一個顏色的兩種寫法，守門只讀得到 hex 那份）。
+
+沒做的：螢幕閱讀器實測、動態內容的 aria live region。要做機關採購的無障礙檢核前先補這兩項。
+
+## 追蹤事件怎麼實測（不污染 GA4、不寄出假申請）
+
+`file_download`／`cta_click`／`generate_lead` 這幾支自訂事件，**一個 JS 錯誤就會全部靜默死掉，
+帳面上完全看不出來**（GA4 只會顯示「這個事件沒有資料」，跟「還沒有人點」長得一模一樣）。
+2026-08-20 用無頭瀏覽器實測過一次，四支都正常、無 JS 錯誤。要重測：
+
+本站刻意不裝 playwright（零 npm 相依），借 `www.yao.care` 的：**把探針放進那個 repo 再執行**，
+不能只 `cd` 過去跑外部路徑的檔（ESM 的套件解析看的是檔案本身的位置，不是 cwd）。
+
+```js
+// 兩個攔截缺一不可，否則會把假資料灌進正式 Property、或真的寄出一封申請信
+await ctx.route('**://*.google-analytics.com/**', async (r) => { record(r.request()); await r.abort(); });
+await ctx.route('**://ods-apply-form.lightman-chang.workers.dev/**',
+  (r) => r.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' }));
+```
+
+參考現成的：`/root/www.yao.care/scripts/ga-event-probe.mjs`（那支沒有攔截，會真的送出，別直接對 ODS 用）。
+
 ## 常用指令
 
 ```bash
 pnpm dev              # 開發（起了就要記得 kill，主機紅線）
-pnpm build            # check-design && check-content && check-zh-hant && check-scenarios && build-docx && astro build && check-anchors && check-og
+pnpm build            # check-design && check-contrast && check-content && check-zh-hant && check-scenarios && build-docx && astro build && check-anchors && check-og
+pnpm check:contrast   # 只跑色彩對比守門（不需要 dist）
 pnpm check:anchors    # 只跑錨點守門（要先有 dist/）
 pnpm check:og         # 只跑分享圖守門（要先有 dist/）
 pnpm gen:brand        # 重產站徽與分享圖（改標題或改品牌色後，需 python3 pillow + noto CJK）

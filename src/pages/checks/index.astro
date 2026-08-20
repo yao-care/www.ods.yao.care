@@ -41,9 +41,37 @@ const byId = Object.fromEntries(checks.map((c) => [c.id, c]));
 const grouped = GROUPS.map((g) => ({ ...g, items: g.ids.map((id) => byId[id]).filter(Boolean) }));
 const covered = new Set(GROUPS.flatMap((g) => g.ids));
 const others = checks.filter((c) => !covered.has(c.id));
+
+// 這頁是一篇說明 24 條檢核的參考文章，但原本沒有 Article／麵包屑，
+// Google 只看得到全站共用的 Organization／WebSite。
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Article',
+      '@id': `${pageUrl}#article`,
+      mainEntityOfPage: pageUrl,
+      headline: '公文格式檢核 24 條',
+      description:
+        '主旨、段落、個資代稱、用字格式、收發共 24 條公文格式檢核，逐條說明為什麼會被退件。',
+      author: { '@type': 'Organization', name: '藥提醒科技有限公司', url: 'https://www.yao.care/' },
+      publisher: { '@type': 'Organization', name: '藥提醒科技有限公司', url: 'https://www.yao.care/' },
+      inLanguage: 'zh-Hant-TW',
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: '首頁', item: 'https://www.ods.yao.care/' },
+        { '@type': 'ListItem', position: 2, name: '格式檢核', item: pageUrl },
+      ],
+    },
+  ],
+};
 ---
 
 <ArticlePage
+  schemas={[schema]}
   title="公文格式檢核 24 條｜公文 AI"
   description="主旨、段落、個資代稱、用字格式、收發共 24 條公文格式檢核，逐條說明為什麼會被退件。"
   heading="格式檢核 24 條"

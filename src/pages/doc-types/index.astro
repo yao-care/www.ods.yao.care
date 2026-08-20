@@ -54,9 +54,35 @@ const citizensOf = (docType) => CITIZEN_EXAMPLES.filter((e) => e.draft.doc_type 
 
 const caseOf = (key) => CASES.find((c) => c.key === key);
 const docTypeOf = (key) => index.items.find((i) => i.key === key)?.doc_type ?? '';
+
+// 文別指南是一篇文章，原本同樣缺 Article／麵包屑。
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Article',
+      '@id': `${pageUrl}#article`,
+      mainEntityOfPage: pageUrl,
+      headline: '公文文別怎麼選：函、書函、公告、簽、開會通知單',
+      description: '五種常用文別的使用時機、主旨寫法與期望語差異，每一種都附完整範例。',
+      author: { '@type': 'Organization', name: '藥提醒科技有限公司', url: 'https://www.yao.care/' },
+      publisher: { '@type': 'Organization', name: '藥提醒科技有限公司', url: 'https://www.yao.care/' },
+      inLanguage: 'zh-Hant-TW',
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: '首頁', item: 'https://www.ods.yao.care/' },
+        { '@type': 'ListItem', position: 2, name: '文別', item: pageUrl },
+      ],
+    },
+  ],
+};
 ---
 
 <ArticlePage
+  schemas={[schema]}
   title="公文文別怎麼選：函、書函、公告、簽、開會通知單｜公文 AI"
   description="五種常用文別的使用時機、主旨寫法與期望語差異，每一種都附完整範例。"
   heading="文別怎麼選"

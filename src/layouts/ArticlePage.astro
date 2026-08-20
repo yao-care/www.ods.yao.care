@@ -8,8 +8,10 @@ interface Props {
   description: string;
   heading: string;
   lead?: string;
+  /** 額外的 JSON-LD。BaseLayout 已給全站 Organization／WebSite，這裡放單頁自己的。 */
+  schemas?: unknown[];
 }
-const { title, description, heading, lead } = Astro.props;
+const { title, description, heading, lead, schemas = [] } = Astro.props;
 ---
 
 <BaseLayout title={title} description={description}>
@@ -20,6 +22,9 @@ const { title, description, heading, lead } = Astro.props;
     <slot />
   </main>
   <SiteFooter />
+  {schemas.map((schema) => (
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  ))}
 </BaseLayout>
 
 <style is:global>

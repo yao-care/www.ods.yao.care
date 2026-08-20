@@ -23,7 +23,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # fetch-depth: 0 是必要的——sitemap 的 lastmod 取自各檔的 git commit 時間
+      # （scripts/lib/lastmod.mjs）。預設的淺 checkout 只有一個 commit，
+      # `git log -1 -- <檔>` 對絕大多數檔案會回空值，lastmod 會整批退回 build 時間，
+      # 等於每次部署都宣稱「全站都改了」，Google 幾次之後就不信這個欄位。
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       # ⚠ 不要加 `with: version:`——package.json 已有 packageManager，action v6 會判定
       #   「Multiple versions of pnpm specified」直接 fail（2026-07-28 ttpa 首跑實測）。

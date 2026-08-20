@@ -87,8 +87,8 @@ const navGroups = [
   },
 ];
 
-const selfRegisterHref = SERVICE_LINKS.selfRegister('header_self_register');
-const agencyApplyHref = SERVICE_LINKS.agencyApply('header_apply');
+const selfRegisterLink = SERVICE_LINKS.selfRegister('header_self_register');
+const agencyApplyLink = SERVICE_LINKS.agencyApply('header_apply');
 ---
 
 <header>
@@ -138,8 +138,8 @@ const agencyApplyHref = SERVICE_LINKS.agencyApply('header_apply');
     </nav>
 
     <div class="actions">
-      <a class="quiet-action" href={selfRegisterHref}>自助開始</a>
-      <a class="cta" href={agencyApplyHref}>機關試用</a>
+      <a class="quiet-action" {...selfRegisterLink}>自助開始</a>
+      <a class="cta" {...agencyApplyLink}>機關試用</a>
     </div>
 
     <details class="mobile-menu">
@@ -177,8 +177,8 @@ const agencyApplyHref = SERVICE_LINKS.agencyApply('header_apply');
           </div>
         ))}
         <div class="mobile-actions">
-          <a class="quiet-action" href={selfRegisterHref}>自助開始</a>
-          <a class="cta" href={agencyApplyHref}>機關申請試用</a>
+          <a class="quiet-action" {...selfRegisterLink}>自助開始</a>
+          <a class="cta" {...agencyApplyLink}>機關申請試用</a>
         </div>
       </div>
     </details>

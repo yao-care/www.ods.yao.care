@@ -6,7 +6,7 @@ import { CITIZEN_CATEGORIES, CITIZEN_EXAMPLES } from '../../data/citizen-example
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
-const registerHref = SERVICE_LINKS.selfRegister('citizens_self_register');
+const registerLink = SERVICE_LINKS.selfRegister('citizens_self_register');
 
 // 列表頁原本只有 BaseLayout 給的全站兩條 schema，/templates/ 則已有 CollectionPage＋麵包屑。
 // 這裡補齊，讓民眾端這個入口頁也講得出「它收了哪 9 份文件」。
@@ -139,7 +139,7 @@ const schema = {
       <li>選擇民眾對機關書件或存證信函，填寫事實與必要欄位。</li>
       <li>看格式檢核結果，人工修改後下載純文字或 Word 文件。</li>
     </ol>
-    <p><a class="primary" href={registerHref}>建立個人工作區</a></p>
+    <p><a class="primary" {...registerLink}>建立個人工作區</a></p>
   </section>
 
   <section>

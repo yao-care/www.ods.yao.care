@@ -15,8 +15,8 @@ const base = import.meta.env.BASE_URL.endsWith('/')
       <a href={`${base}cases/`}>公文範例</a>
       <a href={`${base}citizens/`}>民眾書件與存證信函</a>
       <a href={`${base}security/`}>資料處理方式</a>
-      <a href={SERVICE_LINKS.agencyApply('footer_apply')}>申請試用</a>
-      <a href={SERVICE_LINKS.selfRegister('footer_self_register')}>自助註冊</a>
+      <a {...SERVICE_LINKS.agencyApply('footer_apply')}>申請試用</a>
+      <a {...SERVICE_LINKS.selfRegister('footer_self_register')}>自助註冊</a>
     </nav>
     <p class="org">藥提醒科技有限公司</p>
   </div>

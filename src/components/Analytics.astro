@@ -174,6 +174,20 @@ const { gaId, linkerDomains } = SITE;
       try { url = new URL(href, location.href); } catch (_) { return; }
       var host = url.hostname.toLowerCase().replace(/^www\./, '');
       var self = location.hostname.toLowerCase().replace(/^www\./, '');
+      // Word 範本下載是「公文格式 word」「公文範本下載」這組字的實際轉換，
+      // 但它是同站連結、又不是 /apply/，原本會在下面那串判斷裡被整個略過，一筆都沒送。
+      if (host === self && /\/downloads\//.test(url.pathname)) {
+        var fileName = decodeURIComponent(url.pathname.split('/').pop() || '');
+        var ext = (fileName.split('.').pop() || '').toLowerCase();
+        track('file_download', {
+          file_name: (anchor.getAttribute('download') || fileName).slice(0, 120),
+          file_extension: ext.slice(0, 10),
+          link_url: `${url.origin}${url.pathname}`.slice(0, 200),
+          link_text: (anchor.textContent || '').trim().slice(0, 80),
+        });
+        return;
+      }
+
       var type = '';
       if (url.protocol === 'mailto:') type = 'mail';
       else if (host === self && /\/apply\/?$/.test(url.pathname)) type = 'agency_apply';
@@ -182,7 +196,9 @@ const { gaId, linkerDomains } = SITE;
       if (!type) return;
       // 只送 origin/path；不把 mailto body、query string 或 hash 中的資料送到 GA4。
       var safeUrl = url.protocol === 'mailto:' ? 'mailto:' : `${url.origin}${url.pathname}`;
-      var linkContent = url.searchParams.get('utm_content') || '';
+      // 入口位置改由 data-cta 帶（見 site.config.js 為什麼不再掛 UTM）；
+      // utm_content 留作 fallback，讓站外帶參數進來的連結一樣量得到。
+      var linkContent = anchor.getAttribute('data-cta') || url.searchParams.get('utm_content') || '';
       track('cta_click', {
         link_url: safeUrl.slice(0, 200),
         link_domain: host,

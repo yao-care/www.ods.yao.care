@@ -24,12 +24,21 @@ export const SITE = {
   ],
 };
 
-const withCampaign = (url, content) =>
-  `${url}${url.includes('?') ? '&' : '?'}utm_source=ods.yao.care&utm_medium=owned&utm_campaign=ods_service&utm_content=${content}`;
+// 站內與 app.ods.yao.care 的 CTA 一律用乾淨網址，不掛 utm_source／utm_medium。
+// 這裡曾經每條連結都帶 UTM，兩個代價都實測到了：
+//   1) Google 只認得帶參數那一版 —— /apply/ 的 referringUrls 只有 UTM 變體，
+//      乾淨路徑一條純內鏈都沒有，收錄長期卡在 Discovered - currently not indexed。
+//   2) 上面的 linkerDomains 已經把 yao.care／app.ods.yao.care 串成同一個 GA4 量測範圍，
+//      跨站本來就保留原始來源；utm_medium=owned 反而會在 session 中途覆寫 session_source／medium，
+//      把 google／organic 洗成 owned，讓「台灣自然搜尋訪客」這個北極星指標系統性低估。
+// 入口位置改用 data-cta 屬性帶，由 Analytics.astro 的 cta_click 送成 link_content —— 
+// 量得到一樣的東西，但不動到網址，也不動到歸因。
+const serviceLink = (href, content) => ({ href, 'data-cta': content });
 
-// ODS 的公開內容與實際服務是同一條漏斗；統一產生 CTA 連結，讓 GA4 能分辨入口位置。
+// ODS 的公開內容與實際服務是同一條漏斗；統一產生 CTA 屬性，讓 GA4 能分辨入口位置。
+// 用法是展開而不是只取 href：<a {...SERVICE_LINKS.agencyApply('header_apply')}>
 export const SERVICE_LINKS = {
-  agencyApply: (content = 'agency_apply') => withCampaign('/apply/', content),
+  agencyApply: (content = 'agency_apply') => serviceLink('/apply/', content),
   selfRegister: (content = 'self_register') =>
-    withCampaign('https://app.ods.yao.care/', content),
+    serviceLink('https://app.ods.yao.care/', content),
 };

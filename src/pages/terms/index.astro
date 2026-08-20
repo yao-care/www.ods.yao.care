@@ -1,14 +1,43 @@
 ---
 import ArticlePage from '../../layouts/ArticlePage.astro';
 import knowledge from '../../data/knowledge.json';
+import { breadcrumb } from '../../data/schema.js';
 
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 const categories = [...new Set(knowledge.items.map((k) => k.category))];
+
+// 這頁是一份可查的條目集合，數量取自 knowledge.json，不寫死。
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'CollectionPage',
+      '@id': `${pageUrl}#page`,
+      name: '公文用語與法規速查',
+      description:
+        '期望語、函之結構等作業規範，以及社會救助法、政府採購法、行政程序法等承辦常引的法條摘要。',
+      inLanguage: 'zh-Hant-TW',
+      isPartOf: { '@type': 'WebSite', url: 'https://www.ods.yao.care/' },
+      mainEntity: {
+        '@type': 'ItemList',
+        numberOfItems: knowledge.items.length,
+        itemListElement: knowledge.items.map((k, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          name: k.title,
+        })),
+      },
+    },
+    breadcrumb([['用語與法規速查', pageUrl]]),
+  ],
+};
 ---
 
 <ArticlePage
+  schemas={[schema]}
   title="公文用語與法規速查｜公文 AI"
   description="期望語、函之結構等作業規範，以及社會救助法、政府採購法、行政程序法等承辦常引的法條摘要。"
   heading="用語與法規速查"

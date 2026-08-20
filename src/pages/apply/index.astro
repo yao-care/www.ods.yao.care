@@ -1,13 +1,45 @@
 ---
 import ArticlePage from '../../layouts/ArticlePage.astro';
 import { SERVICE_LINKS } from '../../site.config.js';
+import { ORGANIZATION, breadcrumb } from '../../data/schema.js';
 
 // 收單 Worker（見 workers/apply-form/README.md；2026-08-14 部署並端到端驗證過）。
 // 留空時表單自動改走信件，不會變成按了沒反應的死按鈕。
 const ENDPOINT = 'https://ods-apply-form.lightman-chang.workers.dev';
+
+// 這頁是漏斗終點卻長期只有全站節點，Google 也只認得帶 UTM 的那一版（見 site.config.js）。
+// 補 ContactPage＋麵包屑，讓它在結構上就是「申請入口」而不是又一篇文章。
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'ContactPage',
+      '@id': `${pageUrl}#page`,
+      name: '機關申請試用',
+      description:
+        '機關可申請專屬子網址並由服務方開通；小型受補助單位、一般民眾與個人或企業可直接自助建立工作區。',
+      inLanguage: 'zh-Hant-TW',
+      isPartOf: { '@type': 'WebSite', url: 'https://www.ods.yao.care/' },
+      about: ORGANIZATION,
+      mainEntity: {
+        ...ORGANIZATION,
+        contactPoint: {
+          '@type': 'ContactPoint',
+          contactType: '機關導入洽詢',
+          email: 'service@yao.care',
+          areaServed: 'TW',
+          availableLanguage: ['zh-Hant'],
+        },
+      },
+    },
+    breadcrumb([['機關申請試用', pageUrl]]),
+  ],
+};
 ---
 
 <ArticlePage
+  schemas={[schema]}
   title="機關申請試用｜公文 AI"
   description="機關可申請專屬網址；小型單位、一般民眾與個人／企業可直接在 app.ods.yao.care 自助建立工作區。"
   heading="機關申請試用"
@@ -64,7 +96,7 @@ const ENDPOINT = 'https://ods-apply-form.lightman-chang.workers.dev';
     <h2>小型單位與一般民眾不用等我們</h2>
     <p>
       社區發展協會、學校家長會、農會這類單位，以及需要撰寫對機關書件或存證信函的個人／企業，
-      都可以直接<a href={SERVICE_LINKS.selfRegister('apply_self_register')}>自助建立工作區</a>，不需要申請。
+      都可以直接<a {...SERVICE_LINKS.selfRegister('apply_self_register')}>自助建立工作區</a>，不需要申請。
     </p>
   </section>
 

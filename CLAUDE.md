@@ -108,11 +108,12 @@ cp -r /tmp/…/out/scenarios /tmp/…/out/scenarios.json /tmp/…/out/knowledge.
 `cases.js` 的 `meeting` 只留作重烘前舊資料的後備。
 
 檢核條目數也依文別而定：函／簽／書函／公告 24 條，開會通知單 22 條（不套主旨類 6 條與
-段落類 5 條，改查上面那組固定欄位）。頁面上不要再寫死「24 條」，用 `payload.checks.length`。
+段落類 5 條，改查上面那組固定欄位）。頁面上不要再寫死「24 條」，用 `payload.checks.length`；
+CaseDemo 的進度文字也走 `data-check-count`，不寫死。
 
 ## 體驗器的設計（`src/components/CaseDemo.astro`）
 
-- **漸進增強**：伺服器端就把公文全文與 24 條檢核渲染進 HTML，沒有 JS 時整頁照樣可讀 ——
+- **漸進增強**：伺服器端就把公文全文與逐條檢核渲染進 HTML，沒有 JS 時整頁照樣可讀 ——
   這是本站能被搜到的關鍵，**不要改成 JS 注入**
 - JS 載入後才收合成互動流程：填事由 → 產生草稿（分段進度）→ 結果 → 動作列
 - 凡會改變狀態的動作（改事由、改文別、編輯、儲存、簽核）一律攔截，跳 gate 對話框導向
@@ -135,6 +136,45 @@ node -e "import('/root/seo-ops/lib/google.mjs').then(async g=>{
 
 `/templates/` 是為「公文格式 word」「公文範本下載」這類高意圖字開的落地頁，
 同時也是全站每一頁都連得到的 Word 下載入口（導覽列「格式與用語」群組內）。
+
+## CTA 一律用乾淨網址，入口位置用 `data-cta`（2026-08-20 的教訓）
+
+`SERVICE_LINKS`（`src/site.config.js`）產出的是**屬性物件**，用展開而不是取 href：
+
+```astro
+<a {...SERVICE_LINKS.agencyApply('header_apply')}>機關申請試用</a>
+```
+
+原本它會在網址後面掛 `?utm_source=ods.yao.care&utm_medium=owned&...`，兩個代價都實測到了：
+
+- **收錄**：GSC 對 `/apply/` 唯一已知的 referringUrl 就是那個帶參數版本，乾淨路徑一條純內鏈都沒有，
+  狀態長期卡在 `Discovered - currently not indexed`。
+- **歸因**：`SITE.linkerDomains` 已經把 `yao.care`／`www.ods.yao.care`／`app.ods.yao.care` 串成同一個
+  GA4 資源（三站共用 `G-W7ZNBYKJHJ`），cross-domain linker 本來就保留原始來源；`utm_medium=owned`
+  反而會覆寫 `session_source`／`medium`，把 google／organic 洗成 owned，
+  讓「台灣自然搜尋訪客」這個北極星指標系統性低估。
+
+入口位置改由 `data-cta` 屬性帶，`Analytics.astro` 的 `cta_click` 讀它送成 `link_content`
+（`utm_content` 留作 fallback，站外帶參數進來的一樣量得到）。**`www.yao.care` 那側連過來的連結
+同樣不掛 UTM**（`src/pages/ai/ods.astro`、`src/products.config.ts` 的 `cta.content`），
+兩邊要一起維持，只改一邊等於沒改。
+
+Word 下載另有 `file_download` 事件（file_name／file_extension／link_url／link_text）——
+同站 `/downloads/**` 的點擊原本會被 `cta_click` 的判斷整個略過，一筆都沒送，
+而「公文格式 word」正是站上意圖最高的一組字。
+
+## `llms.txt`／`llms-full.txt` 是產生的（不要手改）
+
+兩支由 `src/pages/llms.txt.js`、`src/pages/llms-full.txt.js` 於 build 時從 `src/data/llms.js` 產生，
+案例與民眾書件的清單直接取自 `cases.js`／`citizen-examples.js`／`scenarios/*.json`，
+條目數也取實際筆數，不寫死。
+
+它們原本是 `public/` 下的手寫檔：站長到 31 頁時只列了 7 個網址，整批民眾端、範本下載、
+公文用語與公文怎麼寫全部不在裡面，而 seo-ops 的 GEO 檢查只驗「檔案存不存在」，抓不到這種漂移。
+現在 `assertCoversAllRoutes()` 會拿 `src/pages` 的實際路由表對帳，**新增頁面沒登記進
+`src/data/llms.js` 的 `FIXED_PAGES` 就擋 build**。案例與民眾書件走資料展開，不必登記。
+
+`FIXED_PAGES` 標了 `hub: true` 的是內容主幹，首頁的 `ItemList` 結構化資料用同一份，站台結構不抄第二次。
 
 ## 三種客群（與應用端的網域架構對應）
 

@@ -1,13 +1,70 @@
 ---
 import ArticlePage from '../../layouts/ArticlePage.astro';
 import { SERVICE_LINKS } from '../../site.config.js';
+import { ORGANIZATION, breadcrumb, faqPage } from '../../data/schema.js';
 
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
+
+// 這頁原本只有 BaseLayout 的全站 Organization／WebSite，沒有任何頁級節點 ——
+// 對搜尋引擎與 AI 助理來說，「公文 AI 是一套什麼軟體、給誰用、怎麼開通」在結構上是空的。
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'SoftwareApplication',
+      '@id': `${pageUrl}#app`,
+      name: '公文 AI',
+      applicationCategory: 'BusinessApplication',
+      applicationSubCategory: '公文製作與格式檢核',
+      operatingSystem: 'Web',
+      url: pageUrl,
+      description:
+        '機關公文、民眾對機關書件與存證信函的草擬、格式檢核與純文字／Word 匯出；' +
+        '可匯入機關既有稿件建索引，沿用該機關的慣用語與行文習慣。',
+      inLanguage: 'zh-Hant-TW',
+      provider: ORGANIZATION,
+      audience: [
+        { '@type': 'Audience', audienceType: '地方機關承辦' },
+        { '@type': 'Audience', audienceType: '小型受補助單位' },
+        { '@type': 'Audience', audienceType: '一般民眾與個人／企業' },
+      ],
+      featureList: [
+        '依文別草擬公文並套用主旨、說明、辦法結構',
+        '民眾書件與存證信函的段落與必要欄位',
+        '逐條格式檢核並指出命中的規則與原因',
+        '匯入既有稿件並先做去識別化再建索引',
+        '純文字與正式格式 Word 匯出',
+        '產生、編輯、簽核、匯出的稽核軌跡',
+      ],
+    },
+    breadcrumb([['功能與導入', pageUrl]]),
+  ],
+};
+
+const faq = faqPage([
+  [
+    '機關要怎麼開通公文 AI？',
+    '機關由服務方建立帳號並配置專屬子網址，再以邀請連結加入同仁；' +
+      '小型受補助單位、一般民眾與個人或企業則在 app.ods.yao.care 自助建立工作區，不需要申請。',
+  ],
+  [
+    '可以沿用機關過去的公文嗎？',
+    '可以。docx、odt、pdf、xlsx 與純文字都能匯入，系統會先做去識別化再建索引；' +
+      '之後草擬會沿用該機關的慣用語、課室署名與行文習慣。',
+  ],
+  [
+    '格式檢核會告訴我哪裡錯嗎？',
+    '會。不通過的項目會指出是哪一條規則、命中什麼字，而不是只回報格式有誤。' +
+      '機關公文套主旨、段落、個資代稱、用字格式與收發等規則；民眾書件與存證信函另檢查必要欄位與期限。',
+  ],
+]);
 ---
 
 <ArticlePage
+  schemas={[schema, faq]}
   title="功能與導入方式｜公文 AI"
   description="機關公文、民眾對機關書件、存證信函、格式檢核、Word 匯出與資料處理。三種客群各自有合適的工作區。"
   heading="功能與導入"
@@ -97,8 +154,8 @@ const base = import.meta.env.BASE_URL.endsWith('/')
       </tbody>
     </table>
     <p>
-      <a href={SERVICE_LINKS.agencyApply('product_agency_apply')}>機關申請試用</a>　·
-      <a href={SERVICE_LINKS.selfRegister('product_self_register')}>小型單位／個人自助註冊</a>
+      <a {...SERVICE_LINKS.agencyApply('product_agency_apply')}>機關申請試用</a>　·
+      <a {...SERVICE_LINKS.selfRegister('product_self_register')}>小型單位／個人自助註冊</a>
     </p>
   </section>
 

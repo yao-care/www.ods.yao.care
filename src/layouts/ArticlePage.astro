@@ -14,7 +14,7 @@ interface Props {
 const { title, description, heading, lead, schemas = [] } = Astro.props;
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} schemas={schemas}>
   <SiteHeader />
   <main>
     <h1>{heading}</h1>
@@ -22,9 +22,6 @@ const { title, description, heading, lead, schemas = [] } = Astro.props;
     <slot />
   </main>
   <SiteFooter />
-  {schemas.map((schema) => (
-    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
-  ))}
 </BaseLayout>
 
 <style is:global>

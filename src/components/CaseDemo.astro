@@ -59,7 +59,7 @@ const base = import.meta.env.BASE_URL.endsWith('/')
 const passed = checks.filter((c) => c.ok).length;
 ---
 
-<section class="demo" data-demo data-family={family} data-doc-title={title}>
+<section class="demo" data-demo data-family={family} data-doc-title={title} data-check-count={checks.length}>
   <ol class="steps" aria-label="操作步驟">
     {steps.map((step, index) => <li data-step={index + 1} class={index === 0 ? 'on' : undefined}>{step}</li>)}
   </ol>
@@ -220,11 +220,11 @@ const passed = checks.filter((c) => c.ok).length;
   <div class="gate-actions">
     {isOfficial ? (
       <>
-        <a class="primary" href={SERVICE_LINKS.agencyApply('demo_agency_apply')}>機關申請試用</a>
-        <a class="secondary" href={SERVICE_LINKS.selfRegister('demo_self_register')}>小型單位自助註冊</a>
+        <a class="primary" {...SERVICE_LINKS.agencyApply('demo_agency_apply')}>機關申請試用</a>
+        <a class="secondary" {...SERVICE_LINKS.selfRegister('demo_self_register')}>小型單位自助註冊</a>
       </>
     ) : (
-      <a class="primary" href={SERVICE_LINKS.selfRegister('demo_self_register')}>建立個人工作區</a>
+      <a class="primary" {...SERVICE_LINKS.selfRegister('demo_self_register')}>建立個人工作區</a>
     )}
     <button type="button" data-gate-close>返回範例</button>
   </div>
@@ -261,7 +261,7 @@ const passed = checks.filter((c) => c.ok).length;
       ['檢索機關知識庫與既有稿件…', 25],
       ['去識別化：姓名、身分證、電話、地址…', 50],
       ['產生草稿…', 80],
-      ['執行 24 條格式檢核…', 100],
+      ['執行 {n} 條格式檢核…', 100],
     ],
     citizen: [
       ['整理事情經過與請求…', 25],
@@ -287,7 +287,13 @@ const passed = checks.filter((c) => c.ok).length;
         [copy[0].replace('陳情書', docTitle), copy[1]],
       ]),
     );
-    const stages = STAGES[family] ?? STAGES.official;
+    // 條目數依文別而定（函／簽／書函／公告 24 條，開會通知單 22 條），
+    // 所以進度文字裡的數字取自這一頁實際烘進來的檢核筆數，不寫死。
+    const checkCount = root.dataset.checkCount ?? '';
+    const stages = (STAGES[family] ?? STAGES.official).map(([label, percent]) => [
+      label.replace('{n}', checkCount),
+      percent,
+    ]);
     const result = root.querySelector('[data-result]');
     const progress = root.querySelector('[data-progress]');
     const progressText = root.querySelector('[data-progress-text]');

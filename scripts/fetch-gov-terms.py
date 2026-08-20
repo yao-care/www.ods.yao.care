@@ -8,6 +8,8 @@
 原檔、用 pdftotext -layout 取版面文字，再逐表解析：
 
   ・手冊本文「十八、公文用語規定」→ 期望／目的／准駁用語、直接與間接稱謂用語（逐字照抄）
+  ・手冊本文「十六、」→ 作業要求、擬稿注意事項、分段要領（主旨／說明／辦法）
+  ・手冊本文「十九、(一)(三)」→「函」之正文撰擬要領
   ・附錄 2 法律統一用字表 → 用字舉例／統一用字／曾見用字／說明
 
 附錄 3 法律統一用語表刻意不收：那張表的儲存格跨列，pdftotext 取不出可靠結構；而且它談的是
@@ -16,7 +18,7 @@
 ⚠️ 本主機到部分政府網站的 IPv6 不通（見專案 CLAUDE.md 對 archives.gov.tw 的記載），
    故一律強制 IPv4。
 """
-import json, re, subprocess, sys, tempfile, datetime, pathlib
+import json, re, subprocess, sys, tempfile, datetime, pathlib, unicodedata
 
 PDF_URL = 'https://www.ey.gov.tw/File/17244366FC77E57C/c689d069-9a0d-47b3-b9cd-fac6da2d9234?A=C'
 SOURCE = {
@@ -34,7 +36,11 @@ def pdf_text() -> str:
         pdf, txt = f'{d}/manual.pdf', f'{d}/manual.txt'
         subprocess.run(['curl', '-4', '-sfL', '-o', pdf, PDF_URL], check=True)
         subprocess.run(['pdftotext', '-layout', pdf, txt], check=True)
-        return pathlib.Path(txt).read_text(encoding='utf-8')
+        raw = pathlib.Path(txt).read_text(encoding='utf-8')
+        # ⚠️ 這份 PDF 有 CJK 相容漢字：頁眉「文書處理手冊」的「理」是 U+F9E4 而不是 U+7406，
+        # 字面比對會失敗（實測頁眉因此清不掉，殘留在資料裡）。NFC 把相容漢字正規化回本字，
+        # 且不會動到全形數字與全形括號——那些是 NFKC 才會轉，轉了會破壞條列標號的解析。
+        return unicodedata.normalize('NFC', raw)
 
 
 def clean(s: str) -> str:
@@ -97,6 +103,46 @@ def parse_chars(text: str) -> list[dict]:
     return rows
 
 
+FULLWIDTH_NUM = '１２３４５６７８９'
+
+
+def depaginate(block: str) -> str:
+    """剔除 pdftotext 夾在正文中間的頁碼與頁眉（如「。 7 文書處理手冊 ３、」）。"""
+    return re.sub(r'\s*\d+\s*(?:貳、公文製作|文書處理手冊)\s*', '', clean(block))
+
+
+def numbered(block: str, markers: str = FULLWIDTH_NUM) -> list[str]:
+    """把手冊的條列拆成陣列。標號前不一定有空白（跨頁處會變成「敷衍。６、擬稿」），
+    所以允許標號緊接在句末標點之後。"""
+    pat = r'(?:^|(?<=[\s。；：]))(?:' + ('１０|１[１-４]|' if markers is FULLWIDTH_NUM else '') + '[' + markers + r'])、'
+    return [clean(x) for x in re.split(pat, depaginate(block))[1:] if clean(x)]
+
+
+def parse_drafting(text: str) -> dict:
+    """手冊「十六、」作業要求／擬稿注意事項／分段要領，與「十九、」函之撰擬要領。"""
+    body = section(text, '第 8 條所規定「簡、淺、明、確」之要求', '十七、公文結構及作法說明')
+    quality = numbered(section(body, '其作業要求：', '(二) 擬稿注意事項如下：'))
+    cautions = numbered(section(body, '(二) 擬稿注意事項如下：', '(三) 分段要領如下：'))
+    seg = depaginate(section(body, '(三) 分段要領如下：', '(四) 製作公文'))
+    grab = lambda a, b: clean(seg[seg.index(a) + len(a):seg.index(b)])
+
+    # 錨點取單行片語——pdftotext 會把長句斷行，整句當錨點會找不到
+    letter_items = numbered(section(text, '「函」之正文', '參、處理程序'), '甲乙丙丁戊己庚')
+
+    return {
+        'quality': quality,
+        'cautions': cautions,
+        'sections': {
+            'subject': grab('１、「主旨」：', '２、「說明」：'),
+            'explanation': grab('２、「說明」：', '３、「辦法」：'),
+            'method': grab('３、「辦法」：', '４、「主旨」、「說明」、「辦法」'),
+            # 去掉開頭的條列標號「４、」——這條在頁面上是獨立一句話，不是清單項目
+            'flexible': clean(seg[seg.index('４、') + 2:]),
+        },
+        'letterNotes': letter_items,
+    }
+
+
 def parse_address_rules(text: str) -> dict:
     """手冊本文「十八、公文用語規定」——逐字照抄，不改寫。"""
     block = clean(section(text, '十八、公文用語規定如下：', '十九、簽、稿之撰擬說明'))
@@ -120,10 +166,14 @@ def main() -> None:
         '_source': SOURCE,
         '_note': '全部取自官方 PDF，未經改寫。網路流傳的用語表多轉錄自 99 年舊版且各校互有出入，不採用。',
         'usageRules': parse_address_rules(text),
+        'drafting': parse_drafting(text),
         'unifiedChars': parse_chars(text),
     }
     OUT.write_text(json.dumps(data, ensure_ascii=False, indent=1) + '\n', encoding='utf-8')
-    print(f'✅ {OUT}：統一用字 {len(data["unifiedChars"])} 條／稱謂與期望語規定 4 段')
+    d = data['drafting']
+    print(f'✅ {OUT}：統一用字 {len(data["unifiedChars"])} 條／稱謂與期望語規定 4 段'
+          f'／作業要求 {len(d["quality"])} 條／擬稿注意事項 {len(d["cautions"])} 條'
+          f'／函之撰擬要領 {len(d["letterNotes"])} 條')
 
 
 if __name__ == '__main__':

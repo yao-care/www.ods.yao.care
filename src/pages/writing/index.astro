@@ -1,0 +1,221 @@
+---
+/**
+ * 公文怎麼寫：主旨、說明、辦法三段怎麼分，以及擬稿的官方規定。
+ *
+ * 為什麼有這一頁（2026-08-20）：實搜「公文範例」，前排是政大、清大、成大、中央
+ * 秘書室的**教學** PDF（公文用字、稱謂、上行平行下行文的期望語差異、核稿要點）——
+ * 使用者要的是「教我怎麼寫」，不是「給我看一則」。本站十則案例全文回答的是後者。
+ * 判定過程見 docs/keyword-validation/2026-08-20-pinned-14.md。
+ *
+ * 資料來自 src/data/gov-terms.json 的 drafting 區塊，由 scripts/fetch-gov-terms.py
+ * 解析行政院《文書處理手冊》官方 PDF 產生。**不要在這頁手寫規則。**
+ */
+import ArticlePage from '../../layouts/ArticlePage.astro';
+import terms from '../../data/gov-terms.json';
+import { CASES } from '../../data/cases.js';
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+
+const { drafting, _source: source, _generated: generated } = terms;
+
+/** 三段各自的官方原文，配上一句白話說明它實際上在回答什麼問題。 */
+const SECTIONS = [
+  {
+    name: '主旨',
+    asks: '這份公文要對方做什麼？',
+    rule: drafting.sections.subject,
+    hint: '不分項、一段到底、句末帶期望語。這是最常被退的地方。',
+  },
+  {
+    name: '說明',
+    asks: '為什麼？依據是什麼？前情如何？',
+    rule: drafting.sections.explanation,
+    hint: '主旨塞不下的事實、來源與理由放這裡；函覆要在第一項引敘來文日期與字號。',
+  },
+  {
+    name: '辦法',
+    asks: '具體要對方怎麼做？',
+    rule: drafting.sections.method,
+    hint: '段名可以換成「建議」「請求」「擬辦」「公告事項」「核示事項」。',
+  },
+];
+
+const caseByKey = Object.fromEntries(CASES.map((c) => [c.key, c]));
+const showcase = ['grant_report', 'subsidy_apply', 'petition_reply'].map((k) => caseByKey[k]).filter(Boolean);
+
+const description =
+  '主旨、說明、辦法三段各自回答什麼問題，以及擬稿的 14 條注意事項與函的 7 條撰擬要領，'
+  + '逐條取自行政院文書處理手冊官方版本。';
+
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+
+const faqPairs = [
+  {
+    q: '公文的主旨要怎麼寫？',
+    a: '主旨是全文精要，說明行文目的與期望，應力求具體扼要；不分項，文字緊接段名冒號之右書寫。'
+      + '概括的期望語（請核示、請查照、請照辦）列入主旨，不在辦法段重複。',
+  },
+  {
+    q: '什麼時候要寫「說明」段？',
+    a: '當案情必須就事實、來源或理由作較詳細的敘述，無法在主旨內容納時才用說明段。'
+      + '主旨、說明、辦法三段可以靈活運用，一段能寫完就不必勉強湊成兩段、三段。',
+  },
+  {
+    q: '函覆公文要注意什麼？',
+    a: '訂有辦理或復文期限的，期限要寫進主旨；擬辦復文或轉行的稿件，要敘入來文機關的發文日期與字號，'
+      + '以便查考。引敘原文時直接語氣要改成間接語氣，「貴」「鈞」要改成「本」「該」。',
+  },
+  {
+    q: '一份來文講了好幾件事怎麼辦？',
+    a: '擬稿以一文一事為原則。來文如果是一文數事，可以分成數文答復。',
+  },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Article',
+      '@id': `${pageUrl}#article`,
+      mainEntityOfPage: pageUrl,
+      headline: '公文怎麼寫：主旨、說明、辦法三段怎麼分',
+      description,
+      author: { '@type': 'Organization', name: '藥提醒科技有限公司', url: 'https://www.yao.care/' },
+      publisher: { '@type': 'Organization', name: '藥提醒科技有限公司', url: 'https://www.yao.care/' },
+      inLanguage: 'zh-Hant-TW',
+      citation: {
+        '@type': 'Legislation',
+        name: `${source.issuer}《${source.name}》${source.edition}`,
+        url: source.url,
+      },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: '首頁', item: 'https://www.ods.yao.care/' },
+        { '@type': 'ListItem', position: 2, name: '公文怎麼寫', item: pageUrl },
+      ],
+    },
+  ],
+};
+
+const faq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqPairs.map((p) => ({
+    '@type': 'Question',
+    name: p.q,
+    acceptedAnswer: { '@type': 'Answer', text: p.a },
+  })),
+};
+---
+
+<ArticlePage
+  schemas={[schema, faq]}
+  title="公文怎麼寫：主旨、說明、辦法三段怎麼分｜公文 AI"
+  description={description}
+  heading="公文怎麼寫"
+  lead="三段式不是填空題。搞清楚每一段在回答什麼問題，剩下的就是把話講清楚。"
+>
+  <p class="cross">
+    這頁講規則。要看規則落在真實公文裡長什麼樣，<a href={`${base}cases/`}>公文範例庫</a>每一則都是完整全文；
+    稱謂語與期望語怎麼配對象，查<a href={`${base}usage/`}>公文用語表</a>。
+  </p>
+
+  <h2>一、三段各自在回答什麼</h2>
+  {SECTIONS.map((s) => (
+    <section class="seg">
+      <h3>{s.name}：{s.asks}</h3>
+      <p>{s.hint}</p>
+      <blockquote>{s.rule}</blockquote>
+    </section>
+  ))}
+  <p class="note">{drafting.sections.flexible}</p>
+
+  <h2>二、「函」的 {drafting.letterNotes.length} 條撰擬要領</h2>
+  <p>手冊對「函」的正文另外點名了這幾件事，都是承辦最常漏的。</p>
+  <ol class="rules">
+    {drafting.letterNotes.map((t) => <li>{t}</li>)}
+  </ol>
+
+  <h2>三、擬稿的 {drafting.cautions.length} 條注意事項</h2>
+  <ol class="rules">
+    {drafting.cautions.map((t) => <li>{t}</li>)}
+  </ol>
+
+  <h2>四、公文書的品質要求</h2>
+  <p>公文程式條例第 8 條要求「簡、淺、明、確」，手冊把它拆成七項作業要求。</p>
+  <ul class="rules">
+    {drafting.quality.map((t) => <li>{t}</li>)}
+  </ul>
+
+  <h2>看規則怎麼落到紙上</h2>
+  <ul class="examples">
+    {showcase.map((c) => (
+      <li>
+        <a href={`${base}cases/${c.slug}/`}>{c.seoTitle}</a>
+        <span>{c.lead}</span>
+      </li>
+    ))}
+  </ul>
+  <p class="note">
+    每一則都附 24 條格式檢核逐條結果 —— 規則有沒有被遵守，看得到。
+    完整清單在<a href={`${base}cases/`}>公文範例庫</a>；
+    文別怎麼挑看<a href={`${base}doc-types/`}>文別怎麼選</a>；
+    空白範本在<a href={`${base}templates/`}>範本下載</a>。
+  </p>
+
+  <p class="verified">
+    資料產生日期：{generated}。來源：{source.issuer}《{source.name}》{source.edition}。
+    手冊改版時重跑 <code>pnpm gen:gov-terms</code>。
+  </p>
+</ArticlePage>
+
+<style>
+  .cross {
+    background: var(--color-bg-light);
+    padding: 1rem 1.25rem;
+    border-radius: 0.375rem;
+  }
+  .seg {
+    margin-block: 2rem;
+  }
+  blockquote {
+    margin: 0.75rem 0 0;
+    padding: 0.75rem 1rem;
+    border-inline-start: 3px solid var(--color-primary);
+    background: var(--color-bg-light);
+    color: var(--color-ink-soft);
+    font-size: var(--text-sm);
+    line-height: 2;
+  }
+  .rules li {
+    margin-block: 0.75rem;
+    line-height: 1.9;
+  }
+  .examples {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+  .examples li {
+    display: grid;
+    gap: 0.25rem;
+  }
+  .examples span {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+  .note {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+  .verified {
+    margin-top: 3rem;
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+</style>

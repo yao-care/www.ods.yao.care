@@ -2,6 +2,7 @@
 import '../styles/variables.css';
 import '../styles/global.css';
 import Analytics from '../components/Analytics.astro';
+import { ORG_SAME_AS } from '../site.config.js';
 
 interface Props {
   title: string;
@@ -19,6 +20,7 @@ const siteSchema = {
       name: '藥提醒科技有限公司',
       legalName: '藥提醒科技有限公司',
       url: 'https://www.yao.care/',
+      sameAs: ORG_SAME_AS,
     },
     {
       '@type': 'WebSite',

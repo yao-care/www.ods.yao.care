@@ -54,6 +54,26 @@ Astro 6 + @astrojs/sitemap，pnpm，無框架、無外部 CDN。
 —— 與應用端 tokens.css 整套冷藍軸（色相 250）同軸；強調色「朱磚」`oklch(0.58 0.13 40)`／`#b95c3a`
 —— 色相 40 與語意色 critical(25)、warn(80) 保持距離，不會被誤讀成檢核狀態。
 
+## 一律正體字（`pnpm check:zh-hant` 自動擋）
+
+**Unicode 沒有「繁體中文區間」**——繁簡同住 CJK 統一漢字 U+4E00–U+9FFF（「該」U+8A72 與它的
+簡化形 U+8BE5 都在區間內），所以「檢查碼點在不在繁體區」做不到。能用程式做的只有逐字比對
+一份簡體專用碼點集合：`src/data/simplified-chars.json`（3730 字，要 commit），
+由 `scripts/gen-simplified-set.py` 從 OpenCC 字典與 Unicode Unihan 推導。
+
+集合刻意**放行**兩類字，收進來會在合法公文上狂誤報：
+
+- **雙身分字 99 個**：`后里面台志表出合回同借几云谷千只…` 本身是正體字，只是同時也是別字的
+  簡化形。實測本站公文案例語料出現 **250+ 次**（合 88、出 35、面 26、回 20、里 15、同 12、
+  借 9、志 8、表 4＝符合／提出／書面／回覆／里長／同時／借款／陳志宏／代表），
+  同一份語料裡純簡體字 **0 次**。
+- **異體選字與台灣標準字**：`群羣／秘祕／峰峯／床牀／灶竈`——台標與舊字形之爭，不是簡繁。
+
+應用端 `ods.yao.care` 的 24 條檢核裡那條 `no_simplified`（critical）用的是**同一份集合**
+（`src/lib/simplified-chars.json`）。原本它是 81 字的手寫清單，漏掉「這、與、錄、門、頁、測、
+試、樣、獨、經、額、補、東、車、馬、鳥、龍、飛、歲、眾、開、時、麼、來」等常見字的簡化形，
+也誤收了「據」的異體（`拮据` 在正體中合法）。兩邊集合要同步，改一邊記得改另一邊。
+
 ## 案例資料從哪來（不要手改）
 
 `src/data/scenarios/*.json` 與 `knowledge.json` 是 **ods 應用產出的**，不是手寫的：
@@ -130,11 +150,13 @@ pnpm build:docx           # 每次 build 自動跑：json + 案例資料 → pub
 
 ```bash
 pnpm dev              # 開發（起了就要記得 kill，主機紅線）
-pnpm build            # check-design && check-content && build-docx && astro build
+pnpm build            # check-design && check-content && check-zh-hant && build-docx && astro build
 pnpm check:design
 pnpm check:content:all
+pnpm check:zh-hant    # 只跑簡體字守門
 pnpm build:docx       # 只重烘 Word（改案例資料或版面後）
 pnpm fetch:gov-template  # 規範改版才跑（會連外網，需 IPv4）
+pnpm gen:simplified-set  # 重產簡體字集合（只在來源資料改版時，需 python3 opencc）
 ```
 
 ## 待辦（接手時從這裡開始）

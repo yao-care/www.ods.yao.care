@@ -25,8 +25,15 @@ const iso = (paths) => {
 
 const newest = (...dates) => dates.filter(Boolean).sort().pop() ?? null;
 
-// 影響每一頁的檔案：版面、元件、樣式、全站設定。
-const GLOBAL = ['src/layouts', 'src/components', 'src/styles', 'src/site.config.js'];
+// 🔴 **刻意不再算「影響每一頁的檔案」**（2026-08-22 移除）。
+//    原本有 GLOBAL = ['src/layouts','src/components','src/styles','src/site.config.js']，
+//    再讓每頁取 newest(globalDate, 自己的日期, 區段資料日期)——版面或元件一動，
+//    全站 lastmod 一起跳到那天。實測後果：線上 sitemap 31 個網址**全部**同一個日期。
+//    這跟本檔下面那段「刻意逐段列 SECTION_DATA，不要一律吃整個 src/data，
+//    那會讓任何一份資料變動就把全站 lastmod 一起推新」是同一個道理，
+//    只是 GLOBAL 自己犯了它警告過的錯。
+//    （seo-ops 守則亦同：olderkkk 實測 SHARED 把 65 頁裡 60 頁拉成同一天；
+//     forme-cro.org 的同型實作 2026-08-22 一併修掉。）
 
 // 各區段的資料相依。刻意逐段列，不要一律吃整個 src/data ——
 // 那會讓任何一份資料變動就把全站 lastmod 一起推新，等於又回到「宣稱全站都改了」。
@@ -48,14 +55,12 @@ const routeFiles = (segments) => {
 };
 
 export function createLastmod(buildTime = new Date().toISOString()) {
-  const globalDate = iso(GLOBAL);
   let warned = false;
 
   return (url) => {
     const segments = new URL(url).pathname.split('/').filter(Boolean);
     const section = segments[0];
     const date = newest(
-      globalDate,
       iso(routeFiles(segments)),
       SECTION_DATA[section] ? iso(SECTION_DATA[section]) : null,
     );

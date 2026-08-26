@@ -25,6 +25,10 @@
 | 2026-08-16 | 品牌色與表單接線 push 上線 |
 | 2026-08-17 | apex 改由主機 NPM 轉址（見下段） |
 
+2026-08-26：第三波關鍵字（見 `docs/keyword-validation/2026-08-26-market-vocabulary.md`）——
+新增 `/ai-official-document/`、案例庫 8 → 23、`/writing/` 補稿面欄位與核擬流程兩節。
+頁數與收錄現況一律用下面的指令查。
+
 2026-08-17：Phase 4–5（Slack、GA4/GSC、seo-ops 納管）已接通。共用 GA4 Property 242590219、GSC `sc-domain:yao.care`、Bing sitemap／IndexNow 與既有 SEO Slack 報表；正式狀態查 `grep ods /etc/cron.d/seo-ops`、`gh run list` 與 `seo-data/`。www.yao.care → ODS → 申請／自助註冊是立即運作的導流漏斗，2–4 週只作轉換比較，不是導流前置等待。
 
 現況查法：`gh repo view yao-care/www.ods.yao.care`、`gh run list`、
@@ -197,11 +201,13 @@ const S = { numbers: { id: 'numbers', label: '六、數字怎麼寫' }, … };
 
 ## sitemap 的 `lastmod` 是易碎品，別零星 commit（2026-08-20 的教訓）
 
-`scripts/lib/lastmod.mjs` 取的是「全域檔（`src/layouts`、`src/components`、`src/styles`、
-`src/site.config.js`）與該頁相依資料的 git commit 時間**取最大值**」。這代表：
-**只要動到 `src/components/` 或 `src/layouts/`，全站每一頁的 `lastmod` 都會一起跳成那次 commit 的時間。**
+`scripts/lib/lastmod.mjs` 取的是「該頁自己的檔案，與**逐段列出**的相依資料（`SECTION_DATA`）
+的 git commit 時間**取最大值**」。原本還有一份 GLOBAL（`src/layouts`、`src/components`、
+`src/styles`、`src/site.config.js`），動到任何一個就把全站 `lastmod` 一起推新 ——
+2026-08-22（commit 541946f）已移除，因為線上實測 31 個網址**全部**同一個日期。
 
-那是誠實的（版面確實影響每一頁），但如果連續幾天每天推一點小修，這個欄位就退化成 build 時間，
+現在動到版面不會再拉動全站，但**同一份資料被多頁吃到時仍會一起跳**（例如重烘案例資料，
+所有案例頁一起動）。如果連續幾天每天推一點小修，這個欄位一樣會退化成 build 時間，
 等於天天對 Google 宣稱「全站都改了」，幾次之後它就不信這個欄位 ——
 而這個欄位正是上線初期唯一能催重爬的訊號（沒有它的那幾天，Google 每天下載 sitemap，
 逐頁查 URL Inspection 卻停在同一個爬取時間）。
@@ -392,5 +398,13 @@ pnpm gen:simplified-set  # 重產簡體字集合（只在來源資料改版時�
    CF 帳號寫死在 `wrangler.jsonc` 的 `account_id`；輪替 Brevo 金鑰：
    `cd workers/apply-form && npx wrangler secret put BREVO_API_KEY`（HTTP API 金鑰
    `xkeysib-…`，與 SMTP 密碼不同種，副本在 secrets.md § SMTP）
-5. Phase 4–5：Slack 頻道、GA4/GSC 授權（**每站要自己的 GCP 專案與 SA，絕不可複製別站金鑰**）、
-   seo-ops 納管。照 `/root/.claude/skills/new-astro-site/SKILL.md` 走
+5. ~~Phase 4–5：Slack 頻道、GA4/GSC 授權、seo-ops 納管~~：**已接通**（2026-08-17，見里程碑）。
+   備忘：**每站要自己的 GCP 專案與 SA，絕不可複製別站金鑰**；本站目前沿用共用 SA，
+   隔離驗收用 `node /root/seo-ops/bin/identity-audit.mjs --site ods.yao.care`
+6. **站外連結只有 `www.yao.care/ai/ods/` 一條**。逐頁 URL Inspection 顯示 Google 對每頁認得的
+   `referringUrls` 是 0～2 —— 這是曝光低最根本的原因，而且不是內容能解的。要用戶決定怎麼做。
+7. **「公告」的主旨該不該強制期望語**（2026-08-26 擱置的產品判斷）。應用端的
+   `subject_expectation` 對所有機關文別一體適用，但公告對不特定多數人、沒有受文者
+   （`receiver_required` 本來就已豁免公告），實務上常以「特此公告」收尾。
+   烘語料時連續兩則公告因此被擋（招標公告、志工招募），當下用事由引導繞過，沒有改規則。
+   要改的話會動到「函／簽／書函／公告 24 條」這句與 `/checks/` 的呈現，**先問用戶**

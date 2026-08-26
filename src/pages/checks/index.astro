@@ -3,6 +3,7 @@ import ArticlePage from '../../layouts/ArticlePage.astro';
 import PageToc from '../../components/PageToc.astro';
 import sample from '../../data/scenarios/grant_report.json';
 import meetingSample from '../../data/scenarios/meeting.json';
+import noticeSample from '../../data/scenarios/notice.json';
 import downloads from '../../data/downloads.json';
 
 const base = import.meta.env.BASE_URL.endsWith('/')
@@ -54,6 +55,10 @@ const others = checks.filter((c) => !covered.has(c.id));
 // 而且開會通知單另有一組（`meetingSample.checks.length`），寫死會兩邊打架。
 const count = checks.length;
 const meetingCount = meetingSample.checks.length;
+const noticeCount = noticeSample.checks.length;
+// 公告少掉的那幾條（目前是主旨期望語），一樣用實際產物比對算出來，不寫死。
+const noticeIds = new Set(noticeSample.checks.map((c) => c.id));
+const notForNotice = checks.filter((c) => !noticeIds.has(c.id));
 const meetingOwn = meetingSample.checks.filter((c) => c.id.startsWith('meeting_'));
 const subjectCount = GROUPS.find((g) => g.id === 'subject').ids.length;
 const sectionCount = GROUPS.find((g) => g.id === 'sections').ids.length;
@@ -68,6 +73,7 @@ const S = {
     grouped.map((g) => [g.id, { id: g.id, label: `${g.name}（${g.items.length} 條）` }]),
   ),
   ...(others.length ? { others: { id: 'others', label: '其他' } } : {}),
+  notice: { id: 'notice', label: `公告少一條（${noticeCount} 條）` },
   meeting: { id: 'meeting', label: `開會通知單另有一組（${meetingCount} 條）` },
   live: { id: 'live', label: '看實際跑出來的結果' },
 };
@@ -103,8 +109,9 @@ const schema = {
 const faqPairs = [
   {
     q: '公文格式檢核會檢查哪些項目？',
-    a: `函、書函、公告、簽共 ${count} 條，分成主旨（${subjectCount} 條）、文別與段落（${sectionCount} 條）、`
-      + '個資與代稱、用字與格式、收發五組。開會通知單是固定欄位表單，不套主旨與段落那兩組，'
+    a: `函、書函、簽共 ${count} 條，分成主旨（${subjectCount} 條）、文別與段落（${sectionCount} 條）、`
+      + `個資與代稱、用字與格式、收發五組。公告 ${noticeCount} 條（不套主旨期望語那條）；`
+      + '開會通知單是固定欄位表單，不套主旨與段落那兩組，'
       + `改查它自己的欄位，合計 ${meetingCount} 條。`,
   },
   {
@@ -183,6 +190,20 @@ const faq = {
   )}
 
   <section>
+    <h2 id={S.notice.id}>公告少一條（{noticeCount} 條）</h2>
+    <p>
+      公告不跑{notForNotice.map((c) => `「${c.title}」`).join('、')}。
+      手冊對公告只要求主旨「扼要敘述公告之目的及要求」，沒有要求期望語；
+      手冊附錄 6 的兩則公告作法舉例，主旨也都沒有期望語 ——
+      像「主旨：公告民國00年出生的役男應辦理身家調查。」就是官方範例本身。
+    </p>
+    <p class="note">
+      道理上也對得起來：期望語是對受文者說的話，而公告對不特定多數人、沒有受文者。
+      把這條套在公告上，手冊自己的範例會被判成不合格。
+    </p>
+  </section>
+
+  <section>
     <h2 id={S.meeting.id}>開會通知單另有一組（{meetingCount} 條）</h2>
     <p>
       這 {count} 條是「函」的檢核。開會通知單依<a href={downloads.source.page} rel="noopener">{downloads.source.name}</a>
@@ -212,7 +233,7 @@ const faq = {
     <h2 id={S.live.id}>看實際跑出來的結果</h2>
     <p>
       每一則<a href={`${base}cases/`}>公文範例</a>都附了逐條結果，可以直接看哪些通過、哪些被標記。
-      開會通知單那則跑的是上面那組 {meetingCount} 條。
+      開會通知單那則跑的是上面那組 {meetingCount} 條，公告那幾則是 {noticeCount} 條。
     </p>
   </section>
 </ArticlePage>

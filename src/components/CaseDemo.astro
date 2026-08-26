@@ -287,7 +287,7 @@ const passed = checks.filter((c) => c.ok).length;
         [copy[0].replace('陳情書', docTitle), copy[1]],
       ]),
     );
-    // 條目數依文別而定（函／簽／書函／公告 24 條，開會通知單 22 條），
+    // 條目數依文別而定（函／簽／書函 24 條、公告 23 條、開會通知單 22 條），
     // 所以進度文字裡的數字取自這一頁實際烘進來的檢核筆數，不寫死。
     const checkCount = root.dataset.checkCount ?? '';
     const stages = (STAGES[family] ?? STAGES.official).map(([label, percent]) => [

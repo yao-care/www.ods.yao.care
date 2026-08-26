@@ -111,8 +111,11 @@ cp -r /tmp/…/out/scenarios /tmp/…/out/scenarios.json /tmp/…/out/knowledge.
 **它不是三段式，沒有主旨也沒有說明／辦法**。網頁與 Word 共用 `src/data/meeting.js` 重排；
 `cases.js` 的 `meeting` 只留作重烘前舊資料的後備。
 
-檢核條目數也依文別而定：函／簽／書函／公告 24 條，開會通知單 22 條（不套主旨類 6 條與
-段落類 5 條，改查上面那組固定欄位）。頁面上不要再寫死「24 條」，用 `payload.checks.length`；
+檢核條目數也依文別而定：函／簽／書函 24 條，公告 23 條，開會通知單 22 條。
+開會通知單不套主旨類 6 條與段落類 5 條，改查那組固定欄位；**公告不套「主旨期望語」那一條**
+（2026-08-26 修正）—— 手冊對公告只要求主旨「扼要敘述公告之目的及要求」，沒有要求期望語，
+附錄 6 的兩則公告作法舉例主旨也都沒有（「主旨：公告民國00年出生的役男應辦理身家調查。」），
+套下去等於連手冊自己的範例都會被判不合格。頁面上不要再寫死「24 條」，用 `payload.checks.length`；
 CaseDemo 的進度文字也走 `data-check-count`，不寫死。`/checks/` 與 `/cases/` 的標題、
 說明與 FAQ 也一律 import `scenarios/grant_report.json` 與 `scenarios/meeting.json` 取 `checks.length`。
 

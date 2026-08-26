@@ -5,33 +5,39 @@
     "source": "陳美玲女士於本鄉三盛村申請低收入戶資格複查，經審查其家庭總收入超過標準，未符合社會救助法第4條規定。"
   },
   "draft": {
-    "id": "drf_01M0YHKA5SHWMR2GY9VR",
+    "id": "drf_01M0YJR07DFKD8DWZ29H",
     "user_id": "usr_DEMO00000000000000",
     "unit": "民政課",
     "document_family": "official",
     "doc_type": "函",
     "classification": "普通",
     "topic": "低收入戶資格複查結果通知",
-    "subject": "復　台端申請低收入戶資格複查一案，經審核家庭總收入未符社會救助法第4條規定，礙難核准，請查照。",
-    "sections_json": "[{\"title\":\"說明\",\"items\":[\"依　陳美玲女士申請低收入戶資格複查案辦理。\",\"經本所審查其家庭總收入平均分配全家人口，已超過最低生活費標準，未符社會救助法第4條規定之低收入戶資格條件。\",\"本案礙難核准其低收入戶資格複查申請。\"]}]",
+    "subject": "為陳美玲女士申請低收入戶資格複查案，經審核未符合社會救助法第4條規定，請查照。",
+    "sections_json": "[{\"title\":\"說明\",\"items\":[\"旨揭陳美玲女士於本鄉三盛村申請低收入戶資格複查一案，業經本所民政課詳予審核。\",\"經查其家庭總收入平均分配全家人口，每人每月已超過最低生活費標準，核與社會救助法第4條所定低收入戶認定要件不符。\"]},{\"title\":\"辦法\",\"items\":[\"本案複查結果應予維持原核定，不予認定為低收入戶。\",\"如陳女士對本案審核結果有異議，得於文到次日起三十日內備具理由向本所提出申復。\"]}]",
     "fields_json": "{\"receiver\":\"陳美玲女士\",\"source_len\":50,\"scenario\":\"low_income\"}",
     "engine": "llm",
     "model": "claude-sonnet-5",
     "degraded_reason": null,
-    "citations_json": "[\"knw_01M0YHJGMRAAFXJK5HE2\"]",
+    "citations_json": "[\"knw_01M0YJQ5DZFF1ZFV7JBB\"]",
     "checks_json": "[{\"id\":\"subject_present\",\"title\":\"主旨必填\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_single_paragraph\",\"title\":\"主旨不分項\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_length\",\"title\":\"主旨長度\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_expectation\",\"title\":\"主旨期望語\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_period\",\"title\":\"主旨句末句號\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_no_section_name\",\"title\":\"主旨不含段名\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"doc_type_valid\",\"title\":\"文別合法\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"classification_valid\",\"title\":\"密等合法\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_titles_valid\",\"title\":\"段名合法\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_not_empty\",\"title\":\"段落不得為空\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_item_period\",\"title\":\"分項句末句號\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_item_count\",\"title\":\"分項數量\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_item_length\",\"title\":\"分項長度\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_mask_token\",\"title\":\"無殘留代稱\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_placeholder\",\"title\":\"無未填佔位符\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_raw_id_number\",\"title\":\"無身分證字號\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_raw_mobile\",\"title\":\"無行動電話號碼\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"roc_year\",\"title\":\"民國紀年\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"currency_format\",\"title\":\"金額格式\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_colloquial\",\"title\":\"無口語詞\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_simplified\",\"title\":\"無簡體字\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"fullwidth_punctuation\",\"title\":\"全形標點\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"receiver_required\",\"title\":\"受文者必填\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_extra_blank\",\"title\":\"無多餘空白\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]}]",
     "confirmed": 0,
     "confirmed_by": null,
     "confirmed_at": null,
-    "created_at": "2026-08-26T08:04:46.906Z",
-    "updated_at": "2026-08-26T08:04:46.906Z",
+    "created_at": "2026-08-26T08:24:49.133Z",
+    "updated_at": "2026-08-26T08:24:49.133Z",
     "sections": [
       {
         "title": "說明",
         "items": [
-          "依　陳美玲女士申請低收入戶資格複查案辦理。",
-          "經本所審查其家庭總收入平均分配全家人口，已超過最低生活費標準，未符社會救助法第4條規定之低收入戶資格條件。",
-          "本案礙難核准其低收入戶資格複查申請。"
+          "旨揭陳美玲女士於本鄉三盛村申請低收入戶資格複查一案，業經本所民政課詳予審核。",
+          "經查其家庭總收入平均分配全家人口，每人每月已超過最低生活費標準，核與社會救助法第4條所定低收入戶認定要件不符。"
+        ]
+      },
+      {
+        "title": "辦法",
+        "items": [
+          "本案複查結果應予維持原核定，不予認定為低收入戶。",
+          "如陳女士對本案審核結果有異議，得於文到次日起三十日內備具理由向本所提出申復。"
         ]
       }
     ],
@@ -41,7 +47,7 @@
       "scenario": "low_income"
     },
     "citations": [
-      "knw_01M0YHJGMRAAFXJK5HE2"
+      "knw_01M0YJQ5DZFF1ZFV7JBB"
     ],
     "checks": [
       {

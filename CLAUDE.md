@@ -533,6 +533,10 @@ pnpm gen:simplified-set  # 重產簡體字集合（只在來源資料改版時�
 
 ## 待辦（接手時從這裡開始）
 
+> **2026-08-26 收工的完整交接在 `docs/HANDOVER-2026-08-26.md`** ——
+> 沒做完的、卡在哪、以及**刻意不做而且不要再重新分析一次的**（含各字的量與理由），
+> 都在那份。下面這幾條是長期性的。
+
 1.–4. ~~repo／Pages／deploy workflow／Worker~~：**都已完成**（見上方里程碑表；
    現況一律指令查）。維運備忘：Cloudflare 授權在 `~/.config/.wrangler/`（`whoami` 可查）、
    CF 帳號寫死在 `wrangler.jsonc` 的 `account_id`；輪替 Brevo 金鑰：

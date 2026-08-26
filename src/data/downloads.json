@@ -298,7 +298,7 @@
       "slug": "private-affidavit",
       "label": "切結書",
       "docType": "切結書",
-      "note": "沒有「如有不實，願負法律責任」那句話就只是一段敘述，不構成切結。機關多半有自己的制式切結書。",
+      "note": "「如有不實，願負法律責任」多數機關列為應記載字樣，缺了會被退件。機關多半有自己的制式切結書，有就用那一份。",
       "path": "templates/private-affidavit.docx",
       "filename": "切結書空白範本.docx"
     },

@@ -191,7 +191,7 @@ const TEMPLATES = [
   { slug: 'private-affidavit', docType: '切結書', label: '切結書', kind: 'private',
     labels: { senderLabel: '立切結書人', receiverLabel: '此致' },
     sections: [{ title: '切結事由', items: [''] }, { title: '切結事項', items: ['', ''] }],
-    note: '沒有「如有不實，願負法律責任」那句話就只是一段敘述，不構成切結。機關多半有自己的制式切結書。' },
+    note: '「如有不實，願負法律責任」多數機關列為應記載字樣，缺了會被退件。機關多半有自己的制式切結書，有就用那一份。' },
   { slug: 'private-statement', docType: '聲明書', label: '聲明書', kind: 'private',
     labels: { senderLabel: '聲明人', receiverLabel: '此致' },
     sections: [{ title: '聲明事由', items: [''] }, { title: '聲明事項', items: ['', ''] }],

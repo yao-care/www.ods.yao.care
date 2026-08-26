@@ -137,6 +137,12 @@ CaseDemo 的進度文字也走 `data-check-count`，不寫死。`/checks/` 與 `
 民眾端只有 `/citizens/` 一個入口。**新增任何一批頁面時，同一回合就要補上這三條路**，
 只靠 sitemap 不會被爬。
 
+**這條規矩自 2026-08-26 起有守門**：`pnpm check:inlinks`（在 `astro build` 之後跑）掃 `dist`，
+判準是**內文**（不含導覽列與頁尾）至少 2 條、加上導覽列或頁尾合計至少 3 條 ——
+導覽列每頁都有，不能拿它充數。當天一口氣新增 30 頁之後就抓到
+`/private-documents/loan-iou/` 只有 2 條，真因是明細頁的「其他分類」用 `slice(0, 2)`
+取前兩則，分類一多就永遠只連得到排在前面的那兩個。**這種漂移不會有任何畫面異常。**
+
 **收錄與內鏈的現況一律用這支查**（全站逐頁，`referringUrls` 為 0 就是「Google 眼中沒人連它」，
 那才是卡 Discovered 的原因；單頁把 sitemap 那行換成該網址即可）：
 
@@ -511,6 +517,7 @@ pnpm build            # check-design && check-contrast && check-content && check
 pnpm check:contrast   # 只跑色彩對比守門（不需要 dist）
 pnpm check:anchors    # 只跑錨點守門（要先有 dist/）
 pnpm check:og         # 只跑分享圖守門（要先有 dist/）
+pnpm check:inlinks    # 只跑內鏈守門（要先有 dist/）
 pnpm check:numbers    # 只跑國字大寫換算守門（不需要 dist）
 pnpm gen:brand        # 重產站徽與分享圖（改標題或改品牌色後，需 python3 pillow + noto CJK）
 pnpm check:design

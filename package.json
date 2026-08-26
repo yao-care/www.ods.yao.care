@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "node scripts/check-design.mjs && node scripts/check-contrast.mjs && node scripts/check-content.mjs && node scripts/check-zh-hant.mjs && node scripts/check-scenarios.mjs && node scripts/check-numbers.mjs && node scripts/build-docx.mjs && astro build && node scripts/check-anchors.mjs && node scripts/check-og.mjs",
+    "build": "node scripts/check-design.mjs && node scripts/check-contrast.mjs && node scripts/check-content.mjs && node scripts/check-zh-hant.mjs && node scripts/check-scenarios.mjs && node scripts/check-numbers.mjs && node scripts/build-docx.mjs && astro build && node scripts/check-anchors.mjs && node scripts/check-inlinks.mjs && node scripts/check-og.mjs",
     "preview": "astro preview",
     "check:design": "node scripts/check-design.mjs",
     "check:contrast": "node scripts/check-contrast.mjs",
@@ -25,7 +25,8 @@
     "gen:gov-terms": "python3 scripts/fetch-gov-terms.py",
     "gen:ai-guidance": "python3 scripts/fetch-ai-guidance.py",
     "check:numbers": "node scripts/check-numbers.mjs",
-    "gen:voucher-rule": "python3 scripts/fetch-voucher-rule.py"
+    "gen:voucher-rule": "python3 scripts/fetch-voucher-rule.py",
+    "check:inlinks": "node scripts/check-inlinks.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",

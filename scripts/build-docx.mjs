@@ -139,6 +139,8 @@ const PRIVATE_LABELS = {
   切結書: { senderLabel: '立切結書人', receiverLabel: '此致' },
   聲明書: { senderLabel: '聲明人', receiverLabel: '此致' },
   和解書: { senderLabel: '甲方', receiverLabel: '乙方' },
+  在職證明書: { senderLabel: '出具單位', receiverLabel: '受證明人' },
+  服務證明書: { senderLabel: '出具單位', receiverLabel: '受證明人' },
 };
 for (const meta of PRIVATE_DOCS) {
   const payload = JSON.parse(readFileSync(join(ROOT, 'src/data/scenarios', `${meta.key}.json`), 'utf8'));
@@ -205,6 +207,14 @@ const TEMPLATES = [
       { title: '拋棄範圍與保留事項', items: [''] },
     ],
     note: '「拋棄範圍與保留事項」不要只寫「拋棄其餘一切請求」——傷勢或損害未確定時，寫「本件僅就○○和解，其餘保留」。' },
+  { slug: 'private-employment-cert', docType: '在職證明書', label: '在職證明書', kind: 'private',
+    labels: { senderLabel: '出具單位', receiverLabel: '受證明人' },
+    sections: [{ title: '證明事項', items: ['', ''] }, { title: '用途', items: [''] }],
+    note: '寫到職日、現職職稱與部門，並明確寫「迄今仍在職中」。薪資要不要寫看用途。' },
+  { slug: 'private-separation-cert', docType: '服務證明書', label: '離職證明書（服務證明書）', kind: 'private',
+    labels: { senderLabel: '出具單位', receiverLabel: '受證明人' },
+    sections: [{ title: '服務期間與職務', items: ['', ''] }, { title: '離職事由', items: [''] }],
+    note: '離職事由要照實寫——要拿去請領失業給付時，那是就業保險法第 25 條第 4 項的法定必載事項。' },
   { slug: 'certified-letter', docType: '存證信函', label: '存證信函內文', kind: 'notice',
     sections: [{ title: '事實經過', items: ['', ''] }, { title: '本人請求', items: [''] }],
     note: '格式已依中華郵政使用說明設定；用紙請至中華郵政官網下載，再把內文貼上。' },

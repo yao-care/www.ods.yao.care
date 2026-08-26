@@ -6,39 +6,38 @@
     "family": "official"
   },
   "draft": {
-    "id": "drf_01M0Z3W2J4RQA49DA8GN",
+    "id": "drf_01M0Z5G7T3JF1K8X8VFV",
     "user_id": "usr_DEMO00000000000000",
     "unit": "民政課",
     "document_family": "official",
     "doc_type": "函",
     "classification": "普通",
     "topic": "申請案不予受理函復",
-    "subject": "復李申請本鄉低收入戶生活扶助一案，因申請人戶籍未設於本鄉，非本所權責範圍，請查照。",
-    "sections_json": "[{\"title\":\"說明\",\"items\":[\"依社會救助法第4條規定，低收入戶之審核認定，應由申請人戶籍所在地直轄市、縣（市）主管機關辦理。\",\"李於114年4月8日申請本鄉低收入戶生活扶助一案，經查其戶籍未設於本鄉，非本所權責範圍。\",\"依非權責案件移文原則，來文事項非本機關權責者，應查明權責機關後逕行移送，並敘明原收文日期字號及移送理由，不逕行退回民眾。\"]},{\"title\":\"辦法\",\"items\":[\"請李逕向戶籍所在地公所提出低收入戶生活扶助申請，以維權益。\"]}]",
+    "subject": "復李申請本鄉低收入戶生活扶助一案，因戶籍非設於本鄉，非本所權責範圍，請查照。",
+    "sections_json": "[{\"title\":\"說明\",\"items\":[\"依社會救助法第4條規定，低收入戶應經申請戶籍所在地直轄市、縣（市）主管機關審核認定。\",\"李於114年4月8日申請本鄉低收入戶生活扶助，經查其戶籍並未設於本鄉，非本所權責範圍，依行政程序法規定不予受理。\"]},{\"title\":\"辦法\",\"items\":[\"請李逕向戶籍所在地公所提出申請，以維權益。\"]}]",
     "fields_json": "{\"receiver\":\"李姓民眾\",\"source_len\":78,\"scenario\":\"reject_application\"}",
     "engine": "llm",
     "model": "claude-sonnet-5",
     "degraded_reason": null,
-    "citations_json": "[\"knw_01M0Z3RG0EC71EXCNK5G\",\"knw_01M0Z3RG0FZ6PGEYN73K\"]",
+    "citations_json": "[\"knw_01M0Z5CSRTPKD057QNS1\",\"knw_01M0Z5CSRVF0GK82FGDM\"]",
     "checks_json": "[{\"id\":\"subject_present\",\"title\":\"主旨必填\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_single_paragraph\",\"title\":\"主旨不分項\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_length\",\"title\":\"主旨長度\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_expectation\",\"title\":\"主旨期望語\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_period\",\"title\":\"主旨句末句號\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_no_section_name\",\"title\":\"主旨不含段名\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"doc_type_valid\",\"title\":\"文別合法\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"classification_valid\",\"title\":\"密等合法\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_titles_valid\",\"title\":\"段名合法\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_not_empty\",\"title\":\"段落不得為空\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_item_period\",\"title\":\"分項句末句號\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_item_count\",\"title\":\"分項數量\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_item_length\",\"title\":\"分項長度\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_mask_token\",\"title\":\"無殘留代稱\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_placeholder\",\"title\":\"無未填佔位符\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_raw_id_number\",\"title\":\"無身分證字號\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_raw_mobile\",\"title\":\"無行動電話號碼\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"roc_year\",\"title\":\"民國紀年\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"currency_format\",\"title\":\"金額格式\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_colloquial\",\"title\":\"無口語詞\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_simplified\",\"title\":\"無簡體字\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"fullwidth_punctuation\",\"title\":\"全形標點\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"receiver_required\",\"title\":\"受文者必填\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_extra_blank\",\"title\":\"無多餘空白\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]}]",
     "confirmed": 0,
     "confirmed_by": null,
     "confirmed_at": null,
-    "created_at": "2026-08-26T13:24:08.389Z",
-    "updated_at": "2026-08-26T13:24:08.389Z",
+    "created_at": "2026-08-26T13:52:37.699Z",
+    "updated_at": "2026-08-26T13:52:37.699Z",
     "sections": [
       {
         "title": "說明",
         "items": [
-          "依社會救助法第4條規定，低收入戶之審核認定，應由申請人戶籍所在地直轄市、縣（市）主管機關辦理。",
-          "李於114年4月8日申請本鄉低收入戶生活扶助一案，經查其戶籍未設於本鄉，非本所權責範圍。",
-          "依非權責案件移文原則，來文事項非本機關權責者，應查明權責機關後逕行移送，並敘明原收文日期字號及移送理由，不逕行退回民眾。"
+          "依社會救助法第4條規定，低收入戶應經申請戶籍所在地直轄市、縣（市）主管機關審核認定。",
+          "李於114年4月8日申請本鄉低收入戶生活扶助，經查其戶籍並未設於本鄉，非本所權責範圍，依行政程序法規定不予受理。"
         ]
       },
       {
         "title": "辦法",
         "items": [
-          "請李逕向戶籍所在地公所提出低收入戶生活扶助申請，以維權益。"
+          "請李逕向戶籍所在地公所提出申請，以維權益。"
         ]
       }
     ],
@@ -48,8 +47,8 @@
       "scenario": "reject_application"
     },
     "citations": [
-      "knw_01M0Z3RG0EC71EXCNK5G",
-      "knw_01M0Z3RG0FZ6PGEYN73K"
+      "knw_01M0Z5CSRTPKD057QNS1",
+      "knw_01M0Z5CSRVF0GK82FGDM"
     ],
     "checks": [
       {

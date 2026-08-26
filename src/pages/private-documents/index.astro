@@ -1,0 +1,301 @@
+---
+/**
+ * 民間書件索引頁。
+ *
+ * 為什麼是獨立的一區（2026-08-26，第四波關鍵字）：`/citizens/` 是「民眾對機關」
+ * 與存證信函；委託書、授權書、切結書、聲明書都不是那兩類 ——
+ * 它們是立書人自己出具、載明事實並自承法律責任的文件。
+ * Bing 需求量實測：委託書 1,865／切結書 958／授權書 536／聲明書 293，
+ * 站上原本一頁都沒有，同期 GSC 這些字本網域一次曝光都沒有。
+ */
+import ArticlePage from '../../layouts/ArticlePage.astro';
+import PageToc from '../../components/PageToc.astro';
+import { SERVICE_LINKS } from '../../site.config.js';
+import { PRIVATE_DOCS, PRIVATE_CATEGORIES } from '../../data/private-docs.js';
+import index from '../../data/scenarios.json';
+import downloads from '../../data/downloads.json';
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+
+const docTypeOf = (key) => index.items.find((i) => i.key === key)?.doc_type ?? '';
+
+// 段名取自實際烘出來的產物，不在頁面上另寫一份 —— 段名改了這裡會跟著變。
+const payloads = import.meta.glob('../../data/scenarios/*.json', { eager: true });
+const sectionsOf = (key) =>
+  (payloads[`../../data/scenarios/${key}.json`]?.default?.draft?.sections ?? []).map((s) => s.title);
+const blankTemplates = downloads.templates.filter((t) =>
+  ['委託書', '授權書', '切結書', '聲明書'].includes(t.docType),
+);
+
+/** 各文別的用途與最該注意的一件事。段名取自實際烘出來的產物，不另外寫死一份。 */
+const TYPES = [
+  {
+    id: 'poa',
+    name: '委託書',
+    when: '自己不能到場，請別人代為辦理某件事。',
+    key: 'poa_household',
+    note: '委託事項要具體到承辦看得懂能不能受理；結尾要有「如有虛偽不實，本人願負相關法律責任」。',
+  },
+  {
+    id: 'authorization',
+    name: '授權書',
+    when: '把某個範圍內的權限給對方，常見於代領款項、代辦業務。',
+    key: 'auth_collect',
+    note: '授權範圍要寫清楚「不含什麼」，否則對方能做的事會比你想的多。',
+  },
+  {
+    id: 'affidavit',
+    name: '切結書',
+    when: '向機關或對方保證某件事屬實，並自承不實的法律責任。',
+    key: 'affidavit_documents',
+    note: '沒有「如有不實，願負法律責任」那句話，就只是一段敘述、不構成切結。',
+  },
+  {
+    id: 'statement',
+    name: '聲明書',
+    when: '單方面說明自己知道的事實，供對方或機關參考。',
+    key: 'statement_income',
+    note: '只聲明自己知道的事實；聲明書不等於證明，機關通常還會要佐證文件。',
+  },
+];
+
+const S = {
+  what: { id: 'what', label: '這一區是什麼、跟民眾書件差在哪' },
+  ...Object.fromEntries(TYPES.map((t) => [t.id, { id: t.id, label: t.name }])),
+  list: { id: 'list', label: '全部範例' },
+  templates: { id: 'templates', label: '空白 Word 範本' },
+};
+
+const description =
+  '委託書、授權書、切結書、聲明書的範例全文與可編輯 Word 檔，'
+  + '每一份附逐條檢核結果，並說明哪些情況應該用機關自己的制式表格。';
+
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'CollectionPage',
+      '@id': `${pageUrl}#page`,
+      name: '民間書件範例',
+      description,
+      inLanguage: 'zh-Hant-TW',
+      isPartOf: { '@type': 'WebSite', url: 'https://www.ods.yao.care/' },
+      hasPart: PRIVATE_DOCS.map((d) => ({
+        '@type': 'Article',
+        name: d.seoTitle,
+        url: new URL(`${base}private-documents/${d.slug}/`, Astro.site).href,
+      })),
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: '首頁', item: 'https://www.ods.yao.care/' },
+        { '@type': 'ListItem', position: 2, name: '民間書件', item: pageUrl },
+      ],
+    },
+  ],
+};
+
+const faq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: '委託書和授權書有什麼不同？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text:
+          '實務上兩個詞常混用。差別在重點：委託書強調「請你代我去辦這件事」，'
+          + '所以要寫清楚委託事項；授權書強調「你在這個範圍內可以代表我」，'
+          + '所以要寫清楚授權範圍與不含什麼。受理單位要哪一種，以該單位的規定為準。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '委託書可以概括寫「處理一切事宜」嗎？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text:
+          '可以概括委任，但民法第 534 條規定有六類行為須有「特別之授權」：'
+          + '不動產之出賣或設定負擔、不動產之租賃逾二年、贈與、和解、起訴、提付仲裁。'
+          + '向行政機關申請的案件，「申請之撤回」也非受特別授權不得為之（行政程序法第 24 條）。'
+          + '事項落在這幾類卻只寫概括代為處理，對方或機關可以不認。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '股東會的委託書可以自己寫嗎？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text:
+          '公開發行公司不行。依「公開發行公司出席股東會使用委託書規則」第 2 條，'
+          + '委託書用紙以公司印發者為限；第 22 條規定用紙非公司印發的，代理表決權不予計算。'
+          + '請直接向該公司或股務代理機構索取委託書用紙。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '切結書有法律效力嗎？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text:
+          '切結書是立書人自己出具的書面陳述，載明事實並自承不實的法律責任。'
+          + '它的效力來自內容本身與後續的法律關係，不是因為叫「切結書」就自動產生效力；'
+          + '而且內容如果要求對方放棄法定權利，未必有效。涉及權利義務的，簽署前請自行確認或洽詢專業人士。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '這些文件有法定格式嗎？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text:
+          '沒有。民間書件不像公文有《文書處理手冊》那樣的格式規範。'
+          + '但受理的機關常有自己的制式表格（例如地政、監理、稅務、學校各有各的切結書），'
+          + '有制式表格時以那份為準，本站提供的是通用結構。',
+      },
+    },
+  ],
+};
+---
+
+<ArticlePage
+  schemas={[schema, faq]}
+  title="委託書、切結書、授權書、聲明書範例｜公文 AI"
+  description={description}
+  heading="民間書件"
+  lead="委託、授權、切結、聲明 —— 這幾種都是自己出具、載明事實、並自承法律責任的文件。沒有法定格式，但寫漏了關鍵那句話，這份文件就只是一段敘述。"
+>
+  <PageToc items={Object.values(S)} />
+
+  <h2 id={S.what.id}>{S.what.label}</h2>
+  <p>
+    站上另一區<a href={`${base}citizens/`}>民眾書件與存證信函</a>講的是「向機關申請、陳情、申訴」，
+    以及「通知對方並留下證據」。這一區不一樣：委託書、授權書、切結書、聲明書都是
+    <strong>由立書人自己出具</strong>，內容是自己的事實與自己願意承擔的責任。
+  </p>
+  <p class="caution">
+    <strong>先確認受理單位有沒有制式表格。</strong>
+    地政、監理、稅務、學校、公所大多有自己的切結書與委託書格式，有的話以那份為準 ——
+    用自己寫的反而會被退。本站提供的是沒有制式表格時可用的通用結構。
+  </p>
+
+  <h3>三件寫之前就該知道的事</h3>
+  <ol class="rules">
+    <li>
+      <strong>「委託書」與「授權書」在台灣法制上是同一件事的不同叫法。</strong>
+      公證法叫授權書、行政程序法叫委任書、土地登記規則與公司法叫委託書、
+      專利與商標的施行細則叫委任書 —— 官方表格自己也混用。
+      要交給哪個單位，就用那個單位的叫法。
+    </li>
+    <li>
+      <strong>有六類行為不能只寫「概括委任」。</strong>
+      民法第 534 條：不動產之出賣或設定負擔、不動產之租賃逾二年、贈與、和解、起訴、提付仲裁，
+      須有<strong>特別之授權</strong>。向行政機關申請的案件，「申請之撤回」也非受特別授權不得為之
+      （行政程序法第 24 條）。本站的檢核會在這幾類出現時提醒你寫明特別授權。
+    </li>
+    <li>
+      <strong>撤回授權要通知才生效。</strong>
+      行政程序法第 24 條：代理權授與之撤回，經通知行政機關後才對機關發生效力；
+      對私人相對人則有民法第 107 條的善意第三人保護。收回文件、通知對方，兩件都要做。
+    </li>
+  </ol>
+  <p class="caution">
+    <strong>公開發行公司的股東會委託書不能自己寫。</strong>
+    依「公開發行公司出席股東會使用委託書規則」第 2 條，用紙以公司印發者為限；
+    第 22 條規定用紙非公司印發的，代理表決權不予計算。請向該公司或股務代理機構索取。
+  </p>
+
+  {TYPES.map((t) => (
+    <section>
+      <h2 id={t.id}>{t.name}</h2>
+      <p><strong>什麼時候用：</strong>{t.when}</p>
+      <p><strong>段落：</strong>{sectionsOf(t.key).join('、')}</p>
+      <p class="note">{t.note}</p>
+      <ul class="examples">
+        {PRIVATE_DOCS.filter((d) => docTypeOf(d.key) === t.name).map((d) => (
+          <li>
+            <a href={`${base}private-documents/${d.slug}/`}>{d.seoTitle}</a>
+            <span>{d.lead}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+
+  <h2 id={S.list.id}>{S.list.label}</h2>
+  {PRIVATE_CATEGORIES.map((cat) => (
+    <section>
+      <h3>{cat}</h3>
+      <ul class="examples">
+        {PRIVATE_DOCS.filter((d) => d.category === cat).map((d) => (
+          <li>
+            <a href={`${base}private-documents/${d.slug}/`}>{d.seoTitle}</a>
+            <span>{docTypeOf(d.key)}　{d.lead}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+
+  <h2 id={S.templates.id}>{S.templates.label}</h2>
+  <p>不想從範例改的，直接下載空白的。</p>
+  <ul class="files">
+    {blankTemplates.map((t) => (
+      <li>
+        <a href={`${base}downloads/${t.path}`} download={t.filename}>{t.filename}</a>
+        <span>{t.note}</span>
+      </li>
+    ))}
+  </ul>
+  <p class="note">
+    公文的空白範本（函、書函、公告、簽、開會通知單）在<a href={`${base}templates/`}>Word 範本下載</a>；
+    金額要寫成國字大寫的，對照表與換算在<a href={`${base}numbers/`}>數字大寫怎麼寫</a>。
+  </p>
+
+  <p>
+    要把範例換成自己的事情，
+    <a {...SERVICE_LINKS.selfRegister('private_index_self_register')}>建立個人工作區</a>即可開始。
+  </p>
+</ArticlePage>
+
+<style>
+  .caution {
+    margin-block: 1.5rem;
+    padding: 0.875rem 1.125rem;
+    border-inline-start: 3px solid var(--color-warn);
+    background: var(--color-bg-light);
+    font-size: var(--text-sm);
+    line-height: 1.9;
+  }
+  .examples,
+  .files {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+  .examples li,
+  .files li {
+    display: grid;
+    gap: 0.25rem;
+  }
+  .examples span,
+  .files span {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+  .rules li {
+    margin-block: 0.75rem;
+    line-height: 1.9;
+  }
+  .note {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+</style>

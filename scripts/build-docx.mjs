@@ -12,9 +12,10 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { docx, p } from './lib/docx.mjs';
-import { PAGE, renderOfficial, citizenDocument, certifiedLetter } from './lib/gov-format.mjs';
+import { PAGE, renderOfficial, citizenDocument, certifiedLetter, privateDocument } from './lib/gov-format.mjs';
 import { CASES } from '../src/data/cases.js';
 import { CITIZEN_EXAMPLES } from '../src/data/citizen-examples.js';
+import { PRIVATE_DOCS } from '../src/data/private-docs.js';
 import format from '../src/data/gov-format.json' with { type: 'json' };
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -51,6 +52,13 @@ const CITIZEN_NOTE = [
   '姓名、地址、電話與日期為待填欄位；內容為虛構案例，不代表法律意見。',
 ];
 
+const PRIVATE_NOTE = [
+  '本檔為 www.ods.yao.care 的民間書件範例，可直接在 Word 修改後使用。',
+  '民間書件沒有法定強制格式；本檔只沿用政府文書格式參考規範的紙張、邊界與字級，讓下載檔看起來是一套。',
+  '**機關另有制式表格時，以該機關的表格為準**——切結書、委託書多半各機關自訂，先去該機關網站看有沒有。',
+  '姓名、身分證統一編號、地址、電話與日期為待填欄位；內容為虛構案例，不代表法律意見。',
+];
+
 const NOTICE_NOTE = [
   '本檔為存證信函「內文」，格式已依中華郵政「存證信函格式使用說明」設定：',
   '英數符號全形、字體大小 18、段落固定行高 34pt 靠左對齊、字元間距加寬 2.9pt。',
@@ -64,7 +72,7 @@ const build = (title, notes, bodyXml) =>
   docx({ title, page: PAGE, body: note(notes) + bodyXml });
 
 // path 是相對 public/downloads/ 的路徑，頁面自己接 BASE_URL。
-const manifest = { source: format.source, postalGuide: 'https://www.post.gov.tw/post/internet/Download/index.jsp?ID=220301', cases: {}, citizens: {}, templates: [] };
+const manifest = { source: format.source, postalGuide: 'https://www.post.gov.tw/post/internet/Download/index.jsp?ID=220301', cases: {}, citizens: {}, private: {}, templates: [] };
 
 // ── 機關公文案例 ───────────────────────────────────────────────
 for (const caseMeta of CASES) {
@@ -120,6 +128,36 @@ for (const example of CITIZEN_EXAMPLES) {
   };
 }
 
+// ── 民間書件案例 ───────────────────────────────────────────────
+// 與機關案例同一個來源：內容取自 ods 應用 --llm 烘出來的真實產物，不是站上手寫的。
+const PRIVATE_LABELS = {
+  委託書: { senderLabel: '委託人', receiverLabel: '受託人' },
+  授權書: { senderLabel: '授權人', receiverLabel: '被授權人' },
+  切結書: { senderLabel: '立切結書人', receiverLabel: '此致' },
+  聲明書: { senderLabel: '聲明人', receiverLabel: '此致' },
+  和解書: { senderLabel: '甲方', receiverLabel: '乙方' },
+};
+for (const meta of PRIVATE_DOCS) {
+  const payload = JSON.parse(readFileSync(join(ROOT, 'src/data/scenarios', `${meta.key}.json`), 'utf8'));
+  const draft = payload.draft;
+  const fields = draft.fields ?? {};
+  const doc = {
+    docType: draft.doc_type,
+    subject: draft.subject,
+    sections: draft.sections,
+    sender: fields.sender ?? '',
+    receiver: fields.receiver ?? '',
+    ...(PRIVATE_LABELS[draft.doc_type] ?? {}),
+  };
+  const file = `private/${meta.slug}.docx`;
+  write(file, build(meta.seoTitle, PRIVATE_NOTE, privateDocument(doc)));
+  manifest.private[meta.slug] = {
+    path: file,
+    filename: `${meta.seoTitle}.docx`,
+    docType: draft.doc_type,
+  };
+}
+
 // ── 空白範本 ───────────────────────────────────────────────────
 const empty = (titles) => titles.map((title) => ({ title, items: ['', '', ''] }));
 const TEMPLATES = [
@@ -139,6 +177,22 @@ const TEMPLATES = [
   { slug: 'citizen-application', docType: '申請書', label: '申請書', kind: 'citizen',
     sections: [{ title: '申請事由', items: ['', ''] }, { title: '檢附文件', items: [''] }],
     note: '申請事由、依據與檢附文件分開寫，機關才不必來電補問。' },
+  { slug: 'private-poa', docType: '委託書', label: '委託書', kind: 'private',
+    labels: { senderLabel: '委託人', receiverLabel: '受託人' },
+    sections: [{ title: '委託事由', items: [''] }, { title: '委託事項', items: ['', ''] }, { title: '委託期間', items: [''] }],
+    note: '委託事項要具體到承辦看得懂能不能受理；結尾要有「如有虛偽不實，本人願負相關法律責任」。' },
+  { slug: 'private-authorization', docType: '授權書', label: '授權書', kind: 'private',
+    labels: { senderLabel: '授權人', receiverLabel: '被授權人' },
+    sections: [{ title: '授權事由', items: [''] }, { title: '授權範圍', items: ['', ''] }, { title: '授權期間', items: [''] }],
+    note: '授權範圍要寫清楚「不含什麼」，否則對方可以做的事會比你想的多。' },
+  { slug: 'private-affidavit', docType: '切結書', label: '切結書', kind: 'private',
+    labels: { senderLabel: '立切結書人', receiverLabel: '此致' },
+    sections: [{ title: '切結事由', items: [''] }, { title: '切結事項', items: ['', ''] }],
+    note: '沒有「如有不實，願負法律責任」那句話就只是一段敘述，不構成切結。機關多半有自己的制式切結書。' },
+  { slug: 'private-statement', docType: '聲明書', label: '聲明書', kind: 'private',
+    labels: { senderLabel: '聲明人', receiverLabel: '此致' },
+    sections: [{ title: '聲明事由', items: [''] }, { title: '聲明事項', items: ['', ''] }],
+    note: '聲明的是自己知道的事實，不要把推測或他人的行為寫成既成事實。' },
   { slug: 'certified-letter', docType: '存證信函', label: '存證信函內文', kind: 'notice',
     sections: [{ title: '事實經過', items: ['', ''] }, { title: '本人請求', items: [''] }],
     note: '格式已依中華郵政使用說明設定；用紙請至中華郵政官網下載，再把內文貼上。' },
@@ -159,9 +213,13 @@ for (const template of TEMPLATES) {
   const body =
     template.kind === 'official' ? renderOfficial(doc)
       : template.kind === 'notice' ? certifiedLetter(doc)
-        : citizenDocument(doc);
+        : template.kind === 'private' ? privateDocument({ ...doc, ...(template.labels ?? {}) })
+          : citizenDocument(doc);
   const notes =
-    template.kind === 'official' ? CASE_NOTE : template.kind === 'notice' ? NOTICE_NOTE : CITIZEN_NOTE;
+    template.kind === 'official' ? CASE_NOTE
+      : template.kind === 'notice' ? NOTICE_NOTE
+        : template.kind === 'private' ? PRIVATE_NOTE
+          : CITIZEN_NOTE;
   const file = `templates/${template.slug}.docx`;
   write(file, build(`${template.label}空白範本`, notes, body));
   manifest.templates.push({

@@ -179,6 +179,38 @@
       "family": "notice"
     }
   },
+  "private": {
+    "power-of-attorney-household": {
+      "path": "private/power-of-attorney-household.docx",
+      "filename": "委託書範例：代領戶籍謄本.docx",
+      "docType": "委託書"
+    },
+    "power-of-attorney-vehicle": {
+      "path": "private/power-of-attorney-vehicle.docx",
+      "filename": "委託書範例：代辦車輛過戶.docx",
+      "docType": "委託書"
+    },
+    "authorization-collect-payment": {
+      "path": "private/authorization-collect-payment.docx",
+      "filename": "授權書範例：代為領取款項.docx",
+      "docType": "授權書"
+    },
+    "affidavit-documents-true": {
+      "path": "private/affidavit-documents-true.docx",
+      "filename": "切結書範例：切結所附文件屬實.docx",
+      "docType": "切結書"
+    },
+    "affidavit-lost-document": {
+      "path": "private/affidavit-lost-document.docx",
+      "filename": "切結書範例：證件遺失申請補發.docx",
+      "docType": "切結書"
+    },
+    "statement-no-income": {
+      "path": "private/statement-no-income.docx",
+      "filename": "聲明書範例：聲明無固定工作收入.docx",
+      "docType": "聲明書"
+    }
+  },
   "templates": [
     {
       "slug": "official-letter",
@@ -235,6 +267,38 @@
       "note": "申請事由、依據與檢附文件分開寫，機關才不必來電補問。",
       "path": "templates/citizen-application.docx",
       "filename": "申請書空白範本.docx"
+    },
+    {
+      "slug": "private-poa",
+      "label": "委託書",
+      "docType": "委託書",
+      "note": "委託事項要具體到承辦看得懂能不能受理；結尾要有「如有虛偽不實，本人願負相關法律責任」。",
+      "path": "templates/private-poa.docx",
+      "filename": "委託書空白範本.docx"
+    },
+    {
+      "slug": "private-authorization",
+      "label": "授權書",
+      "docType": "授權書",
+      "note": "授權範圍要寫清楚「不含什麼」，否則對方可以做的事會比你想的多。",
+      "path": "templates/private-authorization.docx",
+      "filename": "授權書空白範本.docx"
+    },
+    {
+      "slug": "private-affidavit",
+      "label": "切結書",
+      "docType": "切結書",
+      "note": "沒有「如有不實，願負法律責任」那句話就只是一段敘述，不構成切結。機關多半有自己的制式切結書。",
+      "path": "templates/private-affidavit.docx",
+      "filename": "切結書空白範本.docx"
+    },
+    {
+      "slug": "private-statement",
+      "label": "聲明書",
+      "docType": "聲明書",
+      "note": "聲明的是自己知道的事實，不要把推測或他人的行為寫成既成事實。",
+      "path": "templates/private-statement.docx",
+      "filename": "聲明書空白範本.docx"
     },
     {
       "slug": "certified-letter",

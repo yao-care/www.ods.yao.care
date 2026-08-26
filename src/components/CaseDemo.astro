@@ -16,7 +16,7 @@ interface Props {
   };
   checks: { id: string; title: string; severity: string; ok: boolean; detail?: string }[];
   receiver: string | null;
-  family?: 'official' | 'citizen' | 'notice';
+  family?: 'official' | 'citizen' | 'notice' | 'private';
   /** 正式格式的 Word 檔（由 scripts/build-docx.mjs 依政府文書格式參考規範產生）。 */
   download?: { path: string; filename: string } | null;
 }
@@ -50,9 +50,15 @@ const addresses = {
 const deadline = fields.deadline ? String(fields.deadline) : '';
 const attachments = Array.isArray(fields.attachments) ? fields.attachments.join('、') : '';
 const title = isNotice ? '存證信函' : draft.doc_type;
+const isPrivate = family === 'private';
 const steps = isOfficial
   ? ['填寫事由', '產生草稿', '格式檢核', '送出簽核']
-  : [isNotice ? '填寫通知' : '填寫事情與請求', '產生草稿', '格式檢核', '下載文件'];
+  : [
+      isNotice ? '填寫通知' : isPrivate ? '填寫事實與委託內容' : '填寫事情與請求',
+      '產生草稿',
+      '格式檢核',
+      '下載文件',
+    ];
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
@@ -247,6 +253,13 @@ const passed = checks.filter((c) => c.ok).length;
       save: ['儲存並重新檢核', '儲存會保留這份文件，並依民眾書件規則重新檢核，需要工作區。'],
       export: ['匯出文件', '匯出的純文字或 Word 會保留發文人、受文機關與附件欄位，需要工作區。'],
     },
+    private: {
+      'edit-source': ['換成自己的事情', '把範例換成自己要委託、切結或聲明的內容，需要建立個人工作區。'],
+      'edit-meta': ['調整文別與雙方資料', '委託書、授權書、切結書、聲明書的段落與必要欄位各不相同，要自己選，需要工作區。'],
+      edit: ['編輯這份文件', '編輯後系統會重新檢查段落、責任文句與個資格式，需要工作區。'],
+      save: ['儲存並重新檢核', '儲存會保留這份草稿，並依民間書件規則重新檢核，需要工作區。'],
+      export: ['匯出文件', '匯出的是可人工審閱的草稿；機關另有制式表格時以該機關的表格為準。'],
+    },
     notice: {
       'edit-source': ['換成自己的通知事項', '把範例換成自己的事實、請求與期限，需要建立個人工作區。'],
       'edit-meta': ['調整雙方資料與期限', '寄件人、收件人、雙方地址與履行期限都是存證信函的必要欄位，需要工作區。'],
@@ -268,6 +281,12 @@ const passed = checks.filter((c) => c.ok).length;
       ['去識別化：姓名、電話、地址…', 50],
       ['產生陳情書草稿…', 80],
       ['執行民眾文件檢核…', 100],
+    ],
+    private: [
+      ['整理事實與委託／切結內容…', 25],
+      ['去識別化：姓名、身分證、電話、地址…', 50],
+      ['產生草稿…', 80],
+      ['執行 {n} 條檢核（含責任文句）…', 100],
     ],
     notice: [
       ['整理通知事項與履行期限…', 25],

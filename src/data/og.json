@@ -167,6 +167,34 @@
     "file": "og/numbers.png",
     "title": "數字大寫怎麼寫：國字大寫對照表與金額換算"
   },
+  "/private-documents/": {
+    "file": "og/private-documents.png",
+    "title": "委託書、切結書、授權書、聲明書範例｜公文 AI"
+  },
+  "/private-documents/affidavit-documents-true/": {
+    "file": "og/private-documents-affidavit-documents-true.png",
+    "title": "切結書範例：切結所附文件屬實｜公文 AI"
+  },
+  "/private-documents/affidavit-lost-document/": {
+    "file": "og/private-documents-affidavit-lost-document.png",
+    "title": "切結書範例：證件遺失申請補發｜公文 AI"
+  },
+  "/private-documents/authorization-collect-payment/": {
+    "file": "og/private-documents-authorization-collect-payment.png",
+    "title": "授權書範例：代為領取款項｜公文 AI"
+  },
+  "/private-documents/power-of-attorney-household/": {
+    "file": "og/private-documents-power-of-attorney-household.png",
+    "title": "委託書範例：代領戶籍謄本｜公文 AI"
+  },
+  "/private-documents/power-of-attorney-vehicle/": {
+    "file": "og/private-documents-power-of-attorney-vehicle.png",
+    "title": "委託書範例：代辦車輛過戶｜公文 AI"
+  },
+  "/private-documents/statement-no-income/": {
+    "file": "og/private-documents-statement-no-income.png",
+    "title": "聲明書範例：聲明無固定工作收入｜公文 AI"
+  },
   "/product/": {
     "file": "og/product.png",
     "title": "公文 AI 系統：功能、機關導入與電子公文系統的分工"

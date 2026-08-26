@@ -9,6 +9,7 @@
  */
 import { CASES } from './cases.js';
 import { CITIZEN_EXAMPLES } from './citizen-examples.js';
+import { PRIVATE_DOCS } from './private-docs.js';
 import index from './scenarios.json';
 import downloads from './downloads.json';
 
@@ -23,6 +24,7 @@ export const FIXED_PAGES = [
   { path: '/', name: '公文 AI 首頁', blurb: '機關公文、民眾對機關書件與存證信函的範例入口。' },
   { hub: true, path: '/cases/', name: '公文範例庫', blurb: '機關公文全文與逐條格式檢核結果。' },
   { hub: true, path: '/citizens/', name: '民眾書件與存證信函', blurb: '申請書、陳情書、申訴書、說明書與存證信函草稿。' },
+  { hub: true, path: '/private-documents/', name: '民間書件', blurb: '委託書、授權書、切結書、聲明書的範例全文、逐條檢核與可編輯 Word 檔。' },
   { hub: true, path: '/writing/', name: '公文怎麼寫', blurb: '主旨、說明、辦法三段式與擬稿規定。' },
   { hub: true, path: '/checks/', name: '公文格式檢核', blurb: '主旨、段落、個資代稱、用字格式、收發的逐條檢核。' },
   { hub: true, path: '/doc-types/', name: '文別怎麼選', blurb: '函、書函、公告、簽與開會通知單的使用時機。' },
@@ -58,6 +60,18 @@ export const casePages = () =>
     download: downloads.cases[c.slug]?.filename ?? null,
   }));
 
+export const privatePages = () =>
+  PRIVATE_DOCS.map((d) => ({
+    path: `/private-documents/${d.slug}/`,
+    name: d.seoTitle,
+    docType: docTypeOf(d.key),
+    category: d.category,
+    lead: d.lead,
+    checkCount: checkCountOf(d.key),
+    watchOut: d.watchOut ?? [],
+    download: downloads.private?.[d.slug]?.filename ?? null,
+  }));
+
 export const citizenPages = () =>
   CITIZEN_EXAMPLES.map((e) => ({
     path: `/citizens/${e.slug}/`,
@@ -75,6 +89,7 @@ export const allPaths = () => [
   ...FIXED_PAGES.map((p) => p.path),
   ...casePages().map((p) => p.path),
   ...citizenPages().map((p) => p.path),
+  ...privatePages().map((p) => p.path),
 ];
 
 /**
@@ -105,6 +120,7 @@ export function llmsIndex() {
   assertCoversAllRoutes();
   const cases = casePages();
   const citizens = citizenPages();
+  const privates = privatePages();
   const officialTypes = [...new Set(cases.map((c) => c.docType).filter(Boolean))].join('、');
   const citizenTypes = [...new Set(citizens.map((c) => c.docType).filter(Boolean))].join('、');
   const letterCount = citizens.filter((c) => c.docType === '存證信函').length;
@@ -119,6 +135,8 @@ export function llmsIndex() {
     '',
     `- 機關公文範例 ${cases.length} 篇：文別涵蓋${officialTypes}，每篇都是全文加逐條格式檢核結果。`,
     `- 民眾正式書件 ${citizens.length} 篇：${citizenTypes}，其中存證信函 ${letterCount} 篇。`,
+    `- 民間書件 ${privates.length} 篇：${[...new Set(privates.map((d) => d.docType).filter(Boolean))].join('、')}，`
+      + '由立書人自己出具、載明事實並自承法律責任。',
     '- 格式檢核：主旨、段落、個資代稱、用字格式、收發逐條顯示結果與原因；條目數依文別而定。',
     '- 文別選擇：函、書函、公告、簽與開會通知單的使用時機與期望語差異。',
     '- Word 範本：空白範本與填好內容的範例檔，版面取自政府文書格式參考規範原始檔。',
@@ -136,6 +154,10 @@ export function llmsIndex() {
     '',
     ...citizens.map((c) => `- [${c.name}](${url(c.path)})：${c.docType}，${c.lead}`),
     '',
+    '## 民間書件（委託、授權、切結、聲明）',
+    '',
+    ...privates.map((d) => `- [${d.name}](${url(d.path)})：${d.docType}，${d.lead}`),
+    '',
     '## 使用邊界',
     '',
     '本站公開頁面是 Guest 案例與說明，不是登入後的租戶應用程式。' +
@@ -150,6 +172,7 @@ export function llmsFull() {
   assertCoversAllRoutes();
   const cases = casePages();
   const citizens = citizenPages();
+  const privates = privatePages();
   const detail = (p) =>
     [
       `- [${p.name}](${url(p.path)})`,
@@ -185,6 +208,10 @@ export function llmsFull() {
     '',
     ...citizens.map(detail),
     '',
+    `## 民間書件（${privates.length} 篇）`,
+    '',
+    ...privates.map(detail),
+    '',
     '## 可直接回答的問題',
     '',
     '- 格式檢核不是只回報「格式有誤」，而是逐條列出命中的規則與原因；' +
@@ -197,6 +224,10 @@ export function llmsFull() {
       '存證信函要求寄件人、收件人、雙方地址與履行或回覆期限。',
     '- 存證信函用紙由中華郵政規定且不得變更樣式，本站只產內文，用紙請到中華郵政取得。',
     '- 存證信函功能是草稿與排版協助，不代表已完成郵寄、送達或法律審查；目前不直接代辦外部送件。',
+    '- 民間書件（委託書、授權書、切結書、聲明書）由立書人自己出具，沒有法定強制格式；' +
+      '但受理的機關常有自己的制式表格（地政、監理、稅務、學校各有各的），有的話以那份為準。',
+    '- 切結書與委託書一定要有責任文句（如「如有不實，致他人權益受損害者，立切結書人願負法律責任。」）；' +
+      '缺這句話只是一段敘述，不構成切結或委託，本站的檢核會擋下。',
     '',
   ].join('\n');
 }

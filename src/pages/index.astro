@@ -8,10 +8,15 @@ import index from '../data/scenarios.json';
 import { CITIZEN_EXAMPLES } from '../data/citizen-examples.js';
 import { FIXED_PAGES } from '../data/llms.js';
 import { ORGANIZATION, SITE_URL } from '../data/schema.js';
+import { PRIVATE_DOCS } from '../data/private-docs.js';
 import grantReport from '../data/scenarios/grant_report.json';
 
 // 檢核條目數依文別而定，一律取實際筆數，不寫死。
 const checkCount = grantReport.checks.length;
+
+// 民間書件也要有首頁直連 —— 2026-08-19 的教訓：只靠區域索引頁進去的子頁，Google 遲遲不爬。
+const privateFeatured = ['power-of-attorney-household', 'affidavit-documents-true', 'authorization-collect-payment'];
+const privateCards = PRIVATE_DOCS.filter((d) => privateFeatured.includes(d.slug));
 
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
@@ -135,6 +140,26 @@ const homeSchema = {
         版面取自政府文書格式參考規範原始檔，開啟就能改。
       </p>
       <p class="more"><a href={`${base}templates/`}>公文格式 Word 範本下載</a></p>
+    </section>
+
+    <section>
+      <h2>委託、切結、聲明給另一個人或機關</h2>
+      <p class="section-lead">
+        委託別人代辦、向機關切結某件事屬實、聲明自己的狀況 —— 這幾種文件沒有法定格式，
+        但漏掉「如有不實願負法律責任」那句話，寫再多也只是一段敘述。
+      </p>
+      <ul class="cards">
+        {privateCards.map((d) => (
+          <li>
+            <a href={`${base}private-documents/${d.slug}/`}>
+              <span class="doc-type">{docTypeOf(d.key)}</span>
+              <span class="title">{d.seoTitle}</span>
+              <span class="lead-sm">{d.lead}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <p class="more"><a href={`${base}private-documents/`}>看全部民間書件</a></p>
     </section>
 
     <section>

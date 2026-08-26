@@ -13,6 +13,7 @@ const path = Astro.url.pathname;
 const links = {
   cases: `${base}cases/`,
   citizens: `${base}citizens/`,
+  privateDocs: `${base}private-documents/`,
   checks: `${base}checks/`,
   docTypes: `${base}doc-types/`,
   templates: `${base}templates/`,
@@ -37,6 +38,11 @@ const primaryLinks = [
     href: links.citizens,
     label: '民眾文件',
     description: '申請、陳情與存證信函',
+  },
+  {
+    href: links.privateDocs,
+    label: '民間書件',
+    description: '委託、授權、切結與聲明',
   },
 ];
 

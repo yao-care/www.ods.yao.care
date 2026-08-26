@@ -1,0 +1,426 @@
+{
+  "scenario": {
+    "key": "poa_household",
+    "title": "委託代領戶籍謄本",
+    "source": "本人林秀英因工作時間無法親自前往戶政事務所，委託王志明君代為向○○區戶政事務所申請並領取本人之戶籍謄本1份，受託人持本委託書及雙方身分證件辦理，委託期間至114年12月31日止。如有虛偽不實，本人願負相關法律責任。",
+    "family": "private"
+  },
+  "draft": {
+    "id": "drf_01M0YQ2A58QVHR5214BW",
+    "user_id": "usr_DEMO00000000000000",
+    "unit": "民政課",
+    "document_family": "private",
+    "doc_type": "委託書",
+    "classification": "普通",
+    "topic": "委託代領戶籍謄本",
+    "subject": "本人林秀英因工作時間無法親自辦理，委託王志明君代為向○○區戶政事務所申請並領取戶籍謄本，特立此委託書。",
+    "sections_json": "[{\"title\":\"委託事由\",\"items\":[\"本人林秀英因工作時間無法親自前往戶政事務所辦理相關事務，特委託王志明君代為處理。\"]},{\"title\":\"委託事項\",\"items\":[\"委託王志明君代為向○○區戶政事務所申請並領取本人林秀英之戶籍謄本1份。\",\"受託人王志明君應持本委託書及雙方身分證件辦理前項事宜。\",\"如有虛偽不實及任何紛爭，本人願負相關法律責任。\"]},{\"title\":\"委託期間\",\"items\":[\"委託期間至114年12月31日止。\"]},{\"title\":\"附件\",\"items\":[\"檢附委託人身分證影本1份。\",\"檢附受託人身分證影本1份。\"]}]",
+    "fields_json": "{\"sender\":\"林秀英\",\"attachments\":[\"委託人身分證影本1份\",\"受託人身分證影本1份\"],\"receiver\":\"王志明\",\"source_len\":107,\"scenario\":\"poa_household\"}",
+    "engine": "llm",
+    "model": "claude-sonnet-5",
+    "degraded_reason": null,
+    "citations_json": "[]",
+    "checks_json": "[{\"id\":\"subject_present\",\"title\":\"主旨必填\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_single_paragraph\",\"title\":\"主旨不分項\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_length\",\"title\":\"主旨長度\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_period\",\"title\":\"主旨句末標點\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"doc_type_valid\",\"title\":\"文別合法\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_titles_valid\",\"title\":\"段名合法\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_not_empty\",\"title\":\"段落不得為空\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_item_period\",\"title\":\"分項句末標點\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_item_count\",\"title\":\"分項數量\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_item_length\",\"title\":\"分項長度\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_mask_token\",\"title\":\"無殘留代稱\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_placeholder\",\"title\":\"無未填佔位符\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_raw_id_number\",\"title\":\"無身分證字號\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_raw_mobile\",\"title\":\"無行動電話號碼\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_simplified\",\"title\":\"無簡體字\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"fullwidth_punctuation\",\"title\":\"全形標點\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_colloquial\",\"title\":\"無明顯口語詞\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_extra_blank\",\"title\":\"無多餘空白\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"sender_required\",\"title\":\"發文人必填\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"receiver_required\",\"title\":\"收文者必填\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"special_authority\",\"title\":\"特別授權事項\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"liability_clause\",\"title\":\"責任文句\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]}]",
+    "confirmed": 0,
+    "confirmed_by": null,
+    "confirmed_at": null,
+    "created_at": "2026-08-26T09:40:21.289Z",
+    "updated_at": "2026-08-26T09:40:21.289Z",
+    "sections": [
+      {
+        "title": "委託事由",
+        "items": [
+          "本人林秀英因工作時間無法親自前往戶政事務所辦理相關事務，特委託王志明君代為處理。"
+        ]
+      },
+      {
+        "title": "委託事項",
+        "items": [
+          "委託王志明君代為向○○區戶政事務所申請並領取本人林秀英之戶籍謄本1份。",
+          "受託人王志明君應持本委託書及雙方身分證件辦理前項事宜。",
+          "如有虛偽不實及任何紛爭，本人願負相關法律責任。"
+        ]
+      },
+      {
+        "title": "委託期間",
+        "items": [
+          "委託期間至114年12月31日止。"
+        ]
+      },
+      {
+        "title": "附件",
+        "items": [
+          "檢附委託人身分證影本1份。",
+          "檢附受託人身分證影本1份。"
+        ]
+      }
+    ],
+    "fields": {
+      "sender": "林秀英",
+      "attachments": [
+        "委託人身分證影本1份",
+        "受託人身分證影本1份"
+      ],
+      "receiver": "王志明",
+      "source_len": 107,
+      "scenario": "poa_household"
+    },
+    "citations": [],
+    "checks": [
+      {
+        "id": "subject_present",
+        "title": "主旨必填",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "subject_single_paragraph",
+        "title": "主旨不分項",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "subject_length",
+        "title": "主旨長度",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "subject_period",
+        "title": "主旨句末標點",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "doc_type_valid",
+        "title": "文別合法",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "section_titles_valid",
+        "title": "段名合法",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "section_not_empty",
+        "title": "段落不得為空",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "section_item_period",
+        "title": "分項句末標點",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "section_item_count",
+        "title": "分項數量",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "section_item_length",
+        "title": "分項長度",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "no_mask_token",
+        "title": "無殘留代稱",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "no_placeholder",
+        "title": "無未填佔位符",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "no_raw_id_number",
+        "title": "無身分證字號",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "no_raw_mobile",
+        "title": "無行動電話號碼",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "no_simplified",
+        "title": "無簡體字",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "fullwidth_punctuation",
+        "title": "全形標點",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "no_colloquial",
+        "title": "無明顯口語詞",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "no_extra_blank",
+        "title": "無多餘空白",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "sender_required",
+        "title": "發文人必填",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "receiver_required",
+        "title": "收文者必填",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "special_authority",
+        "title": "特別授權事項",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "liability_clause",
+        "title": "責任文句",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      }
+    ]
+  },
+  "checks": [
+    {
+      "id": "subject_present",
+      "title": "主旨必填",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "subject_single_paragraph",
+      "title": "主旨不分項",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "subject_length",
+      "title": "主旨長度",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "subject_period",
+      "title": "主旨句末標點",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "doc_type_valid",
+      "title": "文別合法",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "section_titles_valid",
+      "title": "段名合法",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "section_not_empty",
+      "title": "段落不得為空",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "section_item_period",
+      "title": "分項句末標點",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "section_item_count",
+      "title": "分項數量",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "section_item_length",
+      "title": "分項長度",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "no_mask_token",
+      "title": "無殘留代稱",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "no_placeholder",
+      "title": "無未填佔位符",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "no_raw_id_number",
+      "title": "無身分證字號",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "no_raw_mobile",
+      "title": "無行動電話號碼",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "no_simplified",
+      "title": "無簡體字",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "fullwidth_punctuation",
+      "title": "全形標點",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "no_colloquial",
+      "title": "無明顯口語詞",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "no_extra_blank",
+      "title": "無多餘空白",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "sender_required",
+      "title": "發文人必填",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "receiver_required",
+      "title": "收文者必填",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "special_authority",
+      "title": "特別授權事項",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "liability_clause",
+      "title": "責任文句",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    }
+  ]
+}

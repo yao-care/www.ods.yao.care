@@ -182,6 +182,38 @@ export function citizenDocument(doc) {
   ].join('');
 }
 
+/**
+ * 民間書件（委託書、授權書、切結書、聲明書、和解書）。
+ *
+ * 不能沿用 citizenDocument()：那支寫死「受文機關」與「陳情（申請）人」，
+ * 但民間書件的相對人是另一個人或公司，不是機關；而且雙方書件（委託書、和解書）
+ * 兩造都要簽名，只給一個簽名欄會讓使用者以為簽一個就成立。
+ *
+ * 政府文書格式參考規範管的是公文，不管民間書件 —— 這裡只沿用它的紙張、邊界與字級，
+ * 讓同一批下載檔看起來是一套；格式本身沒有法定強制樣式。
+ */
+export function privateDocument(doc) {
+  const signer = (label, name, extra = []) => [
+    p(`${label}：${name ?? ''}`, S.cc_to),
+    p('國民身分證統一編號：', S.cc_to),
+    p('聯絡地址：', S.cc_to),
+    p('聯絡電話：', S.cc_to),
+    ...extra.map((line) => p(line, S.cc_to)),
+    p('簽名或蓋章：', S.cc_to),
+    blank(S.cc_to),
+  ].join('');
+
+  return [
+    p(doc.docType, S.agency_title),
+    p(`主旨：${doc.subject}`, S.subject),
+    doc.sections.map((s) => sectionBlock(s)).join(''),
+    blank(S.cc_to),
+    signer(doc.senderLabel ?? '立書人', doc.sender),
+    doc.receiver || doc.receiverLabel ? signer(doc.receiverLabel ?? '相對人', doc.receiver) : '',
+    p('中華民國　　年　　月　　日', S.cc_to),
+  ].join('');
+}
+
 /** 中華郵政使用說明第二點：英文、數字、符號等請用「全形」輸入。 */
 export function toFullWidth(text) {
   return String(text ?? '').replace(/[ -~]/g, (c) =>

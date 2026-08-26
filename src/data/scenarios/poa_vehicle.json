@@ -1,0 +1,430 @@
+{
+  "scenario": {
+    "key": "poa_vehicle",
+    "title": "委託代辦車輛過戶",
+    "source": "本人張美玲因出國無法親自辦理，委託陳建豪君代為向監理機關辦理車牌號碼○○○-○○○○號自用小客車之過戶登記，並代為簽署相關表單及領取新行照，委託期間自114年9月1日起至114年10月31日止。依道路交通安全規則第16條規定，代辦人應另繳驗其國民身分證及本人有效之駕駛執照。如有虛偽不實及任何紛爭，本人願負相關法律責任。",
+    "family": "private"
+  },
+  "draft": {
+    "id": "drf_01M0YQ2ET8J1E5Q86PSW",
+    "user_id": "usr_DEMO00000000000000",
+    "unit": "民政課",
+    "document_family": "private",
+    "doc_type": "委託書",
+    "classification": "普通",
+    "topic": "委託代辦車輛過戶",
+    "subject": "本人張美玲因出國無法親自辦理，委託陳建豪代為辦理車牌號碼○○○-○○○○號自用小客車之過戶登記事宜。",
+    "sections_json": "[{\"title\":\"委託事由\",\"items\":[\"本人張美玲因出國無法親自辦理車輛過戶事宜，特委託陳建豪代為處理。\"]},{\"title\":\"委託事項\",\"items\":[\"代為向監理機關辦理車牌號碼○○○-○○○○號自用小客車之過戶登記。\",\"代為簽署過戶登記相關表單。\",\"代為領取新行照。\",\"依道路交通安全規則第16條規定，代辦人應另繳驗其國民身分證及本人有效之駕駛執照。\",\"如有虛偽不實及任何紛爭，本人願負相關法律責任。\"]},{\"title\":\"委託期間\",\"items\":[\"自114年9月1日起至114年10月31日止。\"]},{\"title\":\"附件\",\"items\":[\"檢附行車執照正本。\",\"檢附代辦人國民身分證。\",\"檢附委託人有效駕駛執照。\"]}]",
+    "fields_json": "{\"sender\":\"張美玲\",\"attachments\":[\"行車執照正本\",\"代辦人國民身分證\",\"委託人有效駕駛執照\"],\"receiver\":\"陳建豪\",\"source_len\":160,\"scenario\":\"poa_vehicle\"}",
+    "engine": "llm",
+    "model": "claude-sonnet-5",
+    "degraded_reason": null,
+    "citations_json": "[]",
+    "checks_json": "[{\"id\":\"subject_present\",\"title\":\"主旨必填\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_single_paragraph\",\"title\":\"主旨不分項\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_length\",\"title\":\"主旨長度\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_period\",\"title\":\"主旨句末標點\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"doc_type_valid\",\"title\":\"文別合法\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_titles_valid\",\"title\":\"段名合法\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_not_empty\",\"title\":\"段落不得為空\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_item_period\",\"title\":\"分項句末標點\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_item_count\",\"title\":\"分項數量\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_item_length\",\"title\":\"分項長度\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_mask_token\",\"title\":\"無殘留代稱\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_placeholder\",\"title\":\"無未填佔位符\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_raw_id_number\",\"title\":\"無身分證字號\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_raw_mobile\",\"title\":\"無行動電話號碼\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_simplified\",\"title\":\"無簡體字\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"fullwidth_punctuation\",\"title\":\"全形標點\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_colloquial\",\"title\":\"無明顯口語詞\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_extra_blank\",\"title\":\"無多餘空白\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"sender_required\",\"title\":\"發文人必填\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"receiver_required\",\"title\":\"收文者必填\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"special_authority\",\"title\":\"特別授權事項\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"liability_clause\",\"title\":\"責任文句\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]}]",
+    "confirmed": 0,
+    "confirmed_by": null,
+    "confirmed_at": null,
+    "created_at": "2026-08-26T09:40:26.057Z",
+    "updated_at": "2026-08-26T09:40:26.057Z",
+    "sections": [
+      {
+        "title": "委託事由",
+        "items": [
+          "本人張美玲因出國無法親自辦理車輛過戶事宜，特委託陳建豪代為處理。"
+        ]
+      },
+      {
+        "title": "委託事項",
+        "items": [
+          "代為向監理機關辦理車牌號碼○○○-○○○○號自用小客車之過戶登記。",
+          "代為簽署過戶登記相關表單。",
+          "代為領取新行照。",
+          "依道路交通安全規則第16條規定，代辦人應另繳驗其國民身分證及本人有效之駕駛執照。",
+          "如有虛偽不實及任何紛爭，本人願負相關法律責任。"
+        ]
+      },
+      {
+        "title": "委託期間",
+        "items": [
+          "自114年9月1日起至114年10月31日止。"
+        ]
+      },
+      {
+        "title": "附件",
+        "items": [
+          "檢附行車執照正本。",
+          "檢附代辦人國民身分證。",
+          "檢附委託人有效駕駛執照。"
+        ]
+      }
+    ],
+    "fields": {
+      "sender": "張美玲",
+      "attachments": [
+        "行車執照正本",
+        "代辦人國民身分證",
+        "委託人有效駕駛執照"
+      ],
+      "receiver": "陳建豪",
+      "source_len": 160,
+      "scenario": "poa_vehicle"
+    },
+    "citations": [],
+    "checks": [
+      {
+        "id": "subject_present",
+        "title": "主旨必填",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "subject_single_paragraph",
+        "title": "主旨不分項",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "subject_length",
+        "title": "主旨長度",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "subject_period",
+        "title": "主旨句末標點",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "doc_type_valid",
+        "title": "文別合法",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "section_titles_valid",
+        "title": "段名合法",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "section_not_empty",
+        "title": "段落不得為空",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "section_item_period",
+        "title": "分項句末標點",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "section_item_count",
+        "title": "分項數量",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "section_item_length",
+        "title": "分項長度",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "no_mask_token",
+        "title": "無殘留代稱",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "no_placeholder",
+        "title": "無未填佔位符",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "no_raw_id_number",
+        "title": "無身分證字號",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "no_raw_mobile",
+        "title": "無行動電話號碼",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "no_simplified",
+        "title": "無簡體字",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "fullwidth_punctuation",
+        "title": "全形標點",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "no_colloquial",
+        "title": "無明顯口語詞",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "no_extra_blank",
+        "title": "無多餘空白",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "sender_required",
+        "title": "發文人必填",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "receiver_required",
+        "title": "收文者必填",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "special_authority",
+        "title": "特別授權事項",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "liability_clause",
+        "title": "責任文句",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      }
+    ]
+  },
+  "checks": [
+    {
+      "id": "subject_present",
+      "title": "主旨必填",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "subject_single_paragraph",
+      "title": "主旨不分項",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "subject_length",
+      "title": "主旨長度",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "subject_period",
+      "title": "主旨句末標點",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "doc_type_valid",
+      "title": "文別合法",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "section_titles_valid",
+      "title": "段名合法",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "section_not_empty",
+      "title": "段落不得為空",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "section_item_period",
+      "title": "分項句末標點",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "section_item_count",
+      "title": "分項數量",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "section_item_length",
+      "title": "分項長度",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "no_mask_token",
+      "title": "無殘留代稱",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "no_placeholder",
+      "title": "無未填佔位符",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "no_raw_id_number",
+      "title": "無身分證字號",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "no_raw_mobile",
+      "title": "無行動電話號碼",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "no_simplified",
+      "title": "無簡體字",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "fullwidth_punctuation",
+      "title": "全形標點",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "no_colloquial",
+      "title": "無明顯口語詞",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "no_extra_blank",
+      "title": "無多餘空白",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "sender_required",
+      "title": "發文人必填",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "receiver_required",
+      "title": "收文者必填",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "special_authority",
+      "title": "特別授權事項",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "liability_clause",
+      "title": "責任文句",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    }
+  ]
+}

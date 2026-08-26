@@ -26,6 +26,7 @@
     "gen:ai-guidance": "python3 scripts/fetch-ai-guidance.py",
     "check:numbers": "node scripts/check-numbers.mjs",
     "gen:voucher-rule": "python3 scripts/fetch-voucher-rule.py",
+    "gen:travel-rule": "python3 scripts/fetch-travel-rule.py",
     "check:inlinks": "node scripts/check-inlinks.mjs"
   },
   "dependencies": {

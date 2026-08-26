@@ -1,0 +1,356 @@
+---
+/**
+ * 國內出差旅費報支要點怎麼看。
+ *
+ * 為什麼有這一頁（2026-08-26，第四波關鍵字的第三輪）：Bing 需求量實測
+ * 「國內出差旅費報支要點」1,034、「差旅費」396、「出差申請單」117 ——
+ * 這是站上量到過最大的單一頭部詞之一，而且站上早就有
+ * /cases/travel-expense-sign/（出差旅費報支簽呈範例）接得上。
+ *
+ * 第二步的 SERP 實搜（2026-08-26）前排是：主計總處法規頁、主計總處與各大學主計室的
+ * PDF 附件、地方政府法規共用系統。**沒有全國法規資料庫** —— 因為這是行政規則，
+ * 不在 law.moj.gov.tw。少了那個最強的聚合者，前排就散成一堆 PDF，
+ * 這與「行政程序法」那種打不贏的法規查詢字不一樣。本頁的差別是：
+ * 條文與附表一的數額逐字放出來、加上白話對照，而且是 HTML 不是 PDF。
+ *
+ * 條文與數額取自 src/data/travel-rule.json（scripts/fetch-travel-rule.py 解析官方彙編本產生），
+ * **不要在這頁手寫條文或數字**——住宿費 3,500／4,500 與自用車每公里 3 元／2 元
+ * 都是 114 年新制才改的，手打會過期而且畫面上看不出來。
+ */
+import ArticlePage from '../../layouts/ArticlePage.astro';
+import PageToc from '../../components/PageToc.astro';
+import travel from '../../data/travel-rule.json';
+import { toCurrency } from '../../data/uppercase-number.js';
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+
+const src = travel._source;
+const a = travel.allowance;
+const pointOf = (no) => travel.points.find((p) => p.no === no);
+const noteOf = (i) => a.notes[i];
+
+const money = (n) => n.toLocaleString('en-US');
+
+/** 附表一的三列。數字一律取 json，不寫死。 */
+const ALLOWANCE_ROWS = [
+  { item: '交通費', limit: '覈實報支，無單一上限', plain: a.transport },
+  {
+    item: '住宿費（每日上限）',
+    limit: `平日 ${money(a.lodgingWeekday)} 元／假日 ${money(a.lodgingHoliday)} 元`,
+    plain: '要檢據覈實報支，沒有單據就不能報。「假日」怎麼算見下面第四節，那一格最常記錯。',
+  },
+  {
+    item: '雜費（每日上限）',
+    limit: `${money(a.misc)} 元`,
+    plain: '不必檢據。機關可以另訂按公里數、小時數或出差地點計支的規定。',
+  },
+];
+
+const MISTAKES = [
+  '開自己的車出差，另外再報油錢、過路費或停車費。第五點寫得很直接：按公里數折算之後「不得另行報支油料、過路(橋)、停車等費用」。',
+  '把住宿費的「假日」當成週末。備註二的定義是放假日**並包含放假日前一天，不含放假日最後一天** —— 連假最後一晚是平日價。',
+  '公民營客運到得了的地方自己搭計程車。除非業務需要並經機關核准，那筆不得報支。',
+  '出差回來拖過十五日才送報告表。第四點的期限是事畢起十五日內。',
+  '出差期間請了私假還照報。第十三點：因私事請假的部分不得報支。',
+  '拿機關的規定去對這份要點，發現對不上就以為有人弄錯。第十五點本來就允許各機關在這個範圍內另定報支規定，通常是更嚴，不是更寬。',
+];
+
+const S = {
+  scope: { id: 'scope', label: '一、這份規定管誰，你機關的版本為什麼不一樣' },
+  allowance: { id: 'allowance', label: '二、報支數額：住宿費、雜費與交通費（附表一）' },
+  transport: { id: 'transport', label: '三、交通費：自用車怎麼折算、計程車能不能報' },
+  lodging: { id: 'lodging', label: '四、住宿費：六十公里門檻與「假日」的定義' },
+  misc: { id: 'misc', label: '五、雜費為什麼不必附單據' },
+  deadline: { id: 'deadline', label: '六、報支期限、請假與患病' },
+  mistakes: { id: 'mistakes', label: `七、最常被退的 ${MISTAKES.length} 個地方` },
+  sign: { id: 'sign', label: '八、出差前後那兩份文件怎麼寫' },
+};
+
+const description =
+  `國內出差旅費報支要點的住宿費每日上限平日 ${money(a.lodgingWeekday)} 元、假日 ${money(a.lodgingHoliday)} 元，`
+  + `雜費 ${money(a.misc)} 元，自用汽車每公里三元、機車二元 ——`
+  + '條文與附表一數額逐字取自官方彙編本，並說明六十公里門檻與「假日」的定義。';
+
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Article',
+      '@id': `${pageUrl}#article`,
+      mainEntityOfPage: pageUrl,
+      headline: '國內出差旅費報支要點：住宿費、雜費與交通費怎麼報',
+      description,
+      author: { '@type': 'Organization', name: '藥提醒科技有限公司', url: 'https://www.yao.care/' },
+      publisher: { '@type': 'Organization', name: '藥提醒科技有限公司', url: 'https://www.yao.care/' },
+      inLanguage: 'zh-Hant-TW',
+      citation: {
+        '@type': 'CreativeWork',
+        name: `${src.issuer}《${src.name}》${src.edition}`,
+        url: src.url,
+      },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: '首頁', item: 'https://www.ods.yao.care/' },
+        { '@type': 'ListItem', position: 2, name: '出差旅費報支', item: pageUrl },
+      ],
+    },
+  ],
+};
+
+const faq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: '出差住宿費一天可以報多少？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text:
+          `依《${src.name}》附表一，住宿費每日上限平日 ${money(a.lodgingWeekday)} 元、`
+          + `假日 ${money(a.lodgingHoliday)} 元，應檢據覈實報支。`
+          + '假日指行政院辦公日曆表內的放假日，並包含放假日前一天，不含放假日最後一天。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '開自己的車出差，油錢和停車費可以另外報嗎？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text:
+          '不可以。第五點規定駕駛自用汽車、機車出差者，交通費按必要路程之公里數各以每公里'
+          + '新臺幣三元、新臺幣二元報支，不得另行報支油料、過路（橋）、停車等費用；'
+          + '發生事故者，也不得以公款支付修理費用及對第三者之損害賠償。'
+          + '駕駛自行租賃（含共享）汽車、機車者比照辦理。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '出差地點不到六十公里，可以報住宿費嗎？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text:
+          '原則上不行。第九點以六十公里為門檻，但出差地點距離機關所在地未達六十公里者，'
+          + '因業務需要、事前經機關核准，且有住宿事實者，仍得依規定報支。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '出差旅費什麼時候要報？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: `第四點：${pointOf('四').paras[0]}`,
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '雜費每天多少？要附單據嗎？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text:
+          `附表一的雜費每日上限是 ${money(a.misc)} 元，不必檢據。`
+          + '各機關基於業務特性或其他因素，得在要點所定範圍內另定報支規定，'
+          + '例如以公里數、小時數或出差地點計支，依其規定辦理。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '地方政府和公營事業也適用這份要點嗎？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: `第十六點：${pointOf('十六').paras[0]}`,
+      },
+    },
+  ],
+};
+---
+
+<ArticlePage
+  schemas={[schema, faq]}
+  title="國內出差旅費報支要點：住宿費、雜費與交通費怎麼報"
+  description={description}
+  heading="國內出差旅費報支要點怎麼看"
+  lead={`出差回來要填報告表，卡住的通常是三件事：住宿費能報多少、開自己的車怎麼折算、雜費要不要附單據。`
+    + `這一頁把要點的條文與附表一的數額逐字放出來，並標出承辦最常記錯的那幾格。`
+    + `現行版本是 ${src.edition}、${src.effective}。`}
+>
+  <PageToc items={Object.values(S)} />
+
+  <h2 id={S.scope.id}>{S.scope.label}</h2>
+  <blockquote>{pointOf('一').paras[0]}</blockquote>
+  <p>
+    條文寫的是<strong>中央政府各機關</strong>。地方政府與公營事業不是直接適用，而是準用：
+  </p>
+  <blockquote>{pointOf('十六').paras[0]}</blockquote>
+  <p>
+    所以縣市政府、國立大學、公立醫院各自會有一份自己的報支規定，數字通常與這裡一樣、
+    程序卻更細。那不是誰弄錯了，是要點自己留的空間：
+  </p>
+  <blockquote>{pointOf('十五').paras.join('')}</blockquote>
+  <p class="note">
+    <strong>實務上的順序是：先看自己機關的規定，對不上再回來對這一份。</strong>
+    機關版本只能在這份要點所定的範圍內，也就是可以更嚴、不能更寬。
+  </p>
+
+  <h2 id={S.allowance.id}>{S.allowance.label}</h2>
+  <p>旅費就這三種，沒有第四種：</p>
+  <blockquote>{pointOf('二').paras[0]}</blockquote>
+  <table>
+    <thead><tr><th>費別</th><th>數額</th><th>怎麼看</th></tr></thead>
+    <tbody>
+      {ALLOWANCE_ROWS.map((r) => (
+        <tr>
+          <td>{r.item}</td>
+          <td class="num">{r.limit}</td>
+          <td class="plain">{r.plain}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  <p class="note">
+    在同一個地方待久了，住宿費要打折：
+  </p>
+  <blockquote>{pointOf('十一').paras[0]}</blockquote>
+  <p>
+    報支的真實性是報支人自己負責的，這一項是 114 年新制加上去的：
+  </p>
+  <blockquote>{pointOf('二').paras[1]}</blockquote>
+
+  <h2 id={S.transport.id}>{S.transport.label}</h2>
+  <p>交通費沒有單一上限，但有算法。上限按「機關所在地到出差地」的必要路程計：</p>
+  <blockquote>{pointOf('五').paras.slice(0, 3).join('')}</blockquote>
+  <p>哪些工具算交通費、哪些要附票根：</p>
+  <blockquote>{pointOf('五').paras[3]}</blockquote>
+  <p class="note">
+    <strong>當日往返或使用經費結報系統報支的，不必附票根</strong> ——
+    這一句不是新的，前一版（108-11-26 院授主預字第 1080102859 號函修正、自 109-01-01 生效）就有了。
+    114 新制在這一項改的是<strong>範圍</strong>：要附票根的從「飛機、高鐵、有分等的船舶」
+    擴到「火車商務車廂或相同之座位」，另把公共自行車列進交通費。
+    艙等的部分見附表一：{a.transport}
+  </p>
+  <p>計程車有一條專門的限制，這是最常被退的一筆：</p>
+  <blockquote>{pointOf('五').paras[4]}</blockquote>
+  <p>開自己的車或租車、共享車：</p>
+  <blockquote>{pointOf('五').paras.slice(5, 7).join('')}</blockquote>
+  <p class="note">
+    每公里的錢是<strong>一口價</strong>，油料、過路（橋）費、停車費都已經在裡面，不能再列一筆。
+    出了事故也不能用公款修車或賠人。
+    <strong>每公里三元／二元這個算法本身就是 114 新制</strong> ——
+    前一版是「按同路段公民營客運汽車最高等級之票價報支」，
+    也就是把自用車當客運票價來折；現在改成按公里數算，而且新增了自行租賃與共享汽機車比照。
+    拿舊表格或舊函釋來對會對不上，原因在這裡。
+    至於機關自己有公務車、或你拿到免費票、搭了便車：
+  </p>
+  <blockquote>{pointOf('五').paras[7]}</blockquote>
+
+  <h2 id={S.lodging.id}>{S.lodging.label}</h2>
+  <blockquote>{pointOf('九').paras.join('')}</blockquote>
+  <p>
+    六十公里是原則，不是鐵門檻 —— 沒到六十公里但確實需要住，
+    <strong>事前</strong>報准就可以報。重點在「事前」兩個字，事後補簽通常過不了。
+  </p>
+  <p>另一格最容易記錯的是「假日」。它不是週末的意思：</p>
+  <blockquote>{noteOf(1)}</blockquote>
+  <p class="note">
+    照這個定義推，以週六、週日、週一放假的三天連假為例：放假日是六、日、一，
+    再依定義加上前一天的週五、扣掉最後一天的週一 —— 所以
+    <strong>週五、週六、週日這三晚算假日價，週一那晚算平日價</strong>。
+    這樣切是有道理的：前一晚要先到，最後一天是回程日。
+    兩者差每晚 {money(a.lodgingHoliday - a.lodgingWeekday)} 元，填錯就是整筆退回來重填。
+  </p>
+
+  <h2 id={S.misc.id}>{S.misc.label}</h2>
+  <blockquote>{noteOf(2)}</blockquote>
+  <p>
+    雜費是要點裡唯一不必檢據的一項，因為它涵蓋的本來就是拿不到單據的零星支出。
+    上限 {money(a.misc)} 元是<strong>每日</strong>，不是每次出差。
+    但備註三後半段留了空間：機關可以改成按公里數、小時數或出差地點計支，
+    所以你機關的表格上可能根本沒有「雜費」這一欄，而是換算好的固定金額。
+  </p>
+  <p class="note">
+    套裝行程（含住宿與交通一起買的）另有一條算法：
+  </p>
+  <blockquote>{noteOf(0)}</blockquote>
+
+  <h2 id={S.deadline.id}>{S.deadline.label}</h2>
+  <blockquote>{pointOf('四').paras[0]}</blockquote>
+  <p>旅費算到哪一天、請假怎麼扣：</p>
+  <blockquote>{pointOf('十三').paras.join('')}</blockquote>
+  <p class="note">
+    患病那一項只放寬雜費，住宿費仍然要有單據；而且限的是「突發之重病、經醫院證明必須住院治療」，
+    門診拿藥不算。
+  </p>
+  <p>還有一件事在出差<strong>之前</strong>就決定了 —— 這趟能不能派：</p>
+  <blockquote>{pointOf('三').paras.join('')}</blockquote>
+
+  <h2 id={S.mistakes.id}>{S.mistakes.label}</h2>
+  <ul class="rules">
+    {MISTAKES.map((m) => <li set:html={m.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')} />)}
+  </ul>
+
+  <h2 id={S.sign.id}>{S.sign.label}</h2>
+  <p>
+    要點管的是錢怎麼算，公文怎麼寫是另一回事。出差要先簽，回來要核銷 ——
+    完整的簽呈全文與逐條檢核結果在
+    <a href={`${base}cases/travel-expense-sign/`}>出差旅費報支簽呈範例</a>，
+    那則的結尾用「簽請核示」而不是對外的期望語，期望語的用法查
+    <a href={`${base}usage/`}>公文用語表</a>。
+  </p>
+  <p>
+    報支要附的憑證是另一組規定。誰出具、要記哪些欄位，看
+    <a href={`${base}receipt/`}>領據怎麼寫</a>；
+    金額為什麼一定要國字大寫、{money(a.lodgingWeekday)} 怎麼寫成
+    「{toCurrency(a.lodgingWeekday).text}」，看
+    <a href={`${base}numbers/`}>數字大寫怎麼寫</a>。
+  </p>
+  <p class="note">
+    簽的三段怎麼分、擬稿有哪些規定，在<a href={`${base}writing/`}>公文怎麼寫</a>；
+    空白的簽用 Word 範本在<a href={`${base}templates/`}>Word 範本下載</a>。
+  </p>
+
+  <p class="verified">
+    條文與附表一數額逐字取自 {src.issuer}《{src.name}》{src.edition}、{src.effective}
+    （資料產生日期 {travel._generated}）。
+    正式出處：<a href={src.url} rel="noopener">行政院主計總處法規系統</a>；
+    該頁對本主機回 403，條文取自<a href={src.file} rel="noopener nofollow">同版彙編本</a>。
+    要點改版時重跑 <code>pnpm gen:travel-rule</code>。
+  </p>
+</ArticlePage>
+
+<style>
+  blockquote {
+    margin: 0.75rem 0 0;
+    padding: 0.75rem 1rem;
+    border-inline-start: 3px solid var(--color-primary);
+    background: var(--color-bg-light);
+    color: var(--color-ink-soft);
+    font-size: var(--text-sm);
+    line-height: 2;
+  }
+  .plain {
+    font-size: var(--text-sm);
+  }
+  .num {
+    font-size: var(--text-sm);
+    white-space: nowrap;
+  }
+  .rules li {
+    margin-block: 0.75rem;
+    line-height: 1.9;
+  }
+  .note {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+  .verified {
+    margin-top: 3rem;
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+</style>

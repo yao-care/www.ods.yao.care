@@ -66,7 +66,9 @@ export function createLastmod(buildTime = new Date().toISOString()) {
     );
     if (!date && !warned) {
       warned = true;
-      console.warn('[sitemap] 抓不到 git commit 時間（淺 checkout？），lastmod 退回 build 時間');
+      // 最常見的原因是**新頁面還沒 commit**（commit 之後就有日期了），其次才是 CI 淺 checkout。
+      // 把網址印出來，才不用為了一行警告去翻整份 sitemap。
+      console.warn(`[sitemap] ${url} 抓不到 git commit 時間（新增未 commit 的頁面？淺 checkout？），lastmod 退回 build 時間`);
     }
     return date ?? buildTime;
   };

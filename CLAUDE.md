@@ -305,6 +305,11 @@ pnpm build       # 再跑一次，讓 check-og 對帳
 node /root/seo-ops/bin/keyword-demand.mjs --file <候選字.json>
 node /root/seo-ops/bin/keyword-demand.mjs --site ods.yao.care   # 量現有釘選字
 # 2) 有量的字再實搜一次，看 SERP 前排是不是搶得到的（前三波的方法）
+#    ⚠️ 這一步吃 WebSearch，而 WebSearch 有 session 上限
+#    （CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION，預設 200）。2026-08-26 就用罄過一次，
+#    害 /receipt/ 與 /numbers/ 在沒有專屬 SERP 觀察的情況下上線（隔日補做，判定都成立）。
+#    **用 curl 抓 Bing 結果頁代替是行不通的**，回來的是機器人防護頁，內容與查詢完全無關。
+#    量用完就換 session，不要跳過這一步。
 # 3) grep -r 自家 repo，確認站上用的是不是同一個詞（簽 vs 簽呈、請撥 vs 請款）
 # 4) 上線後用 GSC 實際 query 回頭校正
 ```
@@ -312,6 +317,13 @@ node /root/seo-ops/bin/keyword-demand.mjs --site ods.yao.care   # 量現有釘�
 ⚠️ **判讀邊界**：這是 Bing 的量，只能看相對大小與「是不是 0」；
 **多字組合的 0 不可靠**（「公文格式」300 但「公文格式 word」0，量在主詞不在組合），
 單字頭部詞的 0 才可靠。有量 ≠ 打得贏，第 2 步不能省。
+
+**法規名稱這類字有一條額外的判準**（2026-08-26 用「國內出差旅費報支要點」對照出來的）：
+先看它在不在**全國法規資料庫**（`law.moj.gov.tw`）。在的（行政程序法、政府採購法、
+公務人員請假規則…）表示有一個「條文最全、連結最多」的對手佔著第一名，我們去重製條文打不贏；
+**行政規則不進那個資料庫**，前排就會散成各機關各自上傳的 PDF，那才有得搶。
+再加兩個條件才動手：對手是不是 PDF（沒錨點、沒結構化資料、手機難讀），
+以及這個字接不接得上站上已有的頁。三個都成立才做。
 
 `/numbers/` 的換算（`src/data/uppercase-number.js`）伺服器端與瀏覽器端吃同一份，
 由 `pnpm check:numbers` 守 26 個邊界案例——**算錯不會有任何畫面異常**，
@@ -326,6 +338,7 @@ node /root/seo-ops/bin/keyword-demand.mjs --site ods.yao.care   # 量現有釘�
 | `src/data/gov-terms.json` | `scripts/fetch-gov-terms.py` | 行政院《文書處理手冊》 | 稱謂與期望語、擬稿注意事項、函與簽的撰擬要領、數字原則、用印，以及 `workflow`（文書處理五步驟、稿面 9 個欄位、陳核／核稿／會稿／閱稿／判行共 24 條） |
 | `src/data/ai-guidance.json` | `scripts/fetch-ai-guidance.py` | 行政院《使用生成式 AI 參考指引》 | 十點逐字 |
 | `src/data/voucher-rule.json` | `scripts/fetch-voucher-rule.py` | 主計總處《政府支出憑證處理要點》 | 第四點（收據應記載事項）、第五點（統一發票）、第十三點（總數大寫）逐字 |
+| `src/data/travel-rule.json` | `scripts/fetch-travel-rule.py` | 行政院《國內出差旅費報支要點》 | 第一、二、三、四、五、九、十一、十三、十五、十六點逐字，以及**附表一的數額與四則備註**（住宿費平日／假日上限、雜費上限、交通費艙等說明）|
 
 **不要在頁面裡手寫條文。** 網路流傳的整理多半轉錄自舊版或經過濃縮 ——
 參考指引第四點那句「但封閉式地端部署之生成式 AI 模型…得依文書或資訊機密等級分級使用」
@@ -339,6 +352,17 @@ node /root/seo-ops/bin/keyword-demand.mjs --site ods.yao.care   # 量現有釘�
   字面比對會失敗，頁眉會混進條文裡。兩支都已正規化。
 - 手冊本文各點用**國字**標號 `(一)(二)`，點內子項才用全形阿拉伯數字 `(１)(２)` ——
   `fetch-gov-terms.py` 因此有 `bracketed()` 與 `cjk_bracketed()` 兩支，別用錯。
+- **出差旅費報支要點的三條路都不通，第四條才行**（2026-08-26）：主計總處法規頁
+  `law.dgbas.gov.tw` 一律 403；主計總處自己的檔案伺服器 `ws.dgbas.gov.tw` 有同一份 PDF，
+  但**TLS 憑證鏈是壞的** —— 葉憑證由 TWCA Secure SSL CA 簽發，伺服器卻送 ePKI Root 與
+  政府伺服器數位憑證管理中心 G1 兩張不相干的憑證，缺了真正的中介憑證，curl 恆
+  `unable to get local issuer certificate`（用 `-k` 繞過等於不驗身分，不做）；
+  法務部所屬機關那份抓得到但**是 109 年舊版**，住宿費與自用車單價都不一樣。
+  最後固定抓臺北市政府主計處彙編本裡的同版中央要點（TLS 正常、含附表一），並驗證版本字串。
+- **那份彙編本每頁有頁眉與頁碼夾在條文中間**，要剔除；但**頁碼只能在頁眉的下一行剔除** ——
+  見到純數字行就丟的話，附表一的雜費上限「400」自己就是一整行純數字，會被安靜吃掉（實測踩過）。
+  另外 `-layout` 在這份文件幫不上忙：同一點的**續行**與**下一項**縮排一模一樣（都兩格），
+  分不出項次，改用「前一行以。結尾就是分項」，解析後逐項驗證。
 - **支出憑證處理要點沒有可抓的官方原始下載點**：主計總處法規頁對本主機回 403，
   而抓得到的公務機關鏡像**版本會錯**（彰化地檢署那份是 98 年版的第十七點，
   沒有 109 年新增的「佐證資料」但書）。腳本固定抓一份 .gov.tw 的 109-03-24 彙編本，
@@ -528,6 +552,7 @@ pnpm fetch:gov-template  # 規範改版才跑（會連外網，需 IPv4）
 pnpm gen:gov-terms       # 文書處理手冊改版才跑（會連外網，需 pdftotext）
 pnpm gen:ai-guidance     # 生成式 AI 參考指引改版才跑（會連外網，需 pdftotext）
 pnpm gen:voucher-rule    # 政府支出憑證處理要點改版才跑（會連外網，需 pdftotext）
+pnpm gen:travel-rule     # 國內出差旅費報支要點改版才跑（會連外網，需 pdftotext）
 pnpm gen:simplified-set  # 重產簡體字集合（只在來源資料改版時，需 python3 opencc）
 ```
 
@@ -552,6 +577,11 @@ pnpm gen:simplified-set  # 重產簡體字集合（只在來源資料改版時�
    **借據**也已做（本票刻意不產出，見上面那節）。
    剩下沒做的：租賃契約（內政部已有制式範本與應記載事項，重做價值低）、
    同意書（312，語意太泛看不出意圖）
+6b. ~~**國內出差旅費報支要點**（1,034）~~：**已上線** `/travel-expense/`（2026-08-26 晚）。
+   交接文件第二節卡在「找不到可抓的來源」，四條路試完只有臺北市政府主計處彙編本可用，
+   見上面「官方條文一律抓取產生」那節的坑。它與第五節那批「有量但不做」的法規字的差別
+   （不在全國法規資料庫、對手全是 PDF、接得上站上既有的三頁）寫在
+   `docs/keyword-validation/2026-08-26-demand.md` 第七節
 7. **站外連結只有 `www.yao.care/ai/ods/` 一條**。逐頁 URL Inspection 顯示 Google 對每頁認得的
    `referringUrls` 是 0～2 —— 這是曝光低最根本的原因，而且不是內容能解的。要用戶決定怎麼做。
 8. ~~「公告」的主旨該不該強制期望語~~：**已處理**（2026-08-26，用戶拍板）。

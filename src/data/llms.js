@@ -32,6 +32,7 @@ export const FIXED_PAGES = [
   { hub: true, path: '/usage/', name: '公文用語表', blurb: '稱謂語、期望語與統一用字。' },
   { hub: true, path: '/numbers/', name: '數字大寫怎麼寫', blurb: '國字大寫對照表、金額換算、公文什麼時候用大寫，以及核銷憑證的大寫規定。' },
   { hub: true, path: '/receipt/', name: '領據怎麼寫', blurb: '核銷用領據的必要記載事項（政府支出憑證處理要點第四點原文）、金額大寫規定，以及領據、收據與統一發票的差別。' },
+  { hub: true, path: '/travel-expense/', name: '出差旅費報支要點怎麼看', blurb: '國內出差旅費報支要點的住宿費、雜費與交通費數額（附表一原文）、自用車每公里折算、六十公里住宿門檻與「假日」的定義。' },
   { hub: true, path: '/terms/', name: '用語與法規速查', blurb: '期望語與常用法規依據對照。' },
   { hub: true, path: '/citizens/which-route/', name: '陳情、請願、訴願、申訴怎麼選', blurb: '四條救濟途徑的差別與期限。' },
   { hub: true, path: '/citizens/certified-letter-guide/', name: '存證信函怎麼寄', blurb: '份數、費用、用紙與交寄流程。' },

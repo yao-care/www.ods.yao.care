@@ -15,7 +15,7 @@ import grantReport from '../data/scenarios/grant_report.json';
 const checkCount = grantReport.checks.length;
 
 // 民間書件也要有首頁直連 —— 2026-08-19 的教訓：只靠區域索引頁進去的子頁，Google 遲遲不爬。
-const privateFeatured = ['power-of-attorney-household', 'affidavit-documents-true', 'separation-certificate'];
+const privateFeatured = ['power-of-attorney-household', 'affidavit-documents-true', 'separation-certificate', 'loan-iou'];
 const privateCards = PRIVATE_DOCS.filter((d) => privateFeatured.includes(d.slug));
 
 const base = import.meta.env.BASE_URL.endsWith('/')

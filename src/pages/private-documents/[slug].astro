@@ -55,7 +55,12 @@ const download = downloads.private?.[meta.slug] ?? null;
 const blankTemplate = downloads.templates.find((t) => t.docType === docType) ?? null;
 const failed = payload.checks.filter((c) => !c.ok);
 const related = PRIVATE_DOCS.filter((d) => d.category === meta.category && d.slug !== meta.slug);
-const others = PRIVATE_DOCS.filter((d) => d.category !== meta.category).slice(0, 2);
+// 每個其他分類各取一則，而不是 slice(0,2) —— 用 slice 的話永遠只會連到排在前面的
+// 那兩個分類，排後面的（借據）永遠拿不到橫向內鏈。實測內鏈稽核抓到借據只有 2 條。
+const others = [...new Set(PRIVATE_DOCS.map((d) => d.category))]
+  .filter((c) => c !== meta.category)
+  .map((c) => PRIVATE_DOCS.find((d) => d.category === c))
+  .filter(Boolean);
 
 const description =
   `${meta.lead} 提供完整${docType}範例全文、${payload.checks.length} 條檢核結果與可自行編輯的 Word 檔。`;

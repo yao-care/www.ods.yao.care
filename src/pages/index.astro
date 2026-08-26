@@ -8,11 +8,18 @@ import index from '../data/scenarios.json';
 import { CITIZEN_EXAMPLES } from '../data/citizen-examples.js';
 import { FIXED_PAGES } from '../data/llms.js';
 import { ORGANIZATION, SITE_URL } from '../data/schema.js';
+import grantReport from '../data/scenarios/grant_report.json';
+
+// 檢核條目數依文別而定，一律取實際筆數，不寫死。
+const checkCount = grantReport.checks.length;
 
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
-const featured = ['grant-settlement', 'meeting-notice', 'noise-petition-reply', 'procurement-sign'];
+const featured = [
+  'grant-settlement', 'meeting-notice', 'noise-petition-reply', 'procurement-sign',
+  'travel-expense-sign', 'merit-award-sign', 'tender-announcement', 'construction-acceptance',
+];
 const cards = CASES.filter((c) => featured.includes(c.slug));
 // 民眾端明細頁原本首頁一條都沒直連，只能從 /citizens/ 進去，Google 因此遲遲不爬。
 // 兩個族群各挑幾篇直連，讓兩邊的抓取深度一致。
@@ -130,13 +137,26 @@ const homeSchema = {
       <p class="more"><a href={`${base}templates/`}>公文格式 Word 範本下載</a></p>
     </section>
 
+    <section>
+      <h2>AI 寫公文現在做到哪</h2>
+      <p class="section-lead">
+        雲林縣府與鴻海的「公文大腦」在 23 個局處全面啟用，臺北市府有 CiviClaw，
+        商業產品也有公文 AI 助理。這些系統接進去的都是同一段：擬稿與送陳前的檢查，
+        沒有一套去動簽核流程。行政院對機密文書與個資另訂了界線。
+      </p>
+      <p class="more">
+        <a href={`${base}ai-official-document/`}>機關導入現況與生成式 AI 規範</a>
+        ・<a href={`${base}product/`}>這套系統做什麼、跟電子公文系統怎麼分工</a>
+      </p>
+    </section>
+
     <section class="cols">
       <div>
         <h2>退件的通常不是內容，是格式</h2>
         <p>
           期望語對上級要用「請鑒核」、對平行機關用「請查照」；日期要民國紀年；
           金額要國字大寫；主旨不能分項。這些規則系統會逐條檢查，
-          <a href={`${base}checks/`}>24 條檢核</a>全部列出來，不通過會指出哪一條。
+          <a href={`${base}checks/`}>{checkCount} 條檢核</a>全部列出來，不通過會指出哪一條。
         </p>
       </div>
       <div>

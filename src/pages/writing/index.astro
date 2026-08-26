@@ -19,7 +19,7 @@ const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 
-const { drafting, sign, numberRules, _source: source, _generated: generated } = terms;
+const { drafting, sign, numberRules, workflow, _source: source, _generated: generated } = terms;
 
 /** 三段各自的官方原文，配上一句白話說明它實際上在回答什麼問題。 */
 const SECTIONS = [
@@ -48,7 +48,8 @@ const showcase = ['grant_report', 'subsidy_apply', 'petition_reply'].map((k) => 
 
 const description =
   '函的主旨、說明、辦法與簽的主旨、說明、擬辦分別怎麼寫，先簽後稿與簽稿併陳的分野，'
-  + '以及擬稿注意事項與數字用法，逐條取自行政院文書處理手冊官方版本。';
+  + '速別、密等、正本副本等稿面欄位怎麼填，以及陳核、核稿、會稿、閱稿、判行各關看什麼，'
+  + '逐條取自行政院文書處理手冊官方版本。';
 
 const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
 
@@ -81,6 +82,29 @@ const faqPairs = [
       + '案情簡單或例行承轉的，以稿代簽即可。',
   },
   {
+    q: '公文的「速別」要怎麼填？',
+    a: '速別指的是希望受文機關辦理的速別，應確實考量案件性質，填「最速件」、「速件」或「普通件」。'
+      + '如果是限期公文，則不必填列速別。',
+  },
+  {
+    q: '正本和副本差在哪裡？',
+    a: '正本與副本都要分別逐一書明全銜，或以明確的總稱概括表示；地址非眾所周知的要註明。'
+      + '機關內部另可用加發「抄本（件）」的方式處理。實務上的差別在於誰有辦理義務、誰只是知悉。',
+  },
+  {
+    q: '核稿、會稿、閱稿、判行分別是誰在做？',
+    a: '手冊把文書處理分成收文處理、文件簽辦、文稿擬判、發文處理、歸檔處理五個步驟。'
+      + '核決權責區分為初核（承辦人的直接主管）、覆核（直接主管的上級核稿者）、'
+      + '會核（與本案有關的主管人員）與決定者（依分層負責規定的最後決定人）。'
+      + '文稿的判行按分層負責規定辦理，同意發文批示「發」，不必繕發或尚須考慮的批「不發」或「緩發」。',
+  },
+  {
+    q: '公文送會出去，沒表示意見會怎樣？',
+    a: '各單位對其他單位送會的簽稿如有意見應即提出；未提出意見，一經會簽即視為同意，'
+      + '並應共同負責。會稿單位有不同意見時，由主辦單位綜合修改後再送決定。'
+      + '非政策性的緊急文稿，為爭取時效得先發後會。',
+  },
+  {
     q: '一份來文講了好幾件事怎麼辦？',
     a: '擬稿以一文一事為原則。來文如果是一文數事，可以分成數文答復。',
   },
@@ -93,9 +117,11 @@ const S = {
   letter: { id: 'letter-notes', label: `二、「函」的 ${drafting.letterNotes.length} 條撰擬要領` },
   sign: { id: 'sign', label: '三、「簽」不是「函」：三段是主旨、說明、擬辦' },
   announce: { id: 'announcement', label: '四、「公告」是第三種：主旨、依據、公告事項' },
-  cautions: { id: 'cautions', label: `五、擬稿的 ${drafting.cautions.length} 條注意事項` },
-  numbers: { id: 'numbers', label: '六、數字什麼時候用阿拉伯數字、什麼時候用中文數字' },
-  quality: { id: 'quality', label: '七、公文書的品質要求' },
+  fields: { id: 'draft-fields', label: `五、稿面上要填的 ${workflow.draftFields.length} 個欄位：速別、密等、正本副本` },
+  cautions: { id: 'cautions', label: `六、擬稿的 ${drafting.cautions.length} 條注意事項` },
+  numbers: { id: 'numbers', label: '七、數字什麼時候用阿拉伯數字、什麼時候用中文數字' },
+  flow: { id: 'workflow', label: '八、擬好之後：陳核、核稿、會稿、閱稿、判行' },
+  quality: { id: 'quality', label: '九、公文書的品質要求' },
   examples: { id: 'examples', label: '看規則怎麼落到紙上' },
 };
 
@@ -106,7 +132,7 @@ const schema = {
       '@type': 'Article',
       '@id': `${pageUrl}#article`,
       mainEntityOfPage: pageUrl,
-      headline: '公文怎麼寫：函的三段、簽的三段與擬稿規定',
+      headline: '公文怎麼寫：函與簽的三段、稿面欄位與核稿流程',
       description,
       author: { '@type': 'Organization', name: '藥提醒科技有限公司', url: 'https://www.yao.care/' },
       publisher: { '@type': 'Organization', name: '藥提醒科技有限公司', url: 'https://www.yao.care/' },
@@ -140,7 +166,7 @@ const faq = {
 
 <ArticlePage
   schemas={[schema, faq]}
-  title="公文怎麼寫：函的三段、簽的三段與擬稿規定｜公文 AI"
+  title="公文怎麼寫：函與簽的三段、稿面欄位與核稿流程｜公文 AI"
   description={description}
   heading="公文怎麼寫"
   lead="三段式不是填空題，而且函、簽、公告的三段各不相同。搞清楚每一段在回答什麼問題，剩下的就是把話講清楚。"
@@ -204,6 +230,28 @@ const faq = {
     三種文別的段名對照，以及各文別的用印方式，整理在<a href={`${base}doc-types/`}>文別怎麼選</a>。
   </p>
 
+  <h2 id={S.fields.id}>{S.fields.label}</h2>
+  <p>
+    三段式講的是正文，但稿紙上還有一排欄位要填，而且填錯會直接影響對方怎麼辦這件事 ——
+    速別決定人家多快處理，密等決定這份文能不能給第三人看，正本與副本決定誰有義務辦、誰只是知道。
+    這幾格手冊逐一寫過怎麼填。
+  </p>
+  <dl class="fields">
+    {workflow.draftFields.map((t) => {
+      const [name, ...rest] = t.split('：');
+      return (
+        <>
+          <dt>{name}</dt>
+          <dd>{rest.join('：')}</dd>
+        </>
+      );
+    })}
+  </dl>
+  <p class="note">
+    這 {workflow.draftFields.length} 項是稿面欄位。附件的檢點與編號、特殊處理事項（刊登公報、
+    出版品揭示）另有規定，條文在手冊同一點的後半，本站不轉述 —— 看<a href={source.url} rel="noopener">官方原檔</a>。
+  </p>
+
   <h2 id={S.cautions.id}>{S.cautions.label}</h2>
   <ol class="rules">
     {drafting.cautions.map((t) => <li>{t}</li>)}
@@ -221,6 +269,54 @@ const faq = {
     完整的數字用法舉例一覽表在手冊附錄 5，
     本站不重製那張表（兩層表頭的合併儲存格，機器解出來的對照關係不可靠）——
     請看<a href={source.url} rel="noopener">官方原檔</a>。
+  </p>
+
+  <h2 id={S.flow.id}>{S.flow.label}</h2>
+  <p>
+    稿擬好不等於事情辦完。手冊把文書處理拆成 {workflow.steps.length} 個步驟，
+    承辦寫的那一段只在第二、三步；接下來稿子會經過主管初核、上級覆核、相關單位會稿，
+    再由文書單位閱稿，最後依分層負責由有權者判行。
+  </p>
+  <ol class="rules">
+    {workflow.steps.map((t) => <li>{t}</li>)}
+  </ol>
+
+  <h3>陳核：誰簽在哪一格</h3>
+  <ul class="rules">
+    {workflow.stages.submit.map((t) => <li>{t}</li>)}
+  </ul>
+
+  <h3>核稿：主管改稿的規矩</h3>
+  <ul class="rules">
+    {workflow.stages.review.map((t) => <li>{t}</li>)}
+  </ul>
+
+  <h3>會稿：送會出去以後</h3>
+  <p class="note">
+    最容易吃虧的是第二條 —— <strong>沒表示意見就等於同意，而且要共同負責</strong>。
+  </p>
+  <ul class="rules">
+    {workflow.stages.joint.map((t) => <li>{t}</li>)}
+  </ul>
+
+  <h3>閱稿：文書單位會看的 {workflow.stages.proofread.length} 件事</h3>
+  <p>
+    這是官方版的人工檢查清單。本站的<a href={`${base}checks/`}>格式檢核</a>對得上其中幾條 ——
+    程式、數字、標點與引用法規條文正不正確、有沒有錯別字，機器可以先過一遍。
+    對不上的幾條（簽稿是否相符、前後案情是否連貫、有關單位已否會洽）要人看，
+    因為那要知道這個案子先前發生過什麼。
+  </p>
+  <ol class="rules">
+    {workflow.stages.proofread.map((t) => <li>{t}</li>)}
+  </ol>
+
+  <h3>判行：批「發」、「不發」還是「緩發」</h3>
+  <ul class="rules">
+    {workflow.stages.approve.map((t) => <li>{t}</li>)}
+  </ul>
+  <p class="note">
+    這一整條流程都在機關的電子公文系統裡走。近年各縣市導入的 AI 工具接的是前面擬稿那一段，
+    沒有一套去動這幾關 —— 現況與行政院訂的界線在<a href={`${base}ai-official-document/`}>AI 寫公文現在做到哪</a>。
   </p>
 
   <h2 id={S.quality.id}>{S.quality.label}</h2>
@@ -285,6 +381,21 @@ const faq = {
   }
   .examples span {
     font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+  .fields {
+    display: grid;
+    gap: 0.5rem 1rem;
+    margin-block: 1.5rem;
+  }
+  .fields dt {
+    font-weight: 600;
+    margin-top: 0.75rem;
+  }
+  .fields dd {
+    margin: 0;
+    font-size: var(--text-base);
+    line-height: 1.9;
     color: var(--color-ink-soft);
   }
   .note {

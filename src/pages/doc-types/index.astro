@@ -18,7 +18,8 @@ const TYPES = [
     sections: '主旨、說明、辦法（辦法段名可改用建議／請求／擬辦／核示事項）',
     when: '機關之間往來、對民眾有所答復或請求，最常用的一種。',
     subject: '期望語看對象：對上級用「請鑒核」，平行機關用「請查照」，下級用「請查照辦理」。',
-    keys: ['grant_report', 'subsidy_apply', 'repair', 'low_income'],
+    keys: ['grant_report', 'subsidy_apply', 'payment_request', 'repair', 'low_income',
+      'construction_acceptance', 'annual_plan', 'reject_application'],
   },
   {
     id: 'memo',
@@ -26,7 +27,7 @@ const TYPES = [
     sections: '主旨、說明、辦法（結構與文字用語比照函）',
     when: '公務尚在磋商、徵詢意見或單純通報的階段；案情簡單、不需正式行文的答復或洽辦。',
     subject: '結構與函相同，語氣較簡。常用在陳情案的初步回覆。實際差別在用印：函要署首長職銜姓名，書函蓋機關或承辦單位條戳。',
-    keys: ['petition_reply'],
+    keys: ['petition_reply', 'transfer_case', 'reminder', 'venue_loan'],
   },
   {
     id: 'announcement',
@@ -34,7 +35,7 @@ const TYPES = [
     sections: '主旨、依據、公告事項（僅補充主旨的事實或理由時，段名改用說明）',
     when: '對不特定多數人宣布事項，例如禁令、招標、時程。',
     subject: '沒有受文者，也沒有「辦法」段。依據段引據法規條文名稱或來函，公告事項段分項條列。',
-    keys: ['notice'],
+    keys: ['notice', 'tender_notice', 'recruit_notice'],
   },
   {
     id: 'sign',
@@ -42,7 +43,8 @@ const TYPES = [
     sections: '主旨、說明、擬辦（不是「辦法」）',
     when: '對內陳報長官核示，不對外發文。',
     subject: '結尾用「簽請核示」或「陳請鑒核」，不用對外的期望語，也沒有受文者。說明段不提擬辦意見，擬辦段不重複說明。',
-    keys: ['sign'],
+    keys: ['sign', 'personnel_award', 'travel_expense', 'asset_disposal',
+      'procurement_request', 'plan_approval'],
   },
   {
     id: 'meeting',
@@ -50,7 +52,7 @@ const TYPES = [
     sections: '固定欄位（開會事由、時間、地點、主持人、出席者…），用印蓋機關或承辦單位條戳',
     when: '召集會議，時間、地點、出席人員都有固定欄位。',
     subject: '主旨不要以「開會通知單：」開頭 —— 文別是另外的欄位，期望語仍用「請查照」。',
-    keys: ['meeting'],
+    keys: ['meeting', 'site_survey_meeting'],
   },
 ];
 

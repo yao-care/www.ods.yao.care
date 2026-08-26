@@ -1,0 +1,343 @@
+---
+/**
+ * AI 寫公文的現況與規範。
+ *
+ * 為什麼有這一頁（2026-08-26）：雲林縣府與鴻海的「公文大腦」全面啟用上了新聞，
+ * 實搜「公文大腦」的 SERP 只有新聞稿與縣府稿，**沒有任何一篇解釋性內容** ——
+ * 查這個字的人（承辦、資訊室、想知道「我們機關能不能也有」的人）與本站客群完全重疊。
+ * 同時本站原本一個字都沒提「智慧公文」「公文 AI 助理」這些市場叫法，
+ * `/product/` 講的是自己的功能，回答不了「這件事現在到哪了、可不可以做」。
+ *
+ * 規範那一節的十點逐字取自 src/data/ai-guidance.json（由 scripts/fetch-ai-guidance.py
+ * 解析行政院官方 PDF 產生）。**不要在這頁手寫條文**——網路轉述常把十點濃縮成三五條，
+ * 第四點那個「但封閉式地端部署…」的但書尤其常被吃掉，而它正是機關導入的分野。
+ *
+ * 各機關與廠商的事實一律標出處，且只寫查得到的：功能名稱、時間、規模。
+ * 不比較優劣、不評價他家產品——這頁的用途是回答「這件事現在到哪了」。
+ */
+import ArticlePage from '../../layouts/ArticlePage.astro';
+import PageToc from '../../components/PageToc.astro';
+import { SERVICE_LINKS } from '../../site.config.js';
+import { breadcrumb, faqPage } from '../../data/schema.js';
+import guidance from '../../data/ai-guidance.json';
+import terms from '../../data/gov-terms.json';
+import grantReport from '../../data/scenarios/grant_report.json';
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+
+const checkCount = grantReport.checks.length;
+const { _source: source, points } = guidance;
+
+/** 已公開的導入案例。每一則都要有出處，欄位只填新聞稿或官方稿寫得出來的東西。 */
+const DEPLOYMENTS = [
+  {
+    org: '雲林縣政府',
+    name: '公文大腦',
+    partner: '鴻海科技集團',
+    scope: '23 個局處',
+    when: '2026 年 8 月全面啟用（此前試辦逾半年）',
+    does: '公文草擬、內容檢核、格式提醒與知識查詢，主要涵蓋「簽」與「函」',
+    data: '以約 5,000 份去識別化優選公文作為評測基礎，另以約 2 萬份歷史公文作為模型素材',
+    cite: '雲林縣政府新聞稿',
+    href: 'https://www.yunlin.gov.tw/News_Content.aspx?n=1244&sms=9662&s=602967',
+  },
+  {
+    org: '臺北市政府',
+    name: 'CiviClaw',
+    partner: null,
+    scope: '市府同仁',
+    when: '2026 年',
+    does: '定位為公務員專屬的 AI 助理員；市府資訊局長公開說明過導入要克服的五項挑戰',
+    data: null,
+    cite: '自由時報報導',
+    href: 'https://news.ltn.com.tw/news/Taipei/breakingnews/5480375',
+  },
+  {
+    org: '叡揚資訊（商業產品）',
+    name: '公文 AI 助理',
+    partner: null,
+    scope: '導入該公司公文系統的機關',
+    when: '2024 年發表；該公司自 2019 年起陸續推出智慧公文功能',
+    does: '以對話式問答生成去識別化的公文初稿，另有詞彙糾錯、智慧分文、例稿推薦等功能',
+    data: null,
+    cite: '中央社訊息平台',
+    href: 'https://www.cna.com.tw/postwrite/chi/380458',
+  },
+];
+
+/** 章節的單一真實來源：<h2> 的 id 與文字、目錄的連結全部取這一份。 */
+const S = {
+  who: { id: 'deployments', label: '一、哪些機關已經在用' },
+  what: { id: 'capabilities', label: '二、這些系統實際在做的是哪幾件事' },
+  rules: { id: 'guidance', label: `三、規範怎麼說：參考指引${points.length}點逐字` },
+  limits: { id: 'limits', label: '四、哪幾件事不能交給 AI' },
+  diy: { id: 'diy', label: '五、機關還沒導入，承辦自己能做什麼' },
+};
+
+const description =
+  '雲林縣府與鴻海的「公文大腦」、臺北市府 CiviClaw、叡揚公文 AI 助理各自做到哪，'
+  + '這類系統實際涵蓋的是草擬、檢核、格式提醒與知識查詢；'
+  + `並附行政院使用生成式 AI 參考指引${points.length}點逐字，說明機密文書與個資的界線。`;
+
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+
+const faqPairs = [
+  [
+    '公務員可以用 AI 寫公文嗎？',
+    '可以，但有界線。行政院使用生成式 AI 參考指引第二點要求產出資訊須由業務承辦人就其風險'
+      + '進行客觀且專業之最終判斷，不得取代承辦人的自主思維；第五點要求不可完全信任產出，'
+      + '也不得以未經確認的內容直接作成行政行為或作為公務決策的唯一依據；'
+      + '第六點要求使用時應適當揭露。',
+  ],
+  [
+    '機密公文可以用 AI 寫嗎？',
+    '不行。參考指引第三點明定製作機密文書應由業務承辦人親自撰寫，禁止使用生成式 AI；'
+      + '所稱機密文書指行政院《文書處理手冊》所定的國家機密文書及一般公務機密文書。'
+      + '第四點另外禁止向生成式 AI 提供公務應保密、個人及未經機關同意公開的資訊，'
+      + '但封閉式地端部署的模型於確認系統環境安全性後，得依機密等級分級使用。',
+  ],
+  [
+    '「公文大腦」是什麼？',
+    '雲林縣政府與鴻海科技集團合作的智慧公文服務系統，2026 年 8 月在縣府 23 個局處全面啟用，'
+      + '此前試辦逾半年。提供公文草擬、內容檢核、格式提醒與知識查詢，主要涵蓋「簽」與「函」；'
+      + '以約 5,000 份去識別化優選公文作為評測基礎，另以約 2 萬份歷史公文作為模型素材。',
+  ],
+  [
+    '這類系統會取代電子公文系統嗎？',
+    '不會，兩者管的段落不同。電子公文系統管的是稿子產生之後的流程：陳核、核稿、會稿、'
+      + '閱稿、判行、繕發與歸檔。AI 草擬工具管的是稿子產生之前與當下：從事由到草稿，'
+      + '再到送陳之前的格式自檢。稿擬好之後仍然回到原本的公文系統走流程。',
+  ],
+  [
+    '機關還沒導入，承辦自己可以用嗎？',
+    '可以，但要守參考指引第四點：不得向生成式 AI 提供公務應保密、個人或未經機關同意公開的'
+      + '資訊。實務上的作法是先把人名、身分證字號、地址、電話等個資去掉再問，'
+      + '產出的內容自己逐條確認過再用。',
+  ],
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Article',
+      '@id': `${pageUrl}#article`,
+      mainEntityOfPage: pageUrl,
+      headline: 'AI 寫公文現在做到哪：機關導入現況與生成式 AI 規範',
+      description,
+      author: { '@type': 'Organization', name: '藥提醒科技有限公司', url: 'https://www.yao.care/' },
+      publisher: { '@type': 'Organization', name: '藥提醒科技有限公司', url: 'https://www.yao.care/' },
+      inLanguage: 'zh-Hant-TW',
+      citation: [
+        {
+          '@type': 'CreativeWork',
+          name: `${source.issuer}《${source.name}》`,
+          url: source.url,
+        },
+        {
+          '@type': 'CreativeWork',
+          name: `${terms._source.issuer}《${terms._source.name}》${terms._source.edition}`,
+          url: terms._source.url,
+        },
+      ],
+    },
+    breadcrumb([['AI 寫公文', pageUrl]]),
+  ],
+};
+
+const faq = faqPage(faqPairs);
+---
+
+<ArticlePage
+  schemas={[schema, faq]}
+  title="AI 寫公文：公文大腦等機關導入現況與生成式 AI 規範"
+  description={description}
+  heading="AI 寫公文現在做到哪"
+  lead="縣市與廠商陸續把 AI 接進公文流程，但接進去的都是同一段：擬稿與送陳前的檢查。這頁把已經公開的導入案例、這類系統實際涵蓋的範圍，以及行政院訂的界線放在一起。"
+>
+  <PageToc items={Object.values(S)} />
+
+  <h2 id={S.who.id}>{S.who.label}</h2>
+  <p>
+    只列已經公開、查得到出處的。各機關的導入規模與時程以其官方說明為準，本站不代為評價成效。
+  </p>
+  {DEPLOYMENTS.map((d) => (
+    <section class="deploy">
+      <h3>{d.org}：{d.name}</h3>
+      <dl>
+        {d.partner && (<><dt>合作對象</dt><dd>{d.partner}</dd></>)}
+        <dt>範圍</dt><dd>{d.scope}</dd>
+        <dt>時間</dt><dd>{d.when}</dd>
+        <dt>做什麼</dt><dd>{d.does}</dd>
+        {d.data && (<><dt>資料來源</dt><dd>{d.data}</dd></>)}
+      </dl>
+      <p class="cite">出處：<a href={d.href} rel="noopener nofollow">{d.cite}</a></p>
+    </section>
+  ))}
+
+  <h2 id={S.what.id}>{S.what.label}</h2>
+  <p>
+    把上面幾套攤開來看，功能其實高度重疊 —— 都落在承辦坐下來寫的那一段，沒有一套去動簽核流程。
+  </p>
+  <ol class="rules">
+    <li>
+      <strong>草擬</strong>：承辦給事由，系統產出符合文別結構的初稿。
+      函是主旨、說明、辦法；簽是主旨、說明、擬辦 ——
+      這兩組段名不一樣，是最常寫錯的地方，規則在<a href={`${base}writing/`}>公文怎麼寫</a>。
+    </li>
+    <li>
+      <strong>格式提醒與內容檢核</strong>：送陳之前先把格式問題挑出來。
+      本站的<a href={`${base}checks/`}>格式檢核</a>對機關公文跑 {checkCount} 條，
+      每一則<a href={`${base}cases/`}>公文範例</a>都附逐條結果。
+    </li>
+    <li>
+      <strong>知識查詢</strong>：查機關自己過去怎麼寫、查用語與法規依據。
+      公開版本的用語表在<a href={`${base}usage/`}>公文用語表</a>。
+    </li>
+    <li>
+      <strong>沿用機關既有寫法</strong>：匯入過去的稿件建索引，讓產出像這個機關寫的。
+      雲林那套用了約 2 萬份歷史公文，量級差別在此。
+    </li>
+  </ol>
+  <p class="note">
+    值得注意的是<strong>沒有一套在做簽核流程</strong>。陳核、核稿、會稿、閱稿、判行仍然在原本的
+    電子公文系統裡走，各關在看什麼寫在<a href={`${base}writing/#workflow`}>公文怎麼寫</a>。
+  </p>
+
+  <h2 id={S.rules.id}>{S.rules.label}</h2>
+  <p>
+    {source.issuer}《{source.name}》{source.promulgated}，共 {points.length} 點。
+    以下逐字照錄，未經濃縮 —— 網路上的轉述常把第四點的但書吃掉，而那個但書正是機關導入與
+    承辦自己上網用之間的分野。
+  </p>
+  <ol class="guidance">
+    {points.map((p) => (
+      <li><span class="no">{p.no}、</span>{p.text}</li>
+    ))}
+  </ol>
+  <p class="note">
+    原文出處：<a href={source.url} rel="noopener">{source.issuer}</a>。
+    資料產生日期 {guidance._generated}；指引改版時重跑 <code>pnpm gen:ai-guidance</code>。
+  </p>
+
+  <h2 id={S.limits.id}>{S.limits.label}</h2>
+  <p>把上面十點收成承辦實際會遇到的三條線：</p>
+  <ul class="rules">
+    <li>
+      <strong>機密文書整份不能用</strong>（第三點）。這裡的機密文書有明確定義 ——
+      行政院《文書處理手冊》所定的國家機密文書及一般公務機密文書，
+      也就是稿面「密等」那一格填了絕對機密、極機密、機密或密的那些。
+      稿面欄位怎麼判在<a href={`${base}writing/#draft-fields`}>公文怎麼寫</a>。
+    </li>
+    <li>
+      <strong>個資與未公開資訊不能餵進去</strong>（第四點）。但書是封閉式地端部署的模型，
+      在確認系統環境安全性後可以依機密等級分級使用 —— 這就是為什麼機關導入談的是專屬環境，
+      不是叫大家各自上網用。本站的<a href={`${base}security/`}>資料處理方式</a>寫的是這一段怎麼做。
+    </li>
+    <li>
+      <strong>產出不能直接當決策依據</strong>（第二點、第五點）。最終判斷仍在承辦身上，
+      而且不得以未經確認的產出直接作成行政行為。第六點另要求適當揭露。
+    </li>
+  </ul>
+
+  <h2 id={S.diy.id}>{S.diy.label}</h2>
+  <p>
+    導入是機關層級的決定，通常要走採購與資安審查。在那之前，承辦手上能用的是公開資料：
+  </p>
+  <ul class="examples">
+    <li>
+      <a href={`${base}cases/`}>公文範例庫</a>
+      <span>各業務類型的公文全文，每一則附逐條格式檢核結果。</span>
+    </li>
+    <li>
+      <a href={`${base}templates/`}>Word 範本下載</a>
+      <span>版面取自政府文書格式參考規範原始檔的空白範本與範例檔。</span>
+    </li>
+    <li>
+      <a href={`${base}writing/`}>公文怎麼寫</a>
+      <span>三段式、稿面欄位與核稿判行流程，逐條取自文書處理手冊。</span>
+    </li>
+  </ul>
+  <p>
+    要在機關內部試一套專屬環境的，走
+    <a {...SERVICE_LINKS.agencyApply('ai_page_agency_apply')}>機關申請試用</a>；
+    小型受補助單位、個人或企業可以直接
+    <a {...SERVICE_LINKS.selfRegister('ai_page_self_register')}>自助建立工作區</a>。
+    這套系統本身涵蓋哪些範圍、跟電子公文系統怎麼分工，寫在
+    <a href={`${base}product/`}>公文 AI 系統</a>。
+  </p>
+</ArticlePage>
+
+<style>
+  .deploy {
+    margin-block: 2rem;
+    padding: 1.25rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.375rem;
+  }
+  .deploy h3 {
+    margin-top: 0;
+  }
+  .deploy dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem 1rem;
+    margin: 0;
+  }
+  .deploy dt {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+    white-space: nowrap;
+  }
+  .deploy dd {
+    margin: 0;
+    font-size: var(--text-sm);
+    line-height: 1.9;
+  }
+  .cite {
+    margin-bottom: 0;
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+  .rules li {
+    margin-block: 0.75rem;
+    line-height: 1.9;
+  }
+  .guidance {
+    list-style: none;
+    padding: 0;
+    counter-reset: none;
+  }
+  .guidance li {
+    margin-block: 1rem;
+    padding-inline-start: 3.5rem;
+    text-indent: -3.5rem;
+    line-height: 1.9;
+  }
+  .guidance .no {
+    display: inline-block;
+    width: 3.5rem;
+    text-indent: 0;
+    color: var(--color-primary);
+  }
+  .examples {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+  .examples li {
+    display: grid;
+    gap: 0.25rem;
+  }
+  .examples span {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+  .note {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+</style>

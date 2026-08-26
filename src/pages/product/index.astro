@@ -1,7 +1,25 @@
 ---
 import ArticlePage from '../../layouts/ArticlePage.astro';
+import PageToc from '../../components/PageToc.astro';
 import { SERVICE_LINKS } from '../../site.config.js';
 import { ORGANIZATION, breadcrumb, faqPage } from '../../data/schema.js';
+import grantReport from '../../data/scenarios/grant_report.json';
+
+// 檢核條目數依文別而定，一律取實際筆數，不寫死（頁面上寫死「24 條」會在規則改版時說謊）。
+const checkCount = grantReport.checks.length;
+
+// 章節的單一真實來源：<h2> 的 id 與文字、目錄的連結全部取這一份。
+const S = {
+  what: { id: 'what', label: '一、這套系統做什麼、不做什麼' },
+  eod: { id: 'electronic-official-document', label: '二、跟電子公文系統、線上簽核的分工' },
+  draft: { id: 'draft', label: '三、草擬' },
+  citizen: { id: 'citizen', label: '四、民眾書件與存證信函' },
+  knowledge: { id: 'knowledge', label: '五、接上機關既有稿件' },
+  checks: { id: 'checks', label: `六、格式檢核（機關公文 ${checkCount} 條）` },
+  audit: { id: 'audit', label: '七、稽核與匯出' },
+  onboard: { id: 'onboarding', label: '八、機關導入要準備什麼' },
+  limits: { id: 'limits', label: '九、還沒做的' },
+};
 
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
@@ -40,7 +58,7 @@ const schema = {
         '產生、編輯、簽核、匯出的稽核軌跡',
       ],
     },
-    breadcrumb([['功能與導入', pageUrl]]),
+    breadcrumb([['公文 AI 系統', pageUrl]]),
   ],
 };
 
@@ -56,6 +74,18 @@ const faq = faqPage([
       '之後草擬會沿用該機關的慣用語、課室署名與行文習慣。',
   ],
   [
+    '公文 AI 跟電子公文系統（線上簽核）有什麼不同？',
+    '電子公文系統管的是流程：收文分文、簽核傳遞、公文電子交換、發文歸檔與檔案管理。' +
+      '本系統管的是流程開始之前的那一段——把事由變成合格的稿子，並在送出前逐條檢查格式。' +
+      '兩者不重疊，也不互相取代；稿子擬好之後仍然回到貴機關原本的公文系統走陳核、核稿、會稿與判行。',
+  ],
+  [
+    '機關導入要準備什麼？',
+    '需要三樣：一個機關窗口、一批過去的公文稿件（docx、odt、pdf、xlsx 或純文字都收），' +
+      '以及要開通的同仁名單。服務方建立專屬子網址與帳號後，以邀請連結加入同仁；' +
+      '稿件匯入會先做去識別化再建索引。不需要改動貴機關現有的公文系統。',
+  ],
+  [
     '格式檢核會告訴我哪裡錯嗎？',
     '會。不通過的項目會指出是哪一條規則、命中什麼字，而不是只回報格式有誤。' +
       '機關公文套主旨、段落、個資代稱、用字格式與收發等規則；民眾書件與存證信函另檢查必要欄位與期限。',
@@ -65,13 +95,48 @@ const faq = faqPage([
 
 <ArticlePage
   schemas={[schema, faq]}
-  title="功能與導入方式｜公文 AI"
-  description="機關公文、民眾對機關書件、存證信函、格式檢核、Word 匯出與資料處理。三種客群各自有合適的工作區。"
-  heading="功能與導入"
+  title="公文 AI 系統：功能、機關導入與電子公文系統的分工"
+  description={`公文草擬、逐條格式檢核與正式格式 Word 匯出，機關公文 ${checkCount} 條檢核。`
+    + '與電子公文系統、公文線上簽核的分工，機關導入方式與三種客群各自的工作區。'}
+  heading="公文 AI 系統"
   lead="這套東西解決的是「開案的時候不知道怎麼下筆」與「送出去被格式退回」這兩件事。"
 >
+  <PageToc items={Object.values(S)} />
+
   <section>
-    <h2>草擬</h2>
+    <h2 id={S.what.id}>{S.what.label}</h2>
+    <p>
+      做的是承辦坐下來寫那一段：把事由變成一份合格的稿子，並在送出前逐條檢查格式。
+      不做的是流程 —— 收文分文、簽核傳遞、公文電子交換、發文歸檔與檔案管理都不碰，
+      那些是貴機關現有公文系統的事。
+    </p>
+  </section>
+
+  <section>
+    <h2 id={S.eod.id}>{S.eod.label}</h2>
+    <p>
+      機關通常已經有一套電子公文系統（或叫公文線上簽核、公文管理系統）。那套系統管的是
+      <strong>稿子產生之後</strong>的事：陳核、核稿、會稿、閱稿、判行、繕發、歸檔。
+      本系統管的是<strong>稿子產生之前與當下</strong>：從事由到草稿，再到送陳之前的格式自檢。
+    </p>
+    <table>
+      <thead><tr><th></th><th>電子公文系統</th><th>本系統</th></tr></thead>
+      <tbody>
+        <tr><td>管什麼</td><td>收發、簽核、交換、歸檔的流程</td><td>擬稿與送陳前的格式檢查</td></tr>
+        <tr><td>誰在用</td><td>全機關，含文書單位與各級主管</td><td>承辦人</td></tr>
+        <tr><td>導入方式</td><td>機關資訊系統，通常走採購</td><td>專屬子網址，不動現有系統</td></tr>
+        <tr><td>會不會取代對方</td><td colspan="2">不會。稿子擬好之後照樣回原本的系統走流程。</td></tr>
+      </tbody>
+    </table>
+    <p>
+      各關在看什麼（陳核、核稿、會稿、閱稿、判行的注意事項逐條），
+      整理在<a href={`${base}writing/#workflow`}>公文怎麼寫</a>。
+      其他縣市與廠商把 AI 接進公文流程的哪一段、行政院訂了哪些界線，
+      寫在<a href={`${base}ai-official-document/`}>AI 寫公文現在做到哪</a>。
+    </p>
+  </section>
+  <section>
+    <h2 id={S.draft.id}>{S.draft.label}</h2>
     <p>
       承辦填事由、選文別與受文者，系統先在機關的知識庫與既有稿件裡檢索，
       再依文件族群產出內容。機關公文維持主旨、說明、辦法等格式；民眾書件與存證信函則使用各自的段落結構。
@@ -80,16 +145,14 @@ const faq = faqPage([
   </section>
 
   <section>
-    <h2>民眾對機關的正式書件</h2>
+    <h2 id={S.citizen.id}>{S.citizen.label}</h2>
     <p>
       一般民眾可撰寫申請書、陳情書、申訴書或說明書，整理「事實與理由／請求事項／附件」。
       系統協助把事情寫清楚，不虛構法條、證據或機關承諾。
       <a href={`${base}citizens/`}>看民眾書件說明</a>。
     </p>
-  </section>
 
-  <section>
-    <h2>個人或企業間的存證信函</h2>
+    <h3>個人或企業間的存證信函</h3>
     <p>
       存證信函草稿會保留寄件人、收件人、雙方地址與履行／回覆期限，並提供事實與理由、請求事項、附件的結構。
       產出可人工審閱與下載，不代表已完成郵寄、送達或法律審查。
@@ -97,7 +160,7 @@ const faq = faqPage([
   </section>
 
   <section>
-    <h2>接上機關既有稿件</h2>
+    <h2 id={S.knowledge.id}>{S.knowledge.label}</h2>
     <p>
       把過去的稿件匯進來（docx、odt、pdf、xlsx、純文字都收），系統會先做去識別化再建索引。
       之後草擬會沿用貴機關的慣用語、課室署名與行文習慣，而不是通用範本的口氣。
@@ -105,16 +168,14 @@ const faq = faqPage([
   </section>
 
   <section>
-    <h2>格式檢核</h2>
+    <h2 id={S.checks.id}>{S.checks.label}</h2>
     <p>
-      機關公文沿用主旨、段落、個資代稱、用字格式、收發等 <a href={`${base}checks/`}>24 條</a>檢核；
+      機關公文沿用主旨、段落、個資代稱、用字格式、收發等 <a href={`${base}checks/`}>{checkCount} 條</a>檢核；
       民眾書件與存證信函另檢查文件族群、必要欄位、期限與段落結構。
       不通過的項目會指出是哪一條、命中什麼字，不是只說「格式有誤」。
     </p>
-  </section>
 
-  <section>
-    <h2>補助核銷</h2>
+    <h3>補助核銷的固定要件</h3>
     <p>
       核定金額、實支金額、餘款繳回、附件清單 —— 核銷案的固定要件會被帶進說明段，
       金額自動換成國字大寫。
@@ -122,14 +183,14 @@ const faq = faqPage([
   </section>
 
   <section>
-    <h2>稽核與匯出</h2>
+    <h2 id={S.audit.id}>{S.audit.label}</h2>
     <p>
       每一次產生、編輯、簽核、匯出都留軌跡。整包匯出含資料字典，可以帶著走。
     </p>
   </section>
 
   <section>
-    <h2>怎麼開通</h2>
+    <h2 id={S.onboard.id}>{S.onboard.label}</h2>
     <table>
       <thead><tr><th></th><th>機關</th><th>小型單位</th><th>一般民眾／個人或企業</th></tr></thead>
       <tbody>
@@ -153,6 +214,16 @@ const faq = faqPage([
         </tr>
       </tbody>
     </table>
+    <h3>機關導入要準備的三樣東西</h3>
+    <ol>
+      <li>一個機關窗口（通常是文書單位或資訊單位的聯絡人）。</li>
+      <li>一批過去的公文稿件 —— docx、odt、pdf、xlsx 與純文字都收，先去識別化再建索引。</li>
+      <li>要開通的同仁名單，以邀請連結加入。</li>
+    </ol>
+    <p>
+      不需要改動貴機關現有的電子公文系統，也不需要在機關內部架設主機。
+      資料怎麼隔離、留哪些軌跡，寫在<a href={`${base}security/`}>資料處理方式</a>。
+    </p>
     <p>
       <a {...SERVICE_LINKS.agencyApply('product_agency_apply')}>機關申請試用</a>　·
       <a {...SERVICE_LINKS.selfRegister('product_self_register')}>小型單位／個人自助註冊</a>
@@ -160,7 +231,7 @@ const faq = faqPage([
   </section>
 
   <section>
-    <h2>還沒做的</h2>
+    <h2 id={S.limits.id}>{S.limits.label}</h2>
     <p>
       掃描件的文字辨識還沒做 —— 上傳純圖片的 PDF 會標記失敗並說明原因，不會靜默略過。
       民眾文件目前也不直接代辦機關線上送件或郵局寄送；完成內容後由使用者自行審閱與送出。

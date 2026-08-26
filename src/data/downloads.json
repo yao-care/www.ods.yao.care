@@ -46,6 +46,81 @@
       "path": "cases/low-income-review.docx",
       "filename": "社會救助資格審查結果通知範例.docx",
       "docType": "函"
+    },
+    "merit-award-sign": {
+      "path": "cases/merit-award-sign.docx",
+      "filename": "敘獎建議簽範例.docx",
+      "docType": "簽"
+    },
+    "travel-expense-sign": {
+      "path": "cases/travel-expense-sign.docx",
+      "filename": "出差旅費報支簽範例.docx",
+      "docType": "簽"
+    },
+    "asset-disposal-sign": {
+      "path": "cases/asset-disposal-sign.docx",
+      "filename": "財產報廢簽範例.docx",
+      "docType": "簽"
+    },
+    "small-procurement-sign": {
+      "path": "cases/small-procurement-sign.docx",
+      "filename": "小額採購請購簽範例.docx",
+      "docType": "簽"
+    },
+    "activity-plan-sign": {
+      "path": "cases/activity-plan-sign.docx",
+      "filename": "活動計畫報核簽範例.docx",
+      "docType": "簽"
+    },
+    "construction-acceptance": {
+      "path": "cases/construction-acceptance.docx",
+      "filename": "工程驗收結果報請備查公文範例.docx",
+      "docType": "函"
+    },
+    "tender-announcement": {
+      "path": "cases/tender-announcement.docx",
+      "filename": "工程招標公告範例.docx",
+      "docType": "公告"
+    },
+    "subsidy-payment-request": {
+      "path": "cases/subsidy-payment-request.docx",
+      "filename": "補助款請撥公文範例.docx",
+      "docType": "函"
+    },
+    "annual-work-plan": {
+      "path": "cases/annual-work-plan.docx",
+      "filename": "陳報年度工作計畫公文範例.docx",
+      "docType": "函"
+    },
+    "application-rejected-reply": {
+      "path": "cases/application-rejected-reply.docx",
+      "filename": "申請案不予受理函復範例.docx",
+      "docType": "函"
+    },
+    "case-transfer-memo": {
+      "path": "cases/case-transfer-memo.docx",
+      "filename": "非權責案件移文書函範例.docx",
+      "docType": "書函"
+    },
+    "overdue-reminder-memo": {
+      "path": "cases/overdue-reminder-memo.docx",
+      "filename": "催辦公文範例（逾期未復）.docx",
+      "docType": "書函"
+    },
+    "venue-loan-memo": {
+      "path": "cases/venue-loan-memo.docx",
+      "filename": "場地借用同意書函範例.docx",
+      "docType": "書函"
+    },
+    "volunteer-recruit-notice": {
+      "path": "cases/volunteer-recruit-notice.docx",
+      "filename": "志工招募公告範例.docx",
+      "docType": "公告"
+    },
+    "site-survey-notice": {
+      "path": "cases/site-survey-notice.docx",
+      "filename": "會勘通知單範例.docx",
+      "docType": "開會通知單"
     }
   },
   "citizens": {

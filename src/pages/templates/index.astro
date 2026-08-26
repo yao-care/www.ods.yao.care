@@ -15,6 +15,7 @@ import { SERVICE_LINKS } from '../../site.config.js';
 import { CASES } from '../../data/cases.js';
 import { CITIZEN_EXAMPLES } from '../../data/citizen-examples.js';
 import downloads from '../../data/downloads.json';
+import terms from '../../data/gov-terms.json';
 
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
@@ -140,6 +141,49 @@ const faq = {
       <p class="more">
         文別怎麼選看<a href={`${base}doc-types/`}>文別指南</a>；
         稱謂語、期望語與統一用字查<a href={`${base}usage/`}>公文用語表</a>。
+      </p>
+    </section>
+
+    <section>
+      <h2 id="vocabulary">同一份東西，機關裡會用哪些叫法</h2>
+      <p>
+        同事說「幫我調一份函稿」跟站上寫的「函空白範本」是同一件事。這裡把常聽到的講法對回上面的檔案，
+        免得下載錯。
+      </p>
+      <table>
+        <thead><tr><th>聽到的說法</th><th>指的是</th><th>下載哪一份</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>函稿</td>
+            <td>還沒判行、還在流程裡的函，判行繕發之後才叫函</td>
+            <td>函空白範本</td>
+          </tr>
+          <tr>
+            <td>簽稿</td>
+            <td>簽與稿的合稱，先簽後稿與簽稿併陳講的都是這兩份的先後</td>
+            <td>簽空白範本＋函空白範本</td>
+          </tr>
+          <tr>
+            <td>簡簽</td>
+            <td>案情簡單時的短簽，格式仍是主旨、說明、擬辦，只是篇幅短</td>
+            <td>簽空白範本</td>
+          </tr>
+          <tr>
+            <td>以稿代簽</td>
+            <td>案情簡單或例行承轉時不另寫簽，直接擬稿</td>
+            <td>只要函空白範本</td>
+          </tr>
+          <tr>
+            <td>簽稿會核單</td>
+            <td>送會時附在簽稿前面的會核表，格式是手冊附件 4</td>
+            <td>本站未提供，見<a href={terms._source.url} rel="noopener">文書處理手冊</a></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="more">
+        先簽後稿、簽稿併陳與以稿代簽各自適用什麼案件，
+        以及擬好之後要經過陳核、核稿、會稿、閱稿、判行哪幾關，
+        逐條在<a href={`${base}writing/#workflow`}>公文怎麼寫</a>。
       </p>
     </section>
 

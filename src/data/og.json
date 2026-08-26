@@ -3,6 +3,10 @@
     "file": "og/home.png",
     "title": "公文 AI｜機關公文、民眾書件與存證信函"
   },
+  "/ai-official-document/": {
+    "file": "og/ai-official-document.png",
+    "title": "AI 寫公文：公文大腦等機關導入現況與生成式 AI 規範"
+  },
   "/apply/": {
     "file": "og/apply.png",
     "title": "機關申請試用｜公文 AI"
@@ -10,6 +14,30 @@
   "/cases/": {
     "file": "og/cases.png",
     "title": "公文範例庫｜公文 AI"
+  },
+  "/cases/activity-plan-sign/": {
+    "file": "og/cases-activity-plan-sign.png",
+    "title": "活動計畫報核簽範例｜公文 AI"
+  },
+  "/cases/annual-work-plan/": {
+    "file": "og/cases-annual-work-plan.png",
+    "title": "陳報年度工作計畫公文範例｜公文 AI"
+  },
+  "/cases/application-rejected-reply/": {
+    "file": "og/cases-application-rejected-reply.png",
+    "title": "申請案不予受理函復範例｜公文 AI"
+  },
+  "/cases/asset-disposal-sign/": {
+    "file": "og/cases-asset-disposal-sign.png",
+    "title": "財產報廢簽範例｜公文 AI"
+  },
+  "/cases/case-transfer-memo/": {
+    "file": "og/cases-case-transfer-memo.png",
+    "title": "非權責案件移文書函範例｜公文 AI"
+  },
+  "/cases/construction-acceptance/": {
+    "file": "og/cases-construction-acceptance.png",
+    "title": "工程驗收結果報請備查公文範例｜公文 AI"
   },
   "/cases/grant-settlement/": {
     "file": "og/cases-grant-settlement.png",
@@ -23,6 +51,10 @@
     "file": "og/cases-meeting-notice.png",
     "title": "開會通知單範例｜公文 AI"
   },
+  "/cases/merit-award-sign/": {
+    "file": "og/cases-merit-award-sign.png",
+    "title": "敘獎建議簽範例｜公文 AI"
+  },
   "/cases/noise-petition-reply/": {
     "file": "og/cases-noise-petition-reply.png",
     "title": "民眾陳情案函復範例｜公文 AI"
@@ -30,6 +62,10 @@
   "/cases/open-burning-notice/": {
     "file": "og/cases-open-burning-notice.png",
     "title": "行政公告範例｜公文 AI"
+  },
+  "/cases/overdue-reminder-memo/": {
+    "file": "og/cases-overdue-reminder-memo.png",
+    "title": "催辦公文範例（逾期未復）｜公文 AI"
   },
   "/cases/procurement-sign/": {
     "file": "og/cases-procurement-sign.png",
@@ -39,9 +75,37 @@
     "file": "og/cases-road-repair.png",
     "title": "民眾陳情轉請權責單位處理公文範例｜公文 AI"
   },
+  "/cases/site-survey-notice/": {
+    "file": "og/cases-site-survey-notice.png",
+    "title": "會勘通知單範例｜公文 AI"
+  },
+  "/cases/small-procurement-sign/": {
+    "file": "og/cases-small-procurement-sign.png",
+    "title": "小額採購請購簽範例｜公文 AI"
+  },
   "/cases/subsidy-application/": {
     "file": "og/cases-subsidy-application.png",
     "title": "申請中央補助計畫公文範例｜公文 AI"
+  },
+  "/cases/subsidy-payment-request/": {
+    "file": "og/cases-subsidy-payment-request.png",
+    "title": "補助款請撥公文範例｜公文 AI"
+  },
+  "/cases/tender-announcement/": {
+    "file": "og/cases-tender-announcement.png",
+    "title": "工程招標公告範例｜公文 AI"
+  },
+  "/cases/travel-expense-sign/": {
+    "file": "og/cases-travel-expense-sign.png",
+    "title": "出差旅費報支簽範例｜公文 AI"
+  },
+  "/cases/venue-loan-memo/": {
+    "file": "og/cases-venue-loan-memo.png",
+    "title": "場地借用同意書函範例｜公文 AI"
+  },
+  "/cases/volunteer-recruit-notice/": {
+    "file": "og/cases-volunteer-recruit-notice.png",
+    "title": "志工招募公告範例｜公文 AI"
   },
   "/checks/": {
     "file": "og/checks.png",
@@ -101,7 +165,7 @@
   },
   "/product/": {
     "file": "og/product.png",
-    "title": "功能與導入方式｜公文 AI"
+    "title": "公文 AI 系統：功能、機關導入與電子公文系統的分工"
   },
   "/security/": {
     "file": "og/security.png",
@@ -121,6 +185,6 @@
   },
   "/writing/": {
     "file": "og/writing.png",
-    "title": "公文怎麼寫：函的三段、簽的三段與擬稿規定｜公文 AI"
+    "title": "公文怎麼寫：函與簽的三段、稿面欄位與核稿流程｜公文 AI"
   }
 }

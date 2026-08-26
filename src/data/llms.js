@@ -31,7 +31,8 @@ export const FIXED_PAGES = [
   { hub: true, path: '/terms/', name: '用語與法規速查', blurb: '期望語與常用法規依據對照。' },
   { hub: true, path: '/citizens/which-route/', name: '陳情、請願、訴願、申訴怎麼選', blurb: '四條救濟途徑的差別與期限。' },
   { hub: true, path: '/citizens/certified-letter-guide/', name: '存證信函怎麼寄', blurb: '份數、費用、用紙與交寄流程。' },
-  { path: '/product/', name: '功能與導入', blurb: '草擬、檢核、匯出與機關導入方式。' },
+  { hub: true, path: '/ai-official-document/', name: 'AI 寫公文現在做到哪', blurb: '雲林公文大腦、臺北市 CiviClaw、叡揚公文 AI 助理等已公開的機關導入現況，以及行政院使用生成式 AI 參考指引十點逐字。' },
+  { path: '/product/', name: '公文 AI 系統', blurb: '草擬、檢核、匯出、機關導入方式，以及與電子公文系統的分工。' },
   { path: '/security/', name: '資料處理方式', blurb: '去識別化、資料隔離、稽核軌跡與降級路徑。' },
   { path: '/apply/', name: '機關申請試用', blurb: '機關專屬子網域的申請入口。' },
 ];

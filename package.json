@@ -22,7 +22,8 @@
     "build:docx": "node scripts/build-docx.mjs",
     "fetch:gov-template": "node scripts/fetch-gov-template.mjs",
     "gen:simplified-set": "python3 scripts/gen-simplified-set.py",
-    "gen:gov-terms": "python3 scripts/fetch-gov-terms.py"
+    "gen:gov-terms": "python3 scripts/fetch-gov-terms.py",
+    "gen:ai-guidance": "python3 scripts/fetch-ai-guidance.py"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",

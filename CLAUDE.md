@@ -272,6 +272,28 @@ pnpm build       # 再跑一次，讓 check-og 對帳
 `src/pages/404.astro` 會產成 `dist/404.html`，GitHub Pages 直接吃。它借用首頁那張圖、
 不進 sitemap，也在 `src/data/llms.js` 的路由對帳裡排除 —— 404 不是內容。
 
+## 官方條文一律抓取產生，不手抄（`gov-terms.json`／`ai-guidance.json`）
+
+站上引用的官方規則有兩份資料，都是腳本解析官方 PDF 產生、產物要 commit：
+
+| 檔案 | 腳本 | 來源 | 內容 |
+|---|---|---|---|
+| `src/data/gov-terms.json` | `scripts/fetch-gov-terms.py` | 行政院《文書處理手冊》 | 稱謂與期望語、擬稿注意事項、函與簽的撰擬要領、數字原則、用印，以及 `workflow`（文書處理五步驟、稿面 9 個欄位、陳核／核稿／會稿／閱稿／判行共 24 條） |
+| `src/data/ai-guidance.json` | `scripts/fetch-ai-guidance.py` | 行政院《使用生成式 AI 參考指引》 | 十點逐字 |
+
+**不要在頁面裡手寫條文。** 網路流傳的整理多半轉錄自舊版或經過濃縮 ——
+參考指引第四點那句「但封閉式地端部署之生成式 AI 模型…得依文書或資訊機密等級分級使用」
+特別常被吃掉，而那個但書正是機關導入與承辦自己上網用之間的分野。
+
+兩支腳本的共同坑：
+- **`pdftotext` 要挑模式**。手冊用 `-layout`（表格才對得齊）；參考指引必須用 `-raw` ——
+  它第一點被排版切成視覺兩欄，`-layout` 會把「（以下簡稱各機關）使用生成式 AI」抽到標號之前，
+  逐字照抄就少了一截。
+- **PDF 頁眉用 CJK 相容漢字**（如「理」是 U+F9E4 而不是 U+7406），不先 `unicodedata.normalize('NFC')`
+  字面比對會失敗，頁眉會混進條文裡。兩支都已正規化。
+- 手冊本文各點用**國字**標號 `(一)(二)`，點內子項才用全形阿拉伯數字 `(１)(２)` ——
+  `fetch-gov-terms.py` 因此有 `bracketed()` 與 `cjk_bracketed()` 兩支，別用錯。
+
 ## `llms.txt`／`llms-full.txt` 是產生的（不要手改）
 
 兩支由 `src/pages/llms.txt.js`、`src/pages/llms-full.txt.js` 於 build 時從 `src/data/llms.js` 產生，
@@ -358,6 +380,8 @@ pnpm check:content:all
 pnpm check:zh-hant    # 只跑簡體字守門
 pnpm build:docx       # 只重烘 Word（改案例資料或版面後）
 pnpm fetch:gov-template  # 規範改版才跑（會連外網，需 IPv4）
+pnpm gen:gov-terms       # 文書處理手冊改版才跑（會連外網，需 pdftotext）
+pnpm gen:ai-guidance     # 生成式 AI 參考指引改版才跑（會連外網，需 pdftotext）
 pnpm gen:simplified-set  # 重產簡體字集合（只在來源資料改版時，需 python3 opencc）
 ```
 

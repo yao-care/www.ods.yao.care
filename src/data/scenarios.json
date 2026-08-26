@@ -6,7 +6,7 @@
       "doc_type": "函",
       "receiver": "○○縣政府工務處",
       "source": "本鄉三盛村林姓民眾陳情，中正路二段路面破損多處，機車行經常打滑，請求儘速修繕。經本所於114年3月5日派員會勘屬實。",
-      "draft_id": "drf_01M0FM6XBN5ZZFBR69HP"
+      "draft_id": "drf_01M0YHJSDY7SX43ZGRD9"
     },
     {
       "key": "grant_report",
@@ -14,7 +14,7 @@
       "doc_type": "函",
       "receiver": "○○縣政府社會處",
       "source": "檢陳本所114年度社區照顧關懷據點補助經費核銷資料，核定金額新臺幣50萬元整，實支新臺幣486,320元，餘款繳回。",
-      "draft_id": "drf_01M0FM75XZH2CZDSCD7V"
+      "draft_id": "drf_01M0YHK0W8MWAKXZRK00"
     },
     {
       "key": "meeting",
@@ -22,7 +22,7 @@
       "doc_type": "開會通知單",
       "receiver": "本鄉各里辦公處",
       "source": "為研商114年度基層建設需求，訂於114年4月10日下午2時於本所三樓會議室召開里長座談會，請各里長準時出席。",
-      "draft_id": "drf_01M0FM79TKEQ82FWCX4F"
+      "draft_id": "drf_01M0YHK4AT4Z26VCAF0D"
     },
     {
       "key": "low_income",
@@ -30,7 +30,7 @@
       "doc_type": "函",
       "receiver": "陳美玲女士",
       "source": "陳美玲女士於本鄉三盛村申請低收入戶資格複查，經審查其家庭總收入超過標準，未符合社會救助法第4條規定。",
-      "draft_id": "drf_01M0FM7F42J5X7ZYPR0W"
+      "draft_id": "drf_01M0YHKA5SHWMR2GY9VR"
     },
     {
       "key": "petition_reply",
@@ -38,7 +38,7 @@
       "doc_type": "書函",
       "receiver": "王小明君",
       "source": "復王小明君之父114年2月20日陳情本鄉工廠夜間噪音一案，經本所會同環保局於2月28日前往稽查，噪音值未超過管制標準。",
-      "draft_id": "drf_01M0FM7QNNSX8D3CJPVA"
+      "draft_id": "drf_01M0YHKGDBJVJ4SZ7EWN"
     },
     {
       "key": "notice",
@@ -46,7 +46,7 @@
       "doc_type": "公告",
       "receiver": null,
       "source": "為維護空氣品質，公告本鄉自114年3月1日起全面禁止露天燃燒稻草及農業廢棄物，違者依空氣污染防制法處罰。",
-      "draft_id": "drf_01M0FM7VEMBXX4GNM5NS"
+      "draft_id": "drf_01M0YHKRBJN2MN87AXQG"
     },
     {
       "key": "sign",
@@ -54,7 +54,7 @@
       "doc_type": "簽",
       "receiver": null,
       "source": "為改善本鄉活動中心設備老舊問題，擬編列新臺幣30萬元採購冷氣及音響設備，簽請核示。",
-      "draft_id": "drf_01M0FM85NDGSNNTHAPCN"
+      "draft_id": "drf_01M0YHM4HPJKW12GN5E9"
     },
     {
       "key": "subsidy_apply",
@@ -62,7 +62,127 @@
       "doc_type": "函",
       "receiver": "內政部國土管理署",
       "source": "為改善本鄉復興路排水不良及路面破損問題，擬申請115年度前瞻基礎建設補助新臺幣800萬元整，檢陳計畫書1份。",
-      "draft_id": "drf_01M0FM8E5XBYA2GMJANW"
+      "draft_id": "drf_01M0YHMBT5XVFCAPTD5N"
+    },
+    {
+      "key": "personnel_award",
+      "title": "簽辦水災搶險有功人員敘獎",
+      "doc_type": "簽",
+      "receiver": null,
+      "source": "本鄉114年7月凱米颱風期間，清潔隊及工務課共12人連續3日投入搶險及災後清運，工作績效優良，擬依獎懲規定簽請敘獎，記功1次3人、嘉獎2次9人。",
+      "draft_id": "drf_01M0YHMK3VXE75CHH6Q4"
+    },
+    {
+      "key": "travel_expense",
+      "title": "簽辦出差旅費報支",
+      "doc_type": "簽",
+      "receiver": null,
+      "source": "本課○員奉派於114年5月14日至15日赴臺中市參加內政部主辦之地政業務研習，實際支出高鐵票價新臺幣2,140元、住宿費1,800元、雜費600元，檢附收據及研習證明，簽請核示。",
+      "draft_id": "drf_01M0YHMVPRK58BXPY1RD"
+    },
+    {
+      "key": "asset_disposal",
+      "title": "簽辦公務車輛報廢",
+      "doc_type": "簽",
+      "receiver": null,
+      "source": "本所財產編號○○○之公務小客車，領牌迄今已逾15年、行駛里程28萬公里，經保養廠評估修復費用逾車輛殘值，擬辦理報廢並依規定辦理財產減損，簽請核示。",
+      "draft_id": "drf_01M0YHN1S7QPJ23HBQ96"
+    },
+    {
+      "key": "procurement_request",
+      "title": "簽辦辦公事務機小額採購",
+      "doc_type": "簽",
+      "receiver": null,
+      "source": "本所一樓為民服務櫃檯影印機故障頻繁且已停產無零件，擬以新臺幣9萬8千元辦理小額採購1台，經詢價3家廠商，擬洽最低價廠商採購，簽請核示。",
+      "draft_id": "drf_01M0YHN8HSJTE9J3TWYP"
+    },
+    {
+      "key": "plan_approval",
+      "title": "簽辦社區運動會活動計畫",
+      "doc_type": "簽",
+      "receiver": null,
+      "source": "為促進本鄉社區交流，擬於114年10月19日於本鄉運動公園辦理社區聯合運動會，預計參加人數500人，編列經費新臺幣25萬元，檢陳活動計畫書1份，簽請核示。",
+      "draft_id": "drf_01M0YHNEMAS6JBZ82702"
+    },
+    {
+      "key": "construction_acceptance",
+      "title": "工程驗收結果報請備查",
+      "doc_type": "函",
+      "receiver": "○○縣政府工務處",
+      "source": "本所「復興路排水溝改善工程」契約金額新臺幣620萬元整，於114年6月20日辦理驗收，驗收結果符合契約規定，檢陳驗收紀錄1份，報請備查。",
+      "draft_id": "drf_01M0YHNMZ0E5WPRQ6PBN"
+    },
+    {
+      "key": "payment_request",
+      "title": "補助款請撥公文",
+      "doc_type": "函",
+      "receiver": "○○縣政府社會處",
+      "source": "本所114年度長者共餐計畫奉核定補助新臺幣48萬元整，第一期經費已執行完畢，檢陳支出明細表及成果報告各1份，請撥付第二期款新臺幣24萬元整。",
+      "draft_id": "drf_01M0YHNT1P9FPM98X7GB"
+    },
+    {
+      "key": "annual_plan",
+      "title": "陳報年度工作計畫",
+      "doc_type": "函",
+      "receiver": "○○縣政府民政處",
+      "source": "檢陳本所115年度民政業務工作計畫1份，內容包含里鄰調整、民防編組訓練及祭祀公業輔導等3項重點工作，請鑒核。",
+      "draft_id": "drf_01M0YHNZ64B9FKAJ3WK4"
+    },
+    {
+      "key": "reject_application",
+      "title": "申請案不予受理函復",
+      "doc_type": "函",
+      "receiver": "李姓民眾",
+      "source": "復李姓民眾114年4月8日申請本鄉低收入戶生活扶助一案，因申請人戶籍未設於本鄉，非本所權責範圍，依行政程序法規定不予受理，並告知得向戶籍所在地公所提出申請。",
+      "draft_id": "drf_01M0YHPC1YE1DNYZDYFZ"
+    },
+    {
+      "key": "transfer_case",
+      "title": "非本機關權責案件移文",
+      "doc_type": "書函",
+      "receiver": "○○縣政府環境保護局",
+      "source": "本所114年5月6日收受民眾陳情本鄉工業區空氣異味一案，查空氣污染稽查非本所權責，依權責移請貴局卓處，並副知陳情人。",
+      "draft_id": "drf_01M0YHPGW91CHTPS62GA"
+    },
+    {
+      "key": "reminder",
+      "title": "逾期未復案件催辦",
+      "doc_type": "書函",
+      "receiver": "○○鄉公所",
+      "source": "本所114年3月18日○○字第1140003185號函請貴所提供轄內獨居長者名冊一案，迄今未獲復，因本案關係災害防救造冊時程，請於114年5月30日前見復。",
+      "draft_id": "drf_01M0YHPS9P9SV3ZXX74Y"
+    },
+    {
+      "key": "venue_loan",
+      "title": "場地借用同意書函",
+      "doc_type": "書函",
+      "receiver": "○○社區發展協會",
+      "source": "復貴會114年8月1日申請借用本所活動中心辦理長者健康促進課程一案，同意自114年9月2日起至114年11月25日止每週二上午9時至11時借用，場地清潔及設備維護請自理。",
+      "draft_id": "drf_01M0YHPWTB6284CVD1E3"
+    },
+    {
+      "key": "tender_notice",
+      "title": "工程招標公告",
+      "doc_type": "公告",
+      "receiver": null,
+      "source": "公告本所「中正路人行道改善工程」辦理公開招標，預算金額新臺幣480萬元整，履約期限120日曆天，投標文件請於114年9月15日下午5時前送達本所總務課，請有意投標廠商查照。",
+      "draft_id": "drf_01M0YHQ3WBEHE96M7GN4"
+    },
+    {
+      "key": "recruit_notice",
+      "title": "志工招募公告",
+      "doc_type": "公告",
+      "receiver": null,
+      "source": "公告本所115年度社區照顧關懷據點志工招募，名額20名，服務內容包含長者關懷訪視、共餐協助及健康促進活動帶領，報名期間自114年9月1日起至9月30日止，請有意服務之民眾查照。",
+      "draft_id": "drf_01M0YHQ9PMT5DW71CFBV"
+    },
+    {
+      "key": "site_survey_meeting",
+      "title": "召開排水溝改善工程會勘",
+      "doc_type": "開會通知單",
+      "receiver": "○○縣政府水利處、本鄉三盛村辦公處",
+      "source": "為研商本鄉三盛村中山路排水溝積淹水改善方案，訂於114年9月18日上午10時於現場召開會勘，請派員出席。",
+      "draft_id": "drf_01M0YHQDVSNZGZ5PAKFS"
     }
   ]
 }

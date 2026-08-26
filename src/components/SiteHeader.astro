@@ -1,5 +1,9 @@
 ---
 import { SERVICE_LINKS } from '../site.config.js';
+import grantReport from '../data/scenarios/grant_report.json';
+
+// 檢核條目數依文別而定，導覽列一律取實際筆數，不寫死。
+const checkCount = grantReport.checks.length;
 
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
@@ -16,6 +20,7 @@ const links = {
   writing: `${base}writing/`,
   terms: `${base}terms/`,
   product: `${base}product/`,
+  aiDoc: `${base}ai-official-document/`,
   security: `${base}security/`,
 };
 
@@ -45,7 +50,7 @@ const navGroups = [
       },
       {
         href: links.checks,
-        label: '格式檢核 24 條',
+        label: `格式檢核 ${checkCount} 條`,
         description: '知道哪些規則會被逐條檢查',
       },
       {
@@ -74,9 +79,14 @@ const navGroups = [
     label: '服務說明',
     items: [
       {
+        href: links.aiDoc,
+        label: 'AI 寫公文現在做到哪',
+        description: '機關導入現況與生成式 AI 規範',
+      },
+      {
         href: links.product,
-        label: '功能與導入',
-        description: '草擬、匯出與機關導入方式',
+        label: '公文 AI 系統',
+        description: '草擬、檢核與電子公文系統的分工',
       },
       {
         href: links.security,

@@ -111,7 +111,7 @@ FULLWIDTH_NUM = '１２３４５６７８９'
 
 def depaginate(block: str) -> str:
     """剔除 pdftotext 夾在正文中間的頁碼與頁眉（如「。 7 文書處理手冊 ３、」）。"""
-    return re.sub(r'\s*\d+\s*(?:貳、公文製作|文書處理手冊)\s*', '', clean(block))
+    return re.sub(r'\s*\d+\s*(?:貳、公文製作|伍、文書核擬|文書處理手冊)\s*', '', clean(block))
 
 
 def numbered(block: str, markers: str = FULLWIDTH_NUM) -> list[str]:
@@ -173,6 +173,47 @@ def bracketed(block: str) -> list[str]:
     return [clean(x) for x in re.split(r'\(［?[１-９]］?\)\s*', depaginate(block))[1:] if clean(x)]
 
 
+def cjk_bracketed(block: str) -> list[str]:
+    """拆「(一) … (二) …」這種**國字**標號的條列。
+
+    與 bracketed() 的差別只在標號字集：手冊本文各點用國字，點內的子項才用全形阿拉伯數字。
+    """
+    return [clean(x) for x in re.split(r'\((?:十[一二]?|[一二三四五六七八九])\)\s*', depaginate(block))[1:] if clean(x)]
+
+
+def parse_workflow(text: str) -> dict:
+    """手冊「四、」文書處理五步驟，與「三十、三十二～三十五」核擬各關的注意事項。
+
+    為什麼要抓這一段（2026-08-26）：本站原本一個字都沒提「核稿、會稿、閱稿、判行、決行」，
+    但那是承辦嘴裡每天在講的流程詞；站上只講「主旨說明辦法」等於只覆蓋了辦文的其中一格。
+    「三十一、」的稿面欄位（速別、密等、正本副本）同理——那是稿紙上真的要填的東西。
+
+    「三十四、閱稿」那 8 條特別有用：它是官方版的人工檢查清單，本站的自動檢核對得上其中幾條，
+    對不上的幾條（簽稿是否相符、有關單位已否會洽）恰好說明了機器不該宣稱能做什麼。
+
+    「三十一、」只收 (一)～(九) 這 9 個稿面欄位——(十)～(十二) 是特殊處理事項、附件處理與
+    其他注意事項，各自帶全形數字的子清單，結構與前九項不同，硬併成同一個陣列會失真。
+    """
+    steps = cjk_bracketed(section(text, '四、本手冊所稱文書處理', '五、機關公文以電子交換行之者'))
+    # 第五項「歸檔處理」之後緊接手冊的收尾語，不屬於步驟本身，切掉。
+    steps = [re.split(r'關於文書之簡化', s)[0].strip() for s in steps]
+
+    fields = [x for x in cjk_bracketed(section(text, '三十一、', '三十二、')) if x.startswith('「')]
+
+    chapters = [
+        ('submit', '三十、陳核應注意事項如下：', '三十一、'),
+        ('review', '三十二、 核稿應注意事項如下：', '三十三、'),
+        ('joint', '三十三、 會稿應注意事項如下：', '三十四、'),
+        ('proofread', '三十四、 閱稿應注意事項如下：', '三十五、'),
+        ('approve', '三十五、 判行應注意事項如下：', '三十六、'),
+    ]
+    return {
+        'steps': steps,
+        'draftFields': fields,
+        'stages': {k: cjk_bracketed(section(text, a, b)) for k, a, b in chapters},
+    }
+
+
 def parse_numbers(text: str) -> list[str]:
     """附錄 5 公文書橫式書寫數字使用原則的四條原則（逐字，不含後面那張舉例表）。
 
@@ -224,6 +265,7 @@ def main() -> None:
         'sign': parse_sign(text),
         'numberRules': parse_numbers(text),
         'seals': parse_seals(text),
+        'workflow': parse_workflow(text),
         'unifiedChars': parse_chars(text),
     }
     OUT.write_text(json.dumps(data, ensure_ascii=False, indent=1) + '\n', encoding='utf-8')
@@ -232,7 +274,9 @@ def main() -> None:
           f'／作業要求 {len(d["quality"])} 條／擬稿注意事項 {len(d["cautions"])} 條'
           f'／函之撰擬要領 {len(d["letterNotes"])} 條'
           f'／簽之撰擬 {len(data["sign"]["sections"])} 條／數字原則 {len(data["numberRules"])} 條'
-          f'／用印 {len(data["seals"])} 條')
+          f'／用印 {len(data["seals"])} 條'
+          f'／辦文流程 {len(data["workflow"]["steps"])} 步、稿面欄位 {len(data["workflow"]["draftFields"])} 項'
+          f'、核擬各關 {sum(len(v) for v in data["workflow"]["stages"].values())} 條')
 
 
 if __name__ == '__main__':

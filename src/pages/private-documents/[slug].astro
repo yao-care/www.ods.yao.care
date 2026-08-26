@@ -35,6 +35,22 @@ const base = import.meta.env.BASE_URL.endsWith('/')
 
 const docType = payload.draft.doc_type;
 const isSettlement = docType === '和解書';
+const isLoan = docType === '借據';
+
+// 本票的絕對必要記載事項（票據法第 120 條第 1 項八款，逐字）。
+// **本站刻意不產出本票**：那是有價證券，票據法第 123 條讓執票人可以聲請法院裁定後
+// 直接強制執行，不必先打官司；第 11 條第 2 項又讓善意執票人取得已具備應記載事項的票據時，
+// 發票人不得主張無效。用文書草擬工具產一份 Word 出來是錯的工作流。
+const NOTE_ITEMS = [
+  '表明其為本票之文字。',
+  '一定之金額。',
+  '受款人之姓名或商號。',
+  '無條件擔任支付。',
+  '發票地。',
+  '發票年、月、日。',
+  '付款地。',
+  '到期日。',
+];
 const download = downloads.private?.[meta.slug] ?? null;
 const blankTemplate = downloads.templates.find((t) => t.docType === docType) ?? null;
 const failed = payload.checks.filter((c) => !c.ok);
@@ -159,6 +175,40 @@ const faq = {
         機關或對方另有制式表格時<strong>以那份為準</strong>。這類文件多半由受理單位自訂格式，
         先到該機關網站找有沒有；沒有再用這裡的通用結構。本頁內容為虛構案例，不代表法律意見。
       </p>
+    )}
+
+    {isLoan && (
+      <section class="danger">
+        <h2 class="danger-title">借據跟本票不是同一件事，差別很大</h2>
+        <p>
+          借據是<strong>證據</strong> —— 對方不還錢，你還是要去法院請求，由法院判決後才能執行。
+          本票是<strong>有價證券</strong>：票據法第 123 條規定「執票人向本票發票人行使追索權時，
+          <strong>得聲請法院裁定後強制執行</strong>」，不必先打一場民事官司。
+          所以隨手簽一張本票，跟簽一張借據的風險完全不同。
+        </p>
+        <p>
+          <strong>更該小心的是空白本票。</strong>票據法第 11 條第 1 項雖然說欠缺應記載事項的票據無效，
+          但同條第 2 項接著寫：「執票人<strong>善意取得已具備本法規定應記載事項之票據者</strong>，
+          得依票據文義行使權利；票據債務人不得以票據原係欠缺應記載事項為理由，
+          對於執票人，主張票據無效。」金額或到期日留空交出去，被填上再轉手，就很難主張無效。
+        </p>
+        <p>另外，同條第 3 項：票據上的記載<strong>除金額外</strong>得由原記載人於交付前改寫。
+          也就是<strong>金額寫錯不能改，只能重開</strong>。</p>
+        <h3>本票的必要記載事項（票據法第 120 條第 1 項）</h3>
+        <ol class="note-items">
+          {NOTE_ITEMS.map((t) => <li>{t}</li>)}
+        </ol>
+        <p class="note">
+          同條後段另有補充：未載到期日者視為見票即付；未載受款人者以執票人為受款人；
+          未載發票地者以發票人之營業所、住所或居所所在地為發票地；未載付款地者以發票地為付款地。
+          見票即付並不記載受款人之本票，金額須在五百元以上。
+        </p>
+        <p class="danger-note">
+          <strong>本站不產出本票。</strong>那是有價證券，不是可以用文書草擬工具產一份 Word 出來的東西 ——
+          同樣的理由，站上也不重製中華郵政的存證信函用紙。要開本票請用票據用紙，
+          金額與到期日<strong>當場填齊</strong>，並自行確認法律效果。
+        </p>
+      </section>
     )}
 
     <dl class="facts">
@@ -295,10 +345,15 @@ const faq = {
     font-size: var(--text-sm);
     line-height: 1.9;
   }
-  .danger ul {
+  .danger ul,
+  .danger .note-items {
     display: grid;
     gap: 0.5rem;
     padding-inline-start: 1.25rem;
+  }
+  .danger h3 {
+    font-size: var(--text-base);
+    margin-bottom: 0.5rem;
   }
   .danger-note {
     margin-bottom: 0;

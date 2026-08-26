@@ -169,7 +169,7 @@
   },
   "/private-documents/": {
     "file": "og/private-documents.png",
-    "title": "委託書、切結書、和解書、在職證明、離職證明書範例｜公文 AI"
+    "title": "委託書、切結書、和解書、借據、在職與離職證明範例｜公文 AI"
   },
   "/private-documents/affidavit-documents-true/": {
     "file": "og/private-documents-affidavit-documents-true.png",
@@ -186,6 +186,10 @@
   "/private-documents/employment-certificate/": {
     "file": "og/private-documents-employment-certificate.png",
     "title": "在職證明書範例：辦理貸款、租屋、簽證用｜公文 AI"
+  },
+  "/private-documents/loan-iou/": {
+    "file": "og/private-documents-loan-iou.png",
+    "title": "借據範例：金額、交付與返還期限（附本票必要記載事項）｜公文 AI"
   },
   "/private-documents/power-of-attorney-household/": {
     "file": "og/private-documents-power-of-attorney-household.png",

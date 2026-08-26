@@ -6,38 +6,38 @@
     "family": "official"
   },
   "draft": {
-    "id": "drf_01M0Z5GHPYJ32B99WYQJ",
+    "id": "drf_01M0Z6J6X6FPZS08J3RM",
     "user_id": "usr_DEMO00000000000000",
     "unit": "民政課",
     "document_family": "official",
     "doc_type": "書函",
     "classification": "普通",
     "topic": "逾期未復案件催辦",
-    "subject": "為本所114年3月18日○○字第1140003185號函請貴所提供轄內獨居長者名冊一案，迄今未獲復，事關災害防救造冊時程，請貴所於114年5月30日前查照見復。",
-    "sections_json": "[{\"title\":\"說明\",\"items\":[\"本所前於114年3月18日以○○字第1140003185號函請貴所提供轄內獨居長者名冊，迄今尚未獲復。\",\"本案攸關災害防救相關資料造冊作業時程，亟需貴所配合提供資料，以利後續辦理。\"]},{\"title\":\"辦法\",\"items\":[\"請貴所於114年5月30日前將轄內獨居長者名冊惠復本所，逾期未復將影響災害防救造冊進度。\"]}]",
+    "subject": "為本所114年3月18日○○字第1140003185號函請貴所提供轄內獨居長者名冊一案，迄今未獲復，請查照。",
+    "sections_json": "[{\"title\":\"說明\",\"items\":[\"本所114年3月18日○○字第1140003185號函請貴所提供轄內獨居長者名冊，迄今尚未獲復。\",\"本案攸關災害防救造冊時程，亟待辦理，爰再函請查照惠復。\"]},{\"title\":\"請求\",\"items\":[\"請貴所於114年5月30日前將轄內獨居長者名冊惠復本所，以利後續造冊作業。\"]}]",
     "fields_json": "{\"receiver\":\"○○鄉公所\",\"source_len\":78,\"scenario\":\"reminder\"}",
     "engine": "llm",
     "model": "claude-sonnet-5",
     "degraded_reason": null,
-    "citations_json": "[\"knw_01M0Z5CSRVRW6BVQHYWB\"]",
+    "citations_json": "[\"knw_01M0Z6EA4H6KF59XYW1G\"]",
     "checks_json": "[{\"id\":\"subject_present\",\"title\":\"主旨必填\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_single_paragraph\",\"title\":\"主旨不分項\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_length\",\"title\":\"主旨長度\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_expectation\",\"title\":\"主旨期望語\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_period\",\"title\":\"主旨句末句號\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_no_section_name\",\"title\":\"主旨不含段名\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"doc_type_valid\",\"title\":\"文別合法\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"classification_valid\",\"title\":\"密等合法\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_titles_valid\",\"title\":\"段名合法\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_not_empty\",\"title\":\"段落不得為空\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_item_period\",\"title\":\"分項句末句號\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_item_count\",\"title\":\"分項數量\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_item_length\",\"title\":\"分項長度\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_mask_token\",\"title\":\"無殘留代稱\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_placeholder\",\"title\":\"無未填佔位符\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_raw_id_number\",\"title\":\"無身分證字號\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_raw_mobile\",\"title\":\"無行動電話號碼\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"roc_year\",\"title\":\"民國紀年\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"currency_format\",\"title\":\"金額格式\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_colloquial\",\"title\":\"無口語詞\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_simplified\",\"title\":\"無簡體字\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"fullwidth_punctuation\",\"title\":\"全形標點\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"receiver_required\",\"title\":\"受文者必填\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_extra_blank\",\"title\":\"無多餘空白\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]}]",
     "confirmed": 0,
     "confirmed_by": null,
     "confirmed_at": null,
-    "created_at": "2026-08-26T13:52:47.838Z",
-    "updated_at": "2026-08-26T13:52:47.838Z",
+    "created_at": "2026-08-26T14:11:10.886Z",
+    "updated_at": "2026-08-26T14:11:10.886Z",
     "sections": [
       {
         "title": "說明",
         "items": [
-          "本所前於114年3月18日以○○字第1140003185號函請貴所提供轄內獨居長者名冊，迄今尚未獲復。",
-          "本案攸關災害防救相關資料造冊作業時程，亟需貴所配合提供資料，以利後續辦理。"
+          "本所114年3月18日○○字第1140003185號函請貴所提供轄內獨居長者名冊，迄今尚未獲復。",
+          "本案攸關災害防救造冊時程，亟待辦理，爰再函請查照惠復。"
         ]
       },
       {
-        "title": "辦法",
+        "title": "請求",
         "items": [
-          "請貴所於114年5月30日前將轄內獨居長者名冊惠復本所，逾期未復將影響災害防救造冊進度。"
+          "請貴所於114年5月30日前將轄內獨居長者名冊惠復本所，以利後續造冊作業。"
         ]
       }
     ],
@@ -47,7 +47,7 @@
       "scenario": "reminder"
     },
     "citations": [
-      "knw_01M0Z5CSRVRW6BVQHYWB"
+      "knw_01M0Z6EA4H6KF59XYW1G"
     ],
     "checks": [
       {

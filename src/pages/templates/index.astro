@@ -25,7 +25,7 @@ const base = import.meta.env.BASE_URL.endsWith('/')
 // 三個文書族群各自分區。2026-08-26 開了 private 族群之後，原本的二分法會把委託書、
 // 切結書、和解書一併掃進「民眾書件」——那是「民眾對機關」的區，放錯地方。
 const OFFICIAL_TYPES = ['函', '書函', '公告', '開會通知單', '簽'];
-const PRIVATE_TYPES = ['委託書', '授權書', '切結書', '聲明書', '和解書', '在職證明書', '服務證明書'];
+const PRIVATE_TYPES = ['委託書', '授權書', '切結書', '聲明書', '和解書', '在職證明書', '服務證明書', '借據'];
 const officialTemplates = downloads.templates.filter((t) => OFFICIAL_TYPES.includes(t.docType));
 const privateTemplates = downloads.templates.filter((t) => PRIVATE_TYPES.includes(t.docType));
 const citizenTemplates = downloads.templates.filter(

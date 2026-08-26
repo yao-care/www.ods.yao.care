@@ -26,7 +26,7 @@ const payloads = import.meta.glob('../../data/scenarios/*.json', { eager: true }
 const sectionsOf = (key) =>
   (payloads[`../../data/scenarios/${key}.json`]?.default?.draft?.sections ?? []).map((s) => s.title);
 const blankTemplates = downloads.templates.filter((t) =>
-  ['委託書', '授權書', '切結書', '聲明書', '和解書', '在職證明書', '服務證明書'].includes(t.docType),
+  ['委託書', '授權書', '切結書', '聲明書', '和解書', '在職證明書', '服務證明書', '借據'].includes(t.docType),
 );
 
 /** 各文別的用途與最該注意的一件事。段名取自實際烘出來的產物，不另外寫死一份。 */
@@ -68,6 +68,13 @@ const TYPES = [
       + '要拿去請領失業給付的話，離職原因是就業保險法第 25 條第 4 項的法定必載事項。',
   },
   {
+    id: 'loan',
+    name: '借據',
+    when: '借錢給別人或跟人借錢，把金額、交付與返還期限寫下來當證據。',
+    key: 'loan_iou',
+    note: '一定要寫「業已交付並經借用人如數收訖」——民法第 474 條的消費借貸是要物契約，錢沒交付契約就不成立。',
+  },
+  {
     id: 'settlement',
     name: '和解書',
     when: '雙方就已發生的爭議互相讓步、一次講定，最常見的是車禍。',
@@ -84,8 +91,8 @@ const S = {
 };
 
 const description =
-  '委託書、授權書、切結書、聲明書、和解書、在職證明書與離職證明書的範例全文與可編輯 Word 檔，'
-  + '每一份附逐條檢核結果；和解書另附拋棄範圍怎麼寫窄的實務判決說明。';
+  '委託書、授權書、切結書、聲明書、和解書、借據、在職證明書與離職證明書的範例全文與可編輯 Word 檔，'
+  + '每一份附逐條檢核結果；和解書另附拋棄範圍怎麼寫窄的實務判決說明，借據另附本票必要記載事項與風險。';
 
 const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
 
@@ -196,7 +203,7 @@ const faq = {
 
 <ArticlePage
   schemas={[schema, faq]}
-  title="委託書、切結書、和解書、在職證明、離職證明書範例｜公文 AI"
+  title="委託書、切結書、和解書、借據、在職與離職證明範例｜公文 AI"
   description={description}
   heading="民間書件"
   lead="委託、授權、切結、聲明、和解，以及公司開給員工的在職與離職證明 —— 這幾種都是立書人自己出具、載明事實的文件。難的是知道哪一段該寫什麼、以及哪些情況根本不該自己寫。"
@@ -251,6 +258,13 @@ const faq = {
     <strong>公開發行公司的股東會委託書不能自己寫。</strong>
     依「公開發行公司出席股東會使用委託書規則」第 2 條，用紙以公司印發者為限；
     第 22 條規定用紙非公司印發的，代理表決權不予計算。請向該公司或股務代理機構索取。
+  </p>
+  <p class="danger-inline">
+    <strong>本票要單獨提醒：</strong>本票不是「比較有效的借據」。
+    票據法第 123 條讓執票人可以<strong>聲請法院裁定後直接強制執行</strong>，不必先打民事官司；
+    第 11 條第 2 項又讓善意執票人取得已具備應記載事項的票據時，發票人不得主張無效
+    ——所以空白本票特別危險。<strong>本站不產出本票</strong>，只在
+    <a href={`${base}private-documents/loan-iou/`}>借據那一頁</a>把必要記載事項與風險講清楚。
   </p>
   <p class="danger-inline">
     <strong>離職證明要單獨提醒：</strong>離職原因照實寫。

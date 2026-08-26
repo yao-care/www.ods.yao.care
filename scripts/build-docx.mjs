@@ -141,6 +141,7 @@ const PRIVATE_LABELS = {
   和解書: { senderLabel: '甲方', receiverLabel: '乙方' },
   在職證明書: { senderLabel: '出具單位', receiverLabel: '受證明人' },
   服務證明書: { senderLabel: '出具單位', receiverLabel: '受證明人' },
+  借據: { senderLabel: '立借據人（借用人）', receiverLabel: '貸與人' },
 };
 for (const meta of PRIVATE_DOCS) {
   const payload = JSON.parse(readFileSync(join(ROOT, 'src/data/scenarios', `${meta.key}.json`), 'utf8'));
@@ -215,6 +216,10 @@ const TEMPLATES = [
     labels: { senderLabel: '出具單位', receiverLabel: '受證明人' },
     sections: [{ title: '服務期間與職務', items: ['', ''] }, { title: '離職事由', items: [''] }],
     note: '離職事由要照實寫——要拿去請領失業給付時，那是就業保險法第 25 條第 4 項的法定必載事項。' },
+  { slug: 'private-iou', docType: '借據', label: '借據', kind: 'private',
+    labels: { senderLabel: '立借據人（借用人）', receiverLabel: '貸與人' },
+    sections: [{ title: '借貸事實', items: ['', ''] }, { title: '返還期限與利息', items: [''] }],
+    note: '一定要寫「業已交付並經借用人如數收訖」——消費借貸是要物契約，錢沒交付契約就不成立。利率上限週年 16%。' },
   { slug: 'certified-letter', docType: '存證信函', label: '存證信函內文', kind: 'notice',
     sections: [{ title: '事實經過', items: ['', ''] }, { title: '本人請求', items: [''] }],
     note: '格式已依中華郵政使用說明設定；用紙請至中華郵政官網下載，再把內文貼上。' },

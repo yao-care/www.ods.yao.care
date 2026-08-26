@@ -229,6 +229,11 @@
       "path": "private/separation-certificate.docx",
       "filename": "離職證明書（服務證明書）範例：資遣、供請領失業給付.docx",
       "docType": "服務證明書"
+    },
+    "loan-iou": {
+      "path": "private/loan-iou.docx",
+      "filename": "借據範例：金額、交付與返還期限（附本票必要記載事項）.docx",
+      "docType": "借據"
     }
   },
   "templates": [
@@ -343,6 +348,14 @@
       "note": "離職事由要照實寫——要拿去請領失業給付時，那是就業保險法第 25 條第 4 項的法定必載事項。",
       "path": "templates/private-separation-cert.docx",
       "filename": "離職證明書（服務證明書）空白範本.docx"
+    },
+    {
+      "slug": "private-iou",
+      "label": "借據",
+      "docType": "借據",
+      "note": "一定要寫「業已交付並經借用人如數收訖」——消費借貸是要物契約，錢沒交付契約就不成立。利率上限週年 16%。",
+      "path": "templates/private-iou.docx",
+      "filename": "借據空白範本.docx"
     },
     {
       "slug": "certified-letter",

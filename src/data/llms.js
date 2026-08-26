@@ -28,6 +28,7 @@ export const FIXED_PAGES = [
   { hub: true, path: '/doc-types/', name: '文別怎麼選', blurb: '函、書函、公告、簽與開會通知單的使用時機。' },
   { hub: true, path: '/templates/', name: 'Word 範本下載', blurb: '各文別空白範本與填好內容的範例檔。' },
   { hub: true, path: '/usage/', name: '公文用語表', blurb: '稱謂語、期望語與統一用字。' },
+  { hub: true, path: '/numbers/', name: '數字大寫怎麼寫', blurb: '國字大寫對照表、金額換算、公文什麼時候用大寫，以及核銷憑證的大寫規定。' },
   { hub: true, path: '/terms/', name: '用語與法規速查', blurb: '期望語與常用法規依據對照。' },
   { hub: true, path: '/citizens/which-route/', name: '陳情、請願、訴願、申訴怎麼選', blurb: '四條救濟途徑的差別與期限。' },
   { hub: true, path: '/citizens/certified-letter-guide/', name: '存證信函怎麼寄', blurb: '份數、費用、用紙與交寄流程。' },

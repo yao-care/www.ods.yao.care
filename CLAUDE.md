@@ -281,6 +281,35 @@ pnpm build       # 再跑一次，讓 check-og 對帳
 `src/pages/404.astro` 會產成 `dist/404.html`，GitHub Pages 直接吃。它借用首頁那張圖、
 不進 sitemap，也在 `src/data/llms.js` 的路由對帳裡排除 —— 404 不是內容。
 
+## 選字先量需求，不要憑「我覺得承辦會搜什麼」（2026-08-26 的教訓）
+
+前三波關鍵字判定靠的是 SERP 觀察（每字實搜一次，看前排是誰）。那判斷得了意圖，
+**判斷不了量**——三份文件都留著同一句「這些字的實際搜尋量沒有數據」。
+
+第四波把量測補上，結果是：釘著的 20 個字**只有 4 個有量**，而量最大的一群
+（數字大寫 7,829／國字大寫 1,048／大寫數字 936）根本不在清單裡，站上一頁都沒有；
+同期 GSC 逐字比對，這些有量的字**本網域一次曝光都沒有**。判定過程見
+`docs/keyword-validation/2026-08-26-demand.md`。
+
+**往後選字的順序固定成四步**：
+
+```bash
+# 1) 先量。單字頭部詞判 0 就不要做
+node /root/seo-ops/bin/keyword-demand.mjs --file <候選字.json>
+node /root/seo-ops/bin/keyword-demand.mjs --site ods.yao.care   # 量現有釘選字
+# 2) 有量的字再實搜一次，看 SERP 前排是不是搶得到的（前三波的方法）
+# 3) grep -r 自家 repo，確認站上用的是不是同一個詞（簽 vs 簽呈、請撥 vs 請款）
+# 4) 上線後用 GSC 實際 query 回頭校正
+```
+
+⚠️ **判讀邊界**：這是 Bing 的量，只能看相對大小與「是不是 0」；
+**多字組合的 0 不可靠**（「公文格式」300 但「公文格式 word」0，量在主詞不在組合），
+單字頭部詞的 0 才可靠。有量 ≠ 打得贏，第 2 步不能省。
+
+`/numbers/` 的換算（`src/data/uppercase-number.js`）伺服器端與瀏覽器端吃同一份，
+由 `pnpm check:numbers` 守 26 個邊界案例——**算錯不會有任何畫面異常**，
+使用者會拿著錯的字串去寫核銷憑證。新增換算規則時同一回合把案例加進那支。
+
 ## 官方條文一律抓取產生，不手抄（`gov-terms.json`／`ai-guidance.json`）
 
 站上引用的官方規則有兩份資料，都是腳本解析官方 PDF 產生、產物要 commit：
@@ -383,6 +412,7 @@ pnpm build            # check-design && check-contrast && check-content && check
 pnpm check:contrast   # 只跑色彩對比守門（不需要 dist）
 pnpm check:anchors    # 只跑錨點守門（要先有 dist/）
 pnpm check:og         # 只跑分享圖守門（要先有 dist/）
+pnpm check:numbers    # 只跑國字大寫換算守門（不需要 dist）
 pnpm gen:brand        # 重產站徽與分享圖（改標題或改品牌色後，需 python3 pillow + noto CJK）
 pnpm check:design
 pnpm check:content:all
@@ -404,9 +434,14 @@ pnpm gen:simplified-set  # 重產簡體字集合（只在來源資料改版時�
 5. ~~Phase 4–5：Slack 頻道、GA4/GSC 授權、seo-ops 納管~~：**已接通**（2026-08-17，見里程碑）。
    備忘：**每站要自己的 GCP 專案與 SA，絕不可複製別站金鑰**；本站目前沿用共用 SA，
    隔離驗收用 `node /root/seo-ops/bin/identity-audit.mjs --site ods.yao.care`
-6. **站外連結只有 `www.yao.care/ai/ods/` 一條**。逐頁 URL Inspection 顯示 Google 對每頁認得的
+6. **民間書件那一群（實測需求 ≈ 6,966，站上一頁都沒有）**：委託書 1,865、委託書範例 763、
+   授權書 536、切結書 958、切結書範例 399、和解書 829、車禍和解書 982、和解書範例 341、
+   聲明書 293。**不是加幾頁就好**——應用端的 `citizen` 族群是「民眾對機關」、`notice` 是存證信函，
+   這些是**民間對民間**的書件，要開新的文書族群（段名、必填欄位、檢核、提示詞、Word 範本都要配），
+   且和解書這類文件的法律後果比陳情書重。**產品決定，要用戶拍板**
+7. **站外連結只有 `www.yao.care/ai/ods/` 一條**。逐頁 URL Inspection 顯示 Google 對每頁認得的
    `referringUrls` 是 0～2 —— 這是曝光低最根本的原因，而且不是內容能解的。要用戶決定怎麼做。
-7. ~~「公告」的主旨該不該強制期望語~~：**已處理**（2026-08-26，用戶拍板）。
+8. ~~「公告」的主旨該不該強制期望語~~：**已處理**（2026-08-26，用戶拍板）。
    判準不是「實務上常怎麼寫」，是手冊本身——「十九、(三)」只要求公告主旨扼要敘述
    公告之目的及要求，附錄 6 的兩則官方範例主旨也都沒有期望語。應用端已把
    `subject_expectation` 從公告的檢核裡移除（公告 23 條），`/checks/` 有專節說明。

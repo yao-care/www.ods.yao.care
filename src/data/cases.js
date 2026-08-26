@@ -67,7 +67,7 @@ export const CASES = [
   {
     key: 'sign',
     slug: 'procurement-sign',
-    seoTitle: '簽辦採購案範例',
+    seoTitle: '採購簽呈範例',
     category: '內部簽核',
     lead: '簽是對內文書，結尾用「簽請核示」，不是對外的期望語。',
     watchOut: ['簽不需要受文者', '金額牽涉採購級距，要對照政府採購法', '擬辦事項要具體'],
@@ -83,7 +83,7 @@ export const CASES = [
   {
     key: 'personnel_award',
     slug: 'merit-award-sign',
-    seoTitle: '敘獎建議簽範例',
+    seoTitle: '敘獎建議簽呈範例',
     category: '內部簽核',
     lead: '建議敘獎要把具體事蹟、期間與人數寫清楚，記功與嘉獎分開列，長官才有辦法直接核定。',
     watchOut: ['具體事蹟要寫得出時間與工作內容，不能只寫「表現優良」', '記功與嘉獎的人數分別列明', '同一事由已受獎勵者不重複建議'],
@@ -91,7 +91,7 @@ export const CASES = [
   {
     key: 'travel_expense',
     slug: 'travel-expense-sign',
-    seoTitle: '出差旅費報支簽範例',
+    seoTitle: '出差旅費報支簽呈範例',
     category: '內部簽核',
     lead: '差旅費報支卡的通常不是金額，是憑證與行程對不起來。',
     watchOut: ['交通、住宿、雜費分項列，各自對得上憑證', '出差日期與研習通知的日期要一致', '簽的結尾用「簽請核示」，不是對外的期望語'],
@@ -99,7 +99,7 @@ export const CASES = [
   {
     key: 'asset_disposal',
     slug: 'asset-disposal-sign',
-    seoTitle: '財產報廢簽範例',
+    seoTitle: '財產報廢簽呈範例',
     category: '內部簽核',
     lead: '報廢要說服長官「修不如報」，所以修復費用與殘值的比較是重點。',
     watchOut: ['財產編號、取得日期與使用年限要寫明', '修復費用逾殘值是報廢的理由，要有評估依據', '報廢後的財產減損程序一併敘明'],
@@ -107,7 +107,7 @@ export const CASES = [
   {
     key: 'procurement_request',
     slug: 'small-procurement-sign',
-    seoTitle: '小額採購請購簽範例',
+    seoTitle: '請購單簽呈範例（小額採購）',
     category: '內部簽核',
     lead: '金額落在哪個級距決定要走哪種程序，這是簽裡面最該先講清楚的事。',
     watchOut: ['金額要對照政府採購法的公告金額級距', '詢價家數與擬洽廠商的理由要寫', '國字大寫只用手冊附錄 3 那一組：壹貳參肆伍陸柒捌玖拾佰仟萬億'],
@@ -115,7 +115,7 @@ export const CASES = [
   {
     key: 'plan_approval',
     slug: 'activity-plan-sign',
-    seoTitle: '活動計畫報核簽範例',
+    seoTitle: '活動計畫報核簽呈範例',
     category: '內部簽核',
     lead: '計畫報核的簽是給長官決定「辦不辦、花多少」，不是把計畫書再抄一遍。',
     watchOut: ['日期、地點、人數、經費四項要在簽裡就看得到', '計畫書列為附件，份數要寫', '擬辦段提出的是可以直接核定的方案'],
@@ -139,7 +139,7 @@ export const CASES = [
   {
     key: 'payment_request',
     slug: 'subsidy-payment-request',
-    seoTitle: '補助款請撥公文範例',
+    seoTitle: '補助款請款公文範例',
     category: '補助核銷',
     lead: '請撥第二期款要先交代第一期執行完畢，否則對方會退回要求補件。',
     watchOut: ['核定金額與本次請撥金額都用國字大寫', '支出明細表與成果報告要列為附件', '對上級機關的期望語不是「請查照」'],

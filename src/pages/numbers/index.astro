@@ -1,0 +1,384 @@
+---
+/**
+ * 數字大寫（國字大寫）對照表與換算。
+ *
+ * 為什麼有這一頁（2026-08-26，第四波關鍵字）：用 Bing Webmaster Keyword API 量了
+ * 站上 20 個釘選字，只有 4 個有量；再擴大量 130 個候選字，發現最大的一群需求
+ * 完全不在原本的清單裡 —— 數字大寫 7,829／國字大寫 1,048／大寫數字 936／
+ * 支票大寫 294／金額大寫 245（近三個月、台灣、精準比對）。同期 GSC 實查：
+ * 這些字本網域**一次曝光都沒有**。
+ *
+ * 站上原本只有 /writing/ 一節在講「什麼時候用阿拉伯數字、什麼時候用中文數字」，
+ * 那回答的是「該用哪一種」；查「數字大寫」的人手上已經有一個數字要換，
+ * 要的是換算結果與對照表。這一頁補的是後者，兩頁互連。
+ *
+ * 換算實作在 src/data/uppercase-number.js，伺服器端與瀏覽器端**吃同一份**，
+ * 由 scripts/check-numbers.mjs 在 build 時守門（含補零與跳節的邊界案例）。
+ * 漸進增強：對照表、範例與規則都在 HTML 裡，沒有 JS 一樣讀得到，只是少了輸入框。
+ */
+import ArticlePage from '../../layouts/ArticlePage.astro';
+import PageToc from '../../components/PageToc.astro';
+import terms from '../../data/gov-terms.json';
+import { DIGIT_TABLE, UNIT_TABLE, EXAMPLES, toUppercase, toCurrency } from '../../data/uppercase-number.js';
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+
+const { numberRules, _source: source } = terms;
+
+// 支出憑證那條的出處。**這一份沒有做成抓取腳本**：主計總處的法規頁對本主機回 403，
+// 而抓得到的幾份公務機關鏡像不是 98 年版就是 109 年的修正規定，版本會錯。
+// 條文逐字核對自下面這份 .gov.tw 的 109-03-24 彙編本，改版時要人工重核。
+const VOUCHER = {
+  name: '政府支出憑證處理要點',
+  issuer: '行政院主計總處',
+  edition: '中華民國 109 年 3 月 24 日',
+  point: '十三',
+  text:
+    '支出憑證之總數應用大寫數字書寫。但採用機器作業、國外憑證無法用大寫數字表示'
+    + '或各機關衡酌有相關佐證資料可證明支出憑證所列金額之正確性者，不在此限。',
+  url: 'https://law.dgbas.gov.tw/LawContent.aspx?id=FL017556',
+  verifiedFrom: 'https://www.shalu.taichung.gov.tw/media/642082/%E6%94%BF%E5%BA%9C%E6%94%AF%E5%87%BA%E6%86%91%E8%AD%89%E8%99%95%E7%90%86%E8%A6%81%E9%BB%9E-109324.pdf',
+};
+
+const examples = EXAMPLES.map((e) => ({
+  ...e,
+  upper: toUppercase(e.n).text,
+  currency: toCurrency(e.n).text,
+}));
+
+const S = {
+  convert: { id: 'convert', label: '一、換算' },
+  table: { id: 'table', label: '二、國字大寫對照表' },
+  examples: { id: 'examples', label: '三、進位與補零：容易寫錯的幾個' },
+  when: { id: 'when', label: '四、公文什麼時候用大寫、什麼時候用阿拉伯數字' },
+  voucher: { id: 'voucher', label: '五、核銷憑證為什麼一定要大寫' },
+  mistakes: { id: 'mistakes', label: '六、最常見的錯：三的大寫是「參」' },
+};
+
+const description =
+  '阿拉伯數字轉國字大寫（壹貳參肆伍陸柒捌玖拾佰仟萬億）的對照表與換算，'
+  + '含補零與跳節的寫法、公文什麼時候用大寫、以及核銷憑證的大寫規定原文。';
+
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+
+const faqPairs = [
+  [
+    '數字大寫怎麼寫？',
+    '零壹貳參肆伍陸柒捌玖，位數是拾佰仟萬億。例如 486,320 寫成「肆拾捌萬陸仟參佰貳拾」，'
+      + '金額則寫成「新臺幣肆拾捌萬陸仟參佰貳拾元整」。中間連續是零時只補一個「零」，'
+      + '例如 100,005 寫成「壹拾萬零伍」；結尾的零不寫，1,000 就是「壹仟」。',
+  ],
+  [
+    '金額大寫要加「元整」嗎？',
+    '公文與核銷憑證的慣用寫法是「新臺幣○○○元整」，前面加幣別、後面加「元整」，'
+      + '目的是讓金額不能被加字竄改。寫到元為止，不寫小數。',
+  ],
+  [
+    '核銷的支出憑證一定要寫大寫嗎？',
+    `《${VOUCHER.name}》第${VOUCHER.point}點規定：${VOUCHER.text}`
+      + '也就是原則上要大寫，機器作業、國外憑證，或機關衡酌有佐證資料可證明金額正確的，才可以不用。',
+  ],
+  [
+    '三的大寫要寫哪一個？',
+    '公文與核銷憑證用「參」。輸入法裡另有一個筆畫相近的字（碼點 U+53C1）是簡化字形，'
+      + '不屬於正體字，送出去會被退；同理「陸」也有對應的簡化字形。'
+      + '本站的簡體字守門與應用端的檢核用的是同一份 3,730 字集合，這兩個碼點都在集合裡，'
+      + '打錯當場就會被標記。',
+  ],
+  [
+    '公文裡的日期、編號要不要用大寫？',
+    '不用。依公文書橫式書寫數字使用原則，代碼、編號、發文字號、日期、時間、序數、電話、'
+      + '門牌號碼這類一般數字意義的用語，以及統計數據，都用阿拉伯數字。大寫用在金額這種防竄改的場合。',
+  ],
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Article',
+      '@id': `${pageUrl}#article`,
+      mainEntityOfPage: pageUrl,
+      headline: '數字大寫怎麼寫：國字大寫對照表與金額換算',
+      description,
+      author: { '@type': 'Organization', name: '藥提醒科技有限公司', url: 'https://www.yao.care/' },
+      publisher: { '@type': 'Organization', name: '藥提醒科技有限公司', url: 'https://www.yao.care/' },
+      inLanguage: 'zh-Hant-TW',
+      citation: [
+        { '@type': 'CreativeWork', name: `${source.issuer}《${source.name}》${source.edition}`, url: source.url },
+        { '@type': 'CreativeWork', name: `${VOUCHER.issuer}《${VOUCHER.name}》${VOUCHER.edition}`, url: VOUCHER.url },
+      ],
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: '首頁', item: 'https://www.ods.yao.care/' },
+        { '@type': 'ListItem', position: 2, name: '數字大寫', item: pageUrl },
+      ],
+    },
+  ],
+};
+
+const faq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqPairs.map(([name, text]) => ({
+    '@type': 'Question',
+    name,
+    acceptedAnswer: { '@type': 'Answer', text },
+  })),
+};
+---
+
+<ArticlePage
+  schemas={[schema, faq]}
+  title="數字大寫怎麼寫：國字大寫對照表與金額換算"
+  description={description}
+  heading="數字大寫怎麼寫"
+  lead="零壹貳參肆伍陸柒捌玖，位數是拾佰仟萬億。難的不是這十個字，是中間有零的時候要補幾個、結尾的零要不要寫。"
+>
+  <PageToc items={Object.values(S)} />
+
+  <h2 id={S.convert.id}>{S.convert.label}</h2>
+  <div class="tool" data-uppercase-tool>
+    <noscript><p class="note">這個換算需要 JavaScript。下面的對照表與範例不需要，照樣可以查。</p></noscript>
+    <p class="tool-hint">輸入阿拉伯數字，下面同時給純大寫與金額寫法。資料不離開這個頁面。</p>
+    <label class="tool-label" for="uppercase-input">阿拉伯數字</label>
+    <input
+      id="uppercase-input"
+      type="text"
+      inputmode="numeric"
+      autocomplete="off"
+      placeholder="486320"
+      hidden
+    />
+    <dl class="tool-out" hidden>
+      <dt>國字大寫</dt>
+      <dd data-out="plain">—</dd>
+      <dt>金額寫法</dt>
+      <dd data-out="currency">—</dd>
+    </dl>
+    <p class="tool-error" role="status" hidden></p>
+  </div>
+
+  <h2 id={S.table.id}>{S.table.label}</h2>
+  <table>
+    <thead><tr><th>阿拉伯數字</th><th>國字大寫</th><th>阿拉伯數字</th><th>國字大寫</th></tr></thead>
+    <tbody>
+      {DIGIT_TABLE.slice(0, 5).map((d, i) => (
+        <tr>
+          <td>{d.arabic}</td><td class="upper">{d.upper}</td>
+          <td>{DIGIT_TABLE[i + 5].arabic}</td><td class="upper">{DIGIT_TABLE[i + 5].upper}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  <table>
+    <thead><tr><th>位數</th><th>國字大寫</th></tr></thead>
+    <tbody>
+      {UNIT_TABLE.map((u) => (
+        <tr><td>{u.arabic}</td><td class="upper">{u.upper}</td></tr>
+      ))}
+    </tbody>
+  </table>
+  <p class="note">
+    位數只有拾、佰、仟、萬、億這幾個，沒有「十」「百」「千」的寫法 ——
+    大寫的用意就是讓字劃多到難以加筆竄改。
+  </p>
+
+  <h2 id={S.examples.id}>{S.examples.label}</h2>
+  <table>
+    <thead><tr><th>數字</th><th>國字大寫</th><th>金額寫法</th><th>為什麼挑這個</th></tr></thead>
+    <tbody>
+      {examples.map((e) => (
+        <tr>
+          <td>{e.n.toLocaleString('en-US')}</td>
+          <td class="upper">{e.upper}</td>
+          <td class="upper">{e.currency}</td>
+          <td class="why">{e.why}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  <ul class="rules">
+    <li><strong>結尾的零不寫。</strong>1,000 是「壹仟」，不是「壹仟零零零」。</li>
+    <li><strong>中間連續是零，只補一個「零」。</strong>100,005 是「壹拾萬零伍」。</li>
+    <li><strong>金額寫到元為止</strong>，不寫小數，前面加「新臺幣」、後面加「元整」。</li>
+  </ul>
+
+  <h2 id={S.when.id}>{S.when.label}</h2>
+  <p>
+    大寫用在金額這種需要防竄改的場合。公文正文裡的數字用哪一種，依公文書橫式書寫數字使用原則
+    的這 {numberRules.length} 條判斷：
+  </p>
+  <ol class="rules">
+    {numberRules.map((t) => <li>{t}</li>)}
+  </ol>
+  <p class="note">
+    白話說：代碼、編號、發文字號、日期、時間、序數、電話、門牌號碼與統計數據用阿拉伯數字；
+    描述性用語、專有名詞與慣用語用中文數字。三段式怎麼寫、稿面欄位怎麼填，
+    在<a href={`${base}writing/#numbers`}>公文怎麼寫</a>。
+  </p>
+
+  <h2 id={S.voucher.id}>{S.voucher.label}</h2>
+  <p>
+    補助核銷送出去的支出憑證，金額大寫不是慣例而是規定。
+    《{VOUCHER.name}》（{VOUCHER.edition}）第{VOUCHER.point}點：
+  </p>
+  <blockquote>{VOUCHER.text}</blockquote>
+  <p class="note">
+    但書有三種：機器作業、國外憑證無法用大寫，以及機關衡酌有相關佐證資料可證明金額正確。
+    也就是說「系統印出來的」確實可以不用大寫，但那是機關判斷，不是承辦自己決定。
+    原文見<a href={VOUCHER.url} rel="noopener">{VOUCHER.issuer}法規系統</a>。
+    實際的核銷公文長什麼樣，看<a href={`${base}cases/grant-settlement/`}>補助經費核銷公文範例</a>。
+  </p>
+
+  <h2 id={S.mistakes.id}>{S.mistakes.label}</h2>
+  <p>
+    最常見的不是算錯位數，是打錯字形。三的大寫是「參」；輸入法裡另有一個筆畫相近的字
+    （碼點 U+53C1）是簡化字形，公文與核銷憑證用它會被退。同理「陸」也有對應的簡化字形。
+    本站連這一頁的原始碼都不放那兩個字 —— 放了會被自己的簡體字守門擋下。
+  </p>
+  <p>
+    這件事在本站是有守門的：<a href={`${base}checks/`}>格式檢核</a>裡那條「無簡體字」用的是
+    一份 3,730 字的簡體專用碼點集合，站上的文字也跑同一份 —— 打錯字形當場會被標記，
+    不必等到送出去被退。
+  </p>
+  <p class="note">
+    稱謂語、期望語與法律統一用字查<a href={`${base}usage/`}>公文用語表</a>；
+    空白範本在<a href={`${base}templates/`}>Word 範本下載</a>。
+  </p>
+
+  <p class="verified">
+    數字原則取自 {source.issuer}《{source.name}》{source.edition}（資料產生日期 {terms._generated}）。
+    大寫規定取自 {VOUCHER.issuer}《{VOUCHER.name}》{VOUCHER.edition}第{VOUCHER.point}點，
+    逐字核對自<a href={VOUCHER.verifiedFrom} rel="noopener nofollow">該版彙編本</a>。
+  </p>
+</ArticlePage>
+
+<script>
+  import { toUppercase, toCurrency } from '../../data/uppercase-number.js';
+
+  const root = document.querySelector('[data-uppercase-tool]');
+  if (root) {
+    const input = root.querySelector('#uppercase-input');
+    const out = root.querySelector('.tool-out');
+    const error = root.querySelector('.tool-error');
+    const plain = root.querySelector('[data-out="plain"]');
+    const currency = root.querySelector('[data-out="currency"]');
+
+    // 伺服器端刻意把輸入框與結果區藏起來：沒有 JS 的話它們是死的，
+    // 顯示一個按了沒反應的輸入框比不顯示更糟。
+    input.hidden = false;
+    out.hidden = false;
+
+    const render = () => {
+      const value = input.value.trim();
+      if (!value) {
+        plain.textContent = '—';
+        currency.textContent = '—';
+        error.hidden = true;
+        return;
+      }
+      const result = toUppercase(value);
+      if (!result.ok) {
+        plain.textContent = '—';
+        currency.textContent = '—';
+        error.textContent = result.reason;
+        error.hidden = false;
+        return;
+      }
+      plain.textContent = result.text;
+      currency.textContent = toCurrency(value).text;
+      error.hidden = true;
+    };
+
+    input.addEventListener('input', render);
+    render();
+  }
+</script>
+
+<style>
+  .tool {
+    margin-block: 1.5rem;
+    padding: 1.25rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.375rem;
+    background: var(--color-bg-light);
+  }
+  .tool-hint,
+  .tool-label {
+    display: block;
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+  .tool-hint {
+    margin: 0 0 0.75rem;
+  }
+  .tool-label {
+    margin-bottom: 0.25rem;
+  }
+  .tool input {
+    width: 100%;
+    max-width: 22rem;
+    padding: 0.625rem 0.75rem;
+    font-size: var(--text-base);
+    font-family: inherit;
+    color: var(--color-ink);
+    background: var(--color-bg);
+    border: 1px solid var(--color-line);
+    border-radius: 0.25rem;
+  }
+  .tool-out {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem 1rem;
+    margin: 1rem 0 0;
+  }
+  .tool-out dt {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+    white-space: nowrap;
+  }
+  .tool-out dd {
+    margin: 0;
+    font-size: var(--text-lg);
+    line-height: 1.6;
+    word-break: break-all;
+  }
+  .tool-error {
+    margin: 0.75rem 0 0;
+    font-size: var(--text-sm);
+    color: var(--color-critical);
+  }
+  .upper {
+    font-size: var(--text-base);
+  }
+  .why {
+    color: var(--color-ink-soft);
+  }
+  blockquote {
+    margin: 0.75rem 0 0;
+    padding: 0.75rem 1rem;
+    border-inline-start: 3px solid var(--color-primary);
+    background: var(--color-bg-light);
+    color: var(--color-ink-soft);
+    font-size: var(--text-sm);
+    line-height: 2;
+  }
+  .rules li {
+    margin-block: 0.75rem;
+    line-height: 1.9;
+  }
+  .note {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+  .verified {
+    margin-top: 3rem;
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+</style>

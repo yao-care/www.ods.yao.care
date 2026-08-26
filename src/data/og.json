@@ -17,7 +17,7 @@
   },
   "/cases/activity-plan-sign/": {
     "file": "og/cases-activity-plan-sign.png",
-    "title": "活動計畫報核簽範例｜公文 AI"
+    "title": "活動計畫報核簽呈範例｜公文 AI"
   },
   "/cases/annual-work-plan/": {
     "file": "og/cases-annual-work-plan.png",
@@ -29,7 +29,7 @@
   },
   "/cases/asset-disposal-sign/": {
     "file": "og/cases-asset-disposal-sign.png",
-    "title": "財產報廢簽範例｜公文 AI"
+    "title": "財產報廢簽呈範例｜公文 AI"
   },
   "/cases/case-transfer-memo/": {
     "file": "og/cases-case-transfer-memo.png",
@@ -53,7 +53,7 @@
   },
   "/cases/merit-award-sign/": {
     "file": "og/cases-merit-award-sign.png",
-    "title": "敘獎建議簽範例｜公文 AI"
+    "title": "敘獎建議簽呈範例｜公文 AI"
   },
   "/cases/noise-petition-reply/": {
     "file": "og/cases-noise-petition-reply.png",
@@ -69,7 +69,7 @@
   },
   "/cases/procurement-sign/": {
     "file": "og/cases-procurement-sign.png",
-    "title": "簽辦採購案範例｜公文 AI"
+    "title": "採購簽呈範例｜公文 AI"
   },
   "/cases/road-repair/": {
     "file": "og/cases-road-repair.png",
@@ -81,7 +81,7 @@
   },
   "/cases/small-procurement-sign/": {
     "file": "og/cases-small-procurement-sign.png",
-    "title": "小額採購請購簽範例｜公文 AI"
+    "title": "請購單簽呈範例（小額採購）｜公文 AI"
   },
   "/cases/subsidy-application/": {
     "file": "og/cases-subsidy-application.png",
@@ -89,7 +89,7 @@
   },
   "/cases/subsidy-payment-request/": {
     "file": "og/cases-subsidy-payment-request.png",
-    "title": "補助款請撥公文範例｜公文 AI"
+    "title": "補助款請款公文範例｜公文 AI"
   },
   "/cases/tender-announcement/": {
     "file": "og/cases-tender-announcement.png",
@@ -97,7 +97,7 @@
   },
   "/cases/travel-expense-sign/": {
     "file": "og/cases-travel-expense-sign.png",
-    "title": "出差旅費報支簽範例｜公文 AI"
+    "title": "出差旅費報支簽呈範例｜公文 AI"
   },
   "/cases/venue-loan-memo/": {
     "file": "og/cases-venue-loan-memo.png",
@@ -162,6 +162,10 @@
   "/doc-types/": {
     "file": "og/doc-types.png",
     "title": "公文文別怎麼選：函、書函、公告、簽、開會通知單｜公文 AI"
+  },
+  "/numbers/": {
+    "file": "og/numbers.png",
+    "title": "數字大寫怎麼寫：國字大寫對照表與金額換算"
   },
   "/product/": {
     "file": "og/product.png",

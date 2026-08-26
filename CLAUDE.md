@@ -583,8 +583,13 @@ pnpm gen:simplified-set  # 重產簡體字集合（只在來源資料改版時�
    `cd workers/apply-form && npx wrangler secret put BREVO_API_KEY`（HTTP API 金鑰
    `xkeysib-…`，與 SMTP 密碼不同種，副本在 secrets.md § SMTP）
 5. ~~Phase 4–5：Slack 頻道、GA4/GSC 授權、seo-ops 納管~~：**已接通**（2026-08-17，見里程碑）。
-   備忘：**每站要自己的 GCP 專案與 SA，絕不可複製別站金鑰**；本站目前沿用共用 SA，
-   隔離驗收用 `node /root/seo-ops/bin/identity-audit.mjs --site ods.yao.care`
+   備忘：**每站要自己的 GCP 專案與 SA，絕不可複製別站金鑰**；本站目前沿用共用 SA。
+   ⚠️ **但本站不是可以單獨隔離的租戶**：`gscSiteUrl` 是 `sc-domain:yao.care`、
+   `ga4PropertyId` 是 yao.care 的 `242590219`，靠 `gscPageFilter`／`ga4HostFilter` 切數字 ——
+   本站沒有自己的 GSC 與 GA4 資源，給它一把新 SA 不會縮小爆炸半徑。
+   🅤 **2026-08-26 用戶拍板：不為本站另開 GSC／GA4 資源**，隔離綁在 `yao.care` 一起做，
+   **不要再提案**。`identity-audit --site ods.yao.care` 那個
+   「✗ GSC 看不到 www.ods.yao.care」是判準的假警報，不是權限缺口
 6. ~~民間書件（委託書、授權書、切結書、聲明書、和解書）~~：**已全部上線**
    （2026-08-26，`private` 族群，8 則範例，見上面那節）。
    下一輪的候選見 `docs/keyword-validation/2026-08-26-demand.md` 第五之二節。
@@ -597,8 +602,11 @@ pnpm gen:simplified-set  # 重產簡體字集合（只在來源資料改版時�
    見上面「官方條文一律抓取產生」那節的坑。它與第五節那批「有量但不做」的法規字的差別
    （不在全國法規資料庫、對手全是 PDF、接得上站上既有的三頁）寫在
    `docs/keyword-validation/2026-08-26-demand.md` 第七節
-7. **站外連結只有 `www.yao.care/ai/ods/` 一條**。逐頁 URL Inspection 顯示 Google 對每頁認得的
-   `referringUrls` 是 0～2 —— 這是曝光低最根本的原因，而且不是內容能解的。要用戶決定怎麼做。
+7. ~~**站外連結只有 `www.yao.care/ai/ods/` 一條**~~ 🅤 **用戶拍板不做（2026-08-20 指示、
+   2026-08-26 再次確認），不要再提案**。逐頁 URL Inspection 顯示 Google 對每頁認得的
+   `referringUrls` 是 0～2 —— 這是曝光低的真實因素之一，而且不是內容能解的，
+   但站外訊號那一組（媒體投稿、awesome list、社群回答）用戶明示先不走，
+   等用戶主動說要走。判準原文在 seo-ops 的 `sites/ods.yao.care.json` `_status`。
 8. ~~「公告」的主旨該不該強制期望語~~：**已處理**（2026-08-26，用戶拍板）。
    判準不是「實務上常怎麼寫」，是手冊本身——「十九、(三)」只要求公告主旨扼要敘述
    公告之目的及要求，附錄 6 的兩則官方範例主旨也都沒有期望語。應用端已把

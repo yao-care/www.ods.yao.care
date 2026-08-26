@@ -7,7 +7,7 @@
       "doc_type": "函",
       "receiver": "○○縣政府工務處",
       "source": "本鄉三盛村林姓民眾陳情，中正路二段路面破損多處，機車行經常打滑，請求儘速修繕。經本所於114年3月5日派員會勘屬實。",
-      "draft_id": "drf_01M0YPXVSQ7MGM65DPEW"
+      "draft_id": "drf_01M0YR7TVB37R9AY5V5B"
     },
     {
       "key": "grant_report",
@@ -16,7 +16,7 @@
       "doc_type": "函",
       "receiver": "○○縣政府社會處",
       "source": "檢陳本所114年度社區照顧關懷據點補助經費核銷資料，核定金額新臺幣50萬元整，實支新臺幣486,320元，餘款繳回。",
-      "draft_id": "drf_01M0YPY2CFV2RZN92VRT"
+      "draft_id": "drf_01M0YR8094ZZHJXZNGDE"
     },
     {
       "key": "meeting",
@@ -25,7 +25,7 @@
       "doc_type": "開會通知單",
       "receiver": "本鄉各里辦公處",
       "source": "為研商114年度基層建設需求，訂於114年4月10日下午2時於本所三樓會議室召開里長座談會，請各里長準時出席。",
-      "draft_id": "drf_01M0YPYB2062F8Z2X82N"
+      "draft_id": "drf_01M0YR85F2P37PW4XGBH"
     },
     {
       "key": "low_income",
@@ -34,7 +34,7 @@
       "doc_type": "函",
       "receiver": "陳美玲女士",
       "source": "陳美玲女士於本鄉三盛村申請低收入戶資格複查，經審查其家庭總收入超過標準，未符合社會救助法第4條規定。",
-      "draft_id": "drf_01M0YPYGS60KVV2CNWMN"
+      "draft_id": "drf_01M0YR8D8Q00B41GCP3E"
     },
     {
       "key": "petition_reply",
@@ -43,7 +43,7 @@
       "doc_type": "書函",
       "receiver": "王小明君",
       "source": "復王小明君之父114年2月20日陳情本鄉工廠夜間噪音一案，經本所會同環保局於2月28日前往稽查，噪音值未超過管制標準。",
-      "draft_id": "drf_01M0YPYR55H4APMJRRFX"
+      "draft_id": "drf_01M0YR8M8K2HSPKZ1D7K"
     },
     {
       "key": "notice",
@@ -52,7 +52,7 @@
       "doc_type": "公告",
       "receiver": null,
       "source": "為維護空氣品質，公告本鄉自114年3月1日起全面禁止露天燃燒稻草及農業廢棄物，違者依空氣污染防制法處罰。",
-      "draft_id": "drf_01M0YPYY0055JHFY5XW0"
+      "draft_id": "drf_01M0YR8SM8MTWSZEAC85"
     },
     {
       "key": "sign",
@@ -61,7 +61,7 @@
       "doc_type": "簽",
       "receiver": null,
       "source": "為改善本鄉活動中心設備老舊問題，擬編列新臺幣30萬元採購冷氣及音響設備，簽請核示。",
-      "draft_id": "drf_01M0YPZ7H247CX5YF1HM"
+      "draft_id": "drf_01M0YR916S1TB35ACV3F"
     },
     {
       "key": "subsidy_apply",
@@ -70,7 +70,7 @@
       "doc_type": "函",
       "receiver": "內政部國土管理署",
       "source": "為改善本鄉復興路排水不良及路面破損問題，擬申請115年度前瞻基礎建設補助新臺幣800萬元整，檢陳計畫書1份。",
-      "draft_id": "drf_01M0YPZF5R6A4Z1MYQ21"
+      "draft_id": "drf_01M0YR96ZYF77M0DWTSN"
     },
     {
       "key": "personnel_award",
@@ -79,7 +79,7 @@
       "doc_type": "簽",
       "receiver": null,
       "source": "本鄉114年7月凱米颱風期間，清潔隊及工務課共12人連續3日投入搶險及災後清運，工作績效優良，擬依獎懲規定簽請敘獎，記功1次3人、嘉獎2次9人。",
-      "draft_id": "drf_01M0YPZNWH6MS908TAYY"
+      "draft_id": "drf_01M0YR9E0HRCGB0J0B92"
     },
     {
       "key": "travel_expense",
@@ -88,7 +88,7 @@
       "doc_type": "簽",
       "receiver": null,
       "source": "本課○員奉派於114年5月14日至15日赴臺中市參加內政部主辦之地政業務研習，實際支出高鐵票價新臺幣2,140元、住宿費1,800元、雜費600元，檢附收據及研習證明，簽請核示。",
-      "draft_id": "drf_01M0YPZW9FF2EH9MK1V9"
+      "draft_id": "drf_01M0YR9NC49ASRKGJZN2"
     },
     {
       "key": "asset_disposal",
@@ -97,7 +97,7 @@
       "doc_type": "簽",
       "receiver": null,
       "source": "本所財產編號○○○之公務小客車，領牌迄今已逾15年、行駛里程28萬公里，經保養廠評估修復費用逾車輛殘值，擬辦理報廢並依規定辦理財產減損，簽請核示。",
-      "draft_id": "drf_01M0YQ037JAQNR41A3H0"
+      "draft_id": "drf_01M0YR9TV4JFZNXDR1GM"
     },
     {
       "key": "procurement_request",
@@ -106,7 +106,7 @@
       "doc_type": "簽",
       "receiver": null,
       "source": "本所一樓為民服務櫃檯影印機故障頻繁且已停產無零件，擬以新臺幣9萬8千元辦理小額採購1台，經詢價3家廠商，擬洽最低價廠商採購，簽請核示。",
-      "draft_id": "drf_01M0YQ0AAGFHJWGQ6EVE"
+      "draft_id": "drf_01M0YRA114YZ9XGJ6KF8"
     },
     {
       "key": "plan_approval",
@@ -115,7 +115,7 @@
       "doc_type": "簽",
       "receiver": null,
       "source": "為促進本鄉社區交流，擬於114年10月19日於本鄉運動公園辦理社區聯合運動會，預計參加人數500人，編列經費新臺幣25萬元，檢陳活動計畫書1份，簽請核示。",
-      "draft_id": "drf_01M0YQ0FKZPCPMF34R6M"
+      "draft_id": "drf_01M0YRA85TW5VJ8Z7D2W"
     },
     {
       "key": "construction_acceptance",
@@ -124,7 +124,7 @@
       "doc_type": "函",
       "receiver": "○○縣政府工務處",
       "source": "本所「復興路排水溝改善工程」契約金額新臺幣620萬元整，於114年6月20日辦理驗收，驗收結果符合契約規定，檢陳驗收紀錄1份，報請備查。",
-      "draft_id": "drf_01M0YQ0JTTJSN89MDPSY"
+      "draft_id": "drf_01M0YRACET8ZF8C8RARG"
     },
     {
       "key": "payment_request",
@@ -133,7 +133,7 @@
       "doc_type": "函",
       "receiver": "○○縣政府社會處",
       "source": "本所114年度長者共餐計畫奉核定補助新臺幣48萬元整，第一期經費已執行完畢，檢陳支出明細表及成果報告各1份，請撥付第二期款新臺幣24萬元整。",
-      "draft_id": "drf_01M0YQ0RBAR0JNF2AJSB"
+      "draft_id": "drf_01M0YRAH2D4DRKGXY7V5"
     },
     {
       "key": "annual_plan",
@@ -142,7 +142,7 @@
       "doc_type": "函",
       "receiver": "○○縣政府民政處",
       "source": "檢陳本所115年度民政業務工作計畫1份，內容包含里鄰調整、民防編組訓練及祭祀公業輔導等3項重點工作，請鑒核。",
-      "draft_id": "drf_01M0YQ0Z63N58AZJMAK0"
+      "draft_id": "drf_01M0YRAPHKEV69PAQTAH"
     },
     {
       "key": "reject_application",
@@ -151,7 +151,7 @@
       "doc_type": "函",
       "receiver": "李姓民眾",
       "source": "復李姓民眾114年4月8日申請本鄉低收入戶生活扶助一案，因申請人戶籍未設於本鄉，非本所權責範圍，依行政程序法規定不予受理，並告知得向戶籍所在地公所提出申請。",
-      "draft_id": "drf_01M0YQ177AZHM06853TA"
+      "draft_id": "drf_01M0YRB1KR19KS3KHR21"
     },
     {
       "key": "transfer_case",
@@ -160,7 +160,7 @@
       "doc_type": "書函",
       "receiver": "○○縣政府環境保護局",
       "source": "本所114年5月6日收受民眾陳情本鄉工業區空氣異味一案，查空氣污染稽查非本所權責，依權責移請貴局卓處，並副知陳情人。",
-      "draft_id": "drf_01M0YQ1DHQQQXC000BT8"
+      "draft_id": "drf_01M0YRB6HNX62EH6C7NE"
     },
     {
       "key": "reminder",
@@ -169,7 +169,7 @@
       "doc_type": "書函",
       "receiver": "○○鄉公所",
       "source": "本所114年3月18日○○字第1140003185號函請貴所提供轄內獨居長者名冊一案，迄今未獲復，因本案關係災害防救造冊時程，請於114年5月30日前見復。",
-      "draft_id": "drf_01M0YQ1KHPZKJ05N1PHW"
+      "draft_id": "drf_01M0YRBCHQCAN6V0PNVK"
     },
     {
       "key": "venue_loan",
@@ -178,7 +178,7 @@
       "doc_type": "書函",
       "receiver": "○○社區發展協會",
       "source": "復貴會114年8月1日申請借用本所活動中心辦理長者健康促進課程一案，同意自114年9月2日起至114年11月25日止每週二上午9時至11時借用，場地清潔及設備維護請自理。",
-      "draft_id": "drf_01M0YQ1Q0DVNT0DGVHC6"
+      "draft_id": "drf_01M0YRBFZE6S30VZKX4G"
     },
     {
       "key": "tender_notice",
@@ -187,7 +187,7 @@
       "doc_type": "公告",
       "receiver": null,
       "source": "公告本所「中正路人行道改善工程」辦理公開招標，預算金額新臺幣480萬元整，履約期限120日曆天，投標文件請於114年9月15日下午5時前送達本所總務課。",
-      "draft_id": "drf_01M0YQ1WPW2MR4RYAD6Y"
+      "draft_id": "drf_01M0YRBMRZBWSTBEKB9N"
     },
     {
       "key": "recruit_notice",
@@ -196,7 +196,7 @@
       "doc_type": "公告",
       "receiver": null,
       "source": "公告本所115年度社區照顧關懷據點志工招募，名額20名，服務內容包含長者關懷訪視、共餐協助及健康促進活動帶領，報名期間自114年9月1日起至9月30日止。",
-      "draft_id": "drf_01M0YQ20YQ2ZY0GY6T5M"
+      "draft_id": "drf_01M0YRBTGSSVPD7XJYY6"
     },
     {
       "key": "site_survey_meeting",
@@ -205,7 +205,7 @@
       "doc_type": "開會通知單",
       "receiver": "○○縣政府水利處、本鄉三盛村辦公處",
       "source": "為研商本鄉三盛村中山路排水溝積淹水改善方案，訂於114年9月18日上午10時於現場召開會勘，請派員出席。",
-      "draft_id": "drf_01M0YQ25RJVC7FFDYSMY"
+      "draft_id": "drf_01M0YRBZBBA8HZ34S43N"
     },
     {
       "key": "poa_household",
@@ -214,7 +214,7 @@
       "doc_type": "委託書",
       "receiver": "王志明",
       "source": "本人林秀英因工作時間無法親自前往戶政事務所，委託王志明君代為向○○區戶政事務所申請並領取本人之戶籍謄本1份，受託人持本委託書及雙方身分證件辦理，委託期間至114年12月31日止。如有虛偽不實，本人願負相關法律責任。",
-      "draft_id": "drf_01M0YQ2A58QVHR5214BW"
+      "draft_id": "drf_01M0YRC3D50197HZJ8CM"
     },
     {
       "key": "poa_vehicle",
@@ -223,7 +223,7 @@
       "doc_type": "委託書",
       "receiver": "陳建豪",
       "source": "本人張美玲因出國無法親自辦理，委託陳建豪君代為向監理機關辦理車牌號碼○○○-○○○○號自用小客車之過戶登記，並代為簽署相關表單及領取新行照，委託期間自114年9月1日起至114年10月31日止。依道路交通安全規則第16條規定，代辦人應另繳驗其國民身分證及本人有效之駕駛執照。如有虛偽不實及任何紛爭，本人願負相關法律責任。",
-      "draft_id": "drf_01M0YQ2ET8J1E5Q86PSW"
+      "draft_id": "drf_01M0YRC8WNHNR794HDZ1"
     },
     {
       "key": "auth_collect",
@@ -232,7 +232,7 @@
       "doc_type": "授權書",
       "receiver": "李淑芬",
       "source": "本人吳文彬因行動不便，授權李淑芬君代為向○○鄉公所領取本人114年度低收入戶生活扶助款項，授權範圍以領取款項並簽收為限，不含變更帳戶或代為申請其他補助，授權期間自114年9月1日起至114年12月31日止。",
-      "draft_id": "drf_01M0YQ2N37XZM2HPYAPV"
+      "draft_id": "drf_01M0YRCCWY6MCYXN6ZHQ"
     },
     {
       "key": "affidavit_documents",
@@ -241,7 +241,7 @@
       "doc_type": "切結書",
       "receiver": "○○縣政府社會處",
       "source": "立切結書人○○社區發展協會為申請114年度社區照顧關懷據點補助，所檢附之立案證書、理事長當選證明、經費支出明細表及活動照片等文件，均與正本相符且內容屬實。如有不實，致他人權益受損害者，立切結書人願負法律責任。",
-      "draft_id": "drf_01M0YQ2SB52HANJ2BQPG"
+      "draft_id": "drf_01M0YRCGYE23P0REG19M"
     },
     {
       "key": "affidavit_lost",
@@ -250,7 +250,7 @@
       "doc_type": "切結書",
       "receiver": "○○區戶政事務所",
       "source": "立切結書人黃志偉所有之國民身分證，因於114年8月10日搭乘大眾運輸時遺失，遍尋未獲，特申請補發，並切結如有不實，致他人權益受損害者，立切結書人願負法律責任。",
-      "draft_id": "drf_01M0YQ2YBQY5Y5T7Q7JN"
+      "draft_id": "drf_01M0YRCN3ME6QP82CTA2"
     },
     {
       "key": "statement_income",
@@ -259,7 +259,25 @@
       "doc_type": "聲明書",
       "receiver": "○○鄉公所",
       "source": "本人劉春美自114年3月起因照顧失能家屬離職，迄今無固定工作收入，亦未領取失業給付或其他政府補助，特此聲明，供申請低收入戶資格審查之用。",
-      "draft_id": "drf_01M0YQ3479NEYJ0WK6DY"
+      "draft_id": "drf_01M0YRCT74W1999H5G8P"
+    },
+    {
+      "key": "settlement_traffic",
+      "title": "車禍和解（僅就車損，人身損害保留）",
+      "family": "private",
+      "doc_type": "和解書",
+      "receiver": "周雅婷",
+      "source": "甲方許文龍與乙方周雅婷於114年8月12日下午3時許，在○○市○○路與○○街口發生機車擦撞事故。乙方機車車頭損壞，維修估價新臺幣18,000元；乙方另有左膝挫傷，就醫後醫師表示仍需持續追蹤，傷勢尚未確定。雙方同意先就車輛損害部分成立和解，由甲方給付乙方新臺幣18,000元整，於114年9月10日前匯入乙方指定帳戶。本件僅就車輛損害和解，乙方因本次事故所生人身損害之請求權不在本件範圍，仍予保留。強制汽車責任保險給付不包含在本和解金額內，乙方仍得依法向保險人請求。",
+      "draft_id": "drf_01M0YRD08G70T6DNCWT4"
+    },
+    {
+      "key": "settlement_damage",
+      "title": "物品毀損賠償和解",
+      "family": "private",
+      "doc_type": "和解書",
+      "receiver": "○○商行",
+      "source": "甲方鄭凱文於114年7月28日在乙方○○商行店內，不慎碰倒展示櫃致玻璃破裂。雙方就損害賠償達成和解，由甲方賠償乙方修復費用新臺幣12,000元整，於114年8月31日前一次以現金給付。本件就上開展示櫃玻璃破裂之損害全部和解，乙方就本事故不再對甲方為其他請求；但本件不及於雙方其他既存或將來之法律關係。",
+      "draft_id": "drf_01M0YRD64EX8CW9B0E6Q"
     }
   ]
 }

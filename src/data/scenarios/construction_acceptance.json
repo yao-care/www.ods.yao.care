@@ -6,7 +6,7 @@
     "family": "official"
   },
   "draft": {
-    "id": "drf_01M0YQ0JTTJSN89MDPSY",
+    "id": "drf_01M0YRACET8ZF8C8RARG",
     "user_id": "usr_DEMO00000000000000",
     "unit": "民政課",
     "document_family": "official",
@@ -14,7 +14,7 @@
     "classification": "普通",
     "topic": "工程驗收結果報請備查",
     "subject": "檢陳「復興路排水溝改善工程」驗收紀錄，報請備查。",
-    "sections_json": "[{\"title\":\"說明\",\"items\":[\"本所「復興路排水溝改善工程」契約金額新臺幣陸佰貳拾萬元整，業於114年6月20日辦理驗收，驗收結果符合契約規定。\",\"檢陳驗收紀錄1份，敬請查照。\"]}]",
+    "sections_json": "[{\"title\":\"說明\",\"items\":[\"本所「復興路排水溝改善工程」契約金額新臺幣陸佰貳拾萬元整，業於114年6月20日辦理驗收。\",\"經驗收結果，核與契約規定相符。\"]},{\"title\":\"辦法\",\"items\":[\"檢陳驗收紀錄1份，敬請鑒核備查。\"]}]",
     "fields_json": "{\"receiver\":\"○○縣政府工務處\",\"source_len\":68,\"scenario\":\"construction_acceptance\"}",
     "engine": "llm",
     "model": "claude-sonnet-5",
@@ -24,14 +24,20 @@
     "confirmed": 0,
     "confirmed_by": null,
     "confirmed_at": null,
-    "created_at": "2026-08-26T09:39:24.634Z",
-    "updated_at": "2026-08-26T09:39:24.634Z",
+    "created_at": "2026-08-26T10:02:14.362Z",
+    "updated_at": "2026-08-26T10:02:14.362Z",
     "sections": [
       {
         "title": "說明",
         "items": [
-          "本所「復興路排水溝改善工程」契約金額新臺幣陸佰貳拾萬元整，業於114年6月20日辦理驗收，驗收結果符合契約規定。",
-          "檢陳驗收紀錄1份，敬請查照。"
+          "本所「復興路排水溝改善工程」契約金額新臺幣陸佰貳拾萬元整，業於114年6月20日辦理驗收。",
+          "經驗收結果，核與契約規定相符。"
+        ]
+      },
+      {
+        "title": "辦法",
+        "items": [
+          "檢陳驗收紀錄1份，敬請鑒核備查。"
         ]
       }
     ],

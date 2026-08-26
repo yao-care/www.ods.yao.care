@@ -26,7 +26,7 @@ const payloads = import.meta.glob('../../data/scenarios/*.json', { eager: true }
 const sectionsOf = (key) =>
   (payloads[`../../data/scenarios/${key}.json`]?.default?.draft?.sections ?? []).map((s) => s.title);
 const blankTemplates = downloads.templates.filter((t) =>
-  ['委託書', '授權書', '切結書', '聲明書'].includes(t.docType),
+  ['委託書', '授權書', '切結書', '聲明書', '和解書'].includes(t.docType),
 );
 
 /** 各文別的用途與最該注意的一件事。段名取自實際烘出來的產物，不另外寫死一份。 */
@@ -59,6 +59,13 @@ const TYPES = [
     key: 'statement_income',
     note: '只聲明自己知道的事實；聲明書不等於證明，機關通常還會要佐證文件。',
   },
+  {
+    id: 'settlement',
+    name: '和解書',
+    when: '雙方就已發生的爭議互相讓步、一次講定，最常見的是車禍。',
+    key: 'settlement_traffic',
+    note: '民法第 737 條：和解使當事人所拋棄之權利消滅。傷勢或損害還沒確定就簽概括拋棄，後面的錢就沒了。',
+  },
 ];
 
 const S = {
@@ -69,8 +76,8 @@ const S = {
 };
 
 const description =
-  '委託書、授權書、切結書、聲明書的範例全文與可編輯 Word 檔，'
-  + '每一份附逐條檢核結果，並說明哪些情況應該用機關自己的制式表格。';
+  '委託書、授權書、切結書、聲明書、和解書的範例全文與可編輯 Word 檔，'
+  + '每一份附逐條檢核結果；和解書另附拋棄範圍怎麼寫窄的實務判決說明。';
 
 const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
 
@@ -166,7 +173,7 @@ const faq = {
 
 <ArticlePage
   schemas={[schema, faq]}
-  title="委託書、切結書、授權書、聲明書範例｜公文 AI"
+  title="委託書、切結書、和解書、授權書、聲明書範例｜公文 AI"
   description={description}
   heading="民間書件"
   lead="委託、授權、切結、聲明 —— 這幾種都是自己出具、載明事實、並自承法律責任的文件。沒有法定格式，但寫漏了關鍵那句話，這份文件就只是一段敘述。"
@@ -209,6 +216,12 @@ const faq = {
     <strong>公開發行公司的股東會委託書不能自己寫。</strong>
     依「公開發行公司出席股東會使用委託書規則」第 2 條，用紙以公司印發者為限；
     第 22 條規定用紙非公司印發的，代理表決權不予計算。請向該公司或股務代理機構索取。
+  </p>
+  <p class="danger-inline">
+    <strong>和解書要單獨提醒：</strong>民法第 737 條的和解會使所拋棄之權利消滅。
+    臺灣新竹地方法院 110 年度簡上字第 111 號 —— 一份 3,000 元的和解書，
+    因為「並無其他損害賠償請求權保留之陳述或記載」，關掉了事後 1,253 萬元的請求。
+    傷勢或損害還沒確定的，<a href={`${base}private-documents/settlement-traffic-accident/`}>先看這一則怎麼把範圍寫窄</a>。
   </p>
 
   {TYPES.map((t) => (
@@ -289,6 +302,14 @@ const faq = {
   .files span {
     font-size: var(--text-sm);
     color: var(--color-ink-soft);
+  }
+  .danger-inline {
+    margin-block: 1.5rem;
+    padding: 0.875rem 1.125rem;
+    border-inline-start: 3px solid var(--color-critical);
+    background: var(--color-bg-light);
+    font-size: var(--text-sm);
+    line-height: 1.9;
   }
   .rules li {
     margin-block: 0.75rem;

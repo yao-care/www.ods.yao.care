@@ -34,6 +34,7 @@ const base = import.meta.env.BASE_URL.endsWith('/')
   : `${import.meta.env.BASE_URL}/`;
 
 const docType = payload.draft.doc_type;
+const isSettlement = docType === '和解書';
 const download = downloads.private?.[meta.slug] ?? null;
 const blankTemplate = downloads.templates.find((t) => t.docType === docType) ?? null;
 const failed = payload.checks.filter((c) => !c.ok);
@@ -109,10 +110,56 @@ const faq = {
     <h1>{meta.seoTitle}</h1>
     <p class="lead">{meta.lead}</p>
 
-    <p class="caution">
-      機關或對方另有制式表格時<strong>以那份為準</strong>。這類文件多半由受理單位自訂格式，
-      先到該機關網站找有沒有；沒有再用這裡的通用結構。本頁內容為虛構案例，不代表法律意見。
-    </p>
+    {isSettlement ? (
+      <section class="danger">
+        <h2 class="danger-title">簽之前先看這一段</h2>
+        <p>
+          民法第 737 條：<strong>和解有使當事人所拋棄之權利消滅的效力</strong>。
+          簽下去之後要翻案，實務上是例外不是常態。
+        </p>
+        <p>
+          臺灣新竹地方法院 110 年度簡上字第 111 號：一份<strong>新臺幣 3,000 元</strong>的和解書，
+          因為「並無其他損害賠償請求權保留之陳述或記載」，
+          關掉了當事人事後<strong>1,253 萬元</strong>的請求。
+          那份和解書用的是流通的官方範本文字，其中一條是「乙方同意放棄民、刑事訴訟權益」。
+        </p>
+        <p>
+          反過來，臺灣高等法院 108 年度上字第 904 號之所以讓受害人後續求償成立，
+          關鍵是那份和解書載明<strong>「僅就系爭機車損害」</strong>——
+          人身損害因此不在拋棄的射程內。
+        </p>
+        <ul>
+          <li><strong>傷勢或損害還沒確定，就不要簽概括拋棄。</strong>把範圍寫窄，保留寫明。</li>
+          <li>
+            <strong>強制汽車責任保險不必先和解就能領。</strong>
+            受害人可直接以書面通知對方的產險公司請求給付，不需加害人同意
+            （強制汽車責任保險法第 7 條、第 34 條第 1 項第 2 款）。先簽和解等於把本來拿得到的錢當籌碼。
+          </li>
+          <li>
+            <strong>有投保任意責任險的，和解前要書面通知保險公司參與。</strong>
+            未經保險人參與或同意的和解，保險人可主張不受拘束（保險法第 93 條、
+            強制汽車責任保險法第 30 條）。
+          </li>
+          <li>
+            <strong>金額有爭議、對方是保險公司時，先別急著和解。</strong>
+            金融消費者保護法第 24 條第 2 項：已成立和解或調解者，金融消費評議中心不受理。
+          </li>
+          <li>
+            <strong>過失致死不是告訴乃論</strong>（刑法第 276 條），和解不會讓刑事案件消失，只影響量刑。
+          </li>
+        </ul>
+        <p class="danger-note">
+          有人受傷、金額較大、對方態度不明，或你不確定自己的傷勢會不會惡化 ——
+          走<strong>鄉鎮市區調解委員會</strong>（免費，調解書經法院核定有執行力）或先諮詢律師，
+          不要自己簽。本頁提供的是結構與用字參考，不是法律意見。
+        </p>
+      </section>
+    ) : (
+      <p class="caution">
+        機關或對方另有制式表格時<strong>以那份為準</strong>。這類文件多半由受理單位自訂格式，
+        先到該機關網站找有沒有；沒有再用這裡的通用結構。本頁內容為虛構案例，不代表法律意見。
+      </p>
+    )}
 
     <dl class="facts">
       <div><dt>文別</dt><dd>{docType}</dd></div>
@@ -230,6 +277,33 @@ const faq = {
     line-height: 1.9;
     color: var(--color-ink-soft);
     max-width: 46rem;
+  }
+  .danger {
+    margin-block: 1.5rem;
+    padding: 1.25rem 1.5rem;
+    border: 2px solid var(--color-critical);
+    border-radius: 0.375rem;
+    background: var(--color-bg-light);
+  }
+  .danger-title {
+    margin-top: 0;
+    font-size: var(--text-lg);
+    color: var(--color-critical);
+  }
+  .danger p,
+  .danger li {
+    font-size: var(--text-sm);
+    line-height: 1.9;
+  }
+  .danger ul {
+    display: grid;
+    gap: 0.5rem;
+    padding-inline-start: 1.25rem;
+  }
+  .danger-note {
+    margin-bottom: 0;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--color-line);
   }
   .caution {
     margin-block: 1.5rem;

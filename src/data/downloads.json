@@ -209,6 +209,16 @@
       "path": "private/statement-no-income.docx",
       "filename": "聲明書範例：聲明無固定工作收入.docx",
       "docType": "聲明書"
+    },
+    "settlement-traffic-accident": {
+      "path": "private/settlement-traffic-accident.docx",
+      "filename": "車禍和解書範例：僅就車損和解、人身損害保留.docx",
+      "docType": "和解書"
+    },
+    "settlement-property-damage": {
+      "path": "private/settlement-property-damage.docx",
+      "filename": "和解書範例：物品毀損賠償.docx",
+      "docType": "和解書"
     }
   },
   "templates": [
@@ -299,6 +309,14 @@
       "note": "聲明的是自己知道的事實，不要把推測或他人的行為寫成既成事實。",
       "path": "templates/private-statement.docx",
       "filename": "聲明書空白範本.docx"
+    },
+    {
+      "slug": "private-settlement",
+      "label": "和解書",
+      "docType": "和解書",
+      "note": "「拋棄範圍與保留事項」不要只寫「拋棄其餘一切請求」——傷勢或損害未確定時，寫「本件僅就○○和解，其餘保留」。",
+      "path": "templates/private-settlement.docx",
+      "filename": "和解書空白範本.docx"
     },
     {
       "slug": "certified-letter",

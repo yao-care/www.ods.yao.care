@@ -19,6 +19,7 @@
 import ArticlePage from '../../layouts/ArticlePage.astro';
 import PageToc from '../../components/PageToc.astro';
 import terms from '../../data/gov-terms.json';
+import voucher from '../../data/voucher-rule.json';
 import { DIGIT_TABLE, UNIT_TABLE, EXAMPLES, toUppercase, toCurrency } from '../../data/uppercase-number.js';
 
 const base = import.meta.env.BASE_URL.endsWith('/')
@@ -27,20 +28,11 @@ const base = import.meta.env.BASE_URL.endsWith('/')
 
 const { numberRules, _source: source } = terms;
 
-// 支出憑證那條的出處。**這一份沒有做成抓取腳本**：主計總處的法規頁對本主機回 403，
-// 而抓得到的幾份公務機關鏡像不是 98 年版就是 109 年的修正規定，版本會錯。
-// 條文逐字核對自下面這份 .gov.tw 的 109-03-24 彙編本，改版時要人工重核。
-const VOUCHER = {
-  name: '政府支出憑證處理要點',
-  issuer: '行政院主計總處',
-  edition: '中華民國 109 年 3 月 24 日',
-  point: '十三',
-  text:
-    '支出憑證之總數應用大寫數字書寫。但採用機器作業、國外憑證無法用大寫數字表示'
-    + '或各機關衡酌有相關佐證資料可證明支出憑證所列金額之正確性者，不在此限。',
-  url: 'https://law.dgbas.gov.tw/LawContent.aspx?id=FL017556',
-  verifiedFrom: 'https://www.shalu.taichung.gov.tw/media/642082/%E6%94%BF%E5%BA%9C%E6%94%AF%E5%87%BA%E6%86%91%E8%AD%89%E8%99%95%E7%90%86%E8%A6%81%E9%BB%9E-109324.pdf',
-};
+// 支出憑證那幾點改由 scripts/fetch-voucher-rule.py 解析官方彙編本產生（2026-08-26）。
+// 原本這裡手抄一段條文，並註明「這一份沒有做成抓取腳本」——做 /receipt/ 時要引到第四、五點，
+// 手抄就變成三段，違反站規「官方條文一律抓取產生」，所以補了腳本並把這裡換掉。
+const voucherPoint = (no) => voucher.points.find((p) => p.no === no);
+const VOUCHER = { ...voucher._source, point: '十三', text: voucherPoint('十三').text };
 
 const examples = EXAMPLES.map((e) => ({
   ...e,
@@ -232,7 +224,8 @@ const faq = {
     但書有三種：機器作業、國外憑證無法用大寫，以及機關衡酌有相關佐證資料可證明金額正確。
     也就是說「系統印出來的」確實可以不用大寫，但那是機關判斷，不是承辦自己決定。
     原文見<a href={VOUCHER.url} rel="noopener">{VOUCHER.issuer}法規系統</a>。
-    實際的核銷公文長什麼樣，看<a href={`${base}cases/grant-settlement/`}>補助經費核銷公文範例</a>。
+    實際的核銷公文長什麼樣，看<a href={`${base}cases/grant-settlement/`}>補助經費核銷公文範例</a>；
+    領據與收據該記哪些欄位，看<a href={`${base}receipt/`}>領據怎麼寫</a>。
   </p>
 
   <h2 id={S.mistakes.id}>{S.mistakes.label}</h2>
@@ -254,7 +247,7 @@ const faq = {
   <p class="verified">
     數字原則取自 {source.issuer}《{source.name}》{source.edition}（資料產生日期 {terms._generated}）。
     大寫規定取自 {VOUCHER.issuer}《{VOUCHER.name}》{VOUCHER.edition}第{VOUCHER.point}點，
-    逐字核對自<a href={VOUCHER.verifiedFrom} rel="noopener nofollow">該版彙編本</a>。
+    逐字取自<a href={VOUCHER.file} rel="noopener nofollow">該版彙編本</a>（資料產生日期 {voucher._generated}）。
   </p>
 </ArticlePage>
 

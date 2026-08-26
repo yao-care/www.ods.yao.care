@@ -1,0 +1,257 @@
+---
+/**
+ * 領據與收據怎麼寫（核銷用）。
+ *
+ * 為什麼有這一頁（2026-08-26，第四波關鍵字的第二輪）：Bing 需求量實測
+ * 領據 700、收據 949、收據範本 647。領據直接落在本站既有的補助核銷主題
+ * （知識庫那條「核銷應檢附核定函影本、支出憑證黏存單、原始憑證、領據…」講的就是它），
+ * 而且它的金額**必須國字大寫**，與 /numbers/ 天生相接。
+ *
+ * 實搜「領據」的 SERP 前排是桃園市府、新北社會局、台南文化局、高雄市府附件、
+ * 雲科大、台北大學的 PDF／DOC 附件頁 —— 跟公文那一群同一個型態（各機關各自轉述）。
+ * 本頁的差別在於**直接引通案上位規定**：那些機關版本都是從《政府支出憑證處理要點》
+ * 第四點來的，站上把條文逐字放出來，比轉述可靠。
+ *
+ * 條文取自 src/data/voucher-rule.json（scripts/fetch-voucher-rule.py 解析官方彙編本產生），
+ * **不要在這頁手寫條文**。
+ */
+import ArticlePage from '../../layouts/ArticlePage.astro';
+import PageToc from '../../components/PageToc.astro';
+import voucher from '../../data/voucher-rule.json';
+import downloads from '../../data/downloads.json';
+import { toCurrency } from '../../data/uppercase-number.js';
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+
+const src = voucher._source;
+const pointOf = (no) => voucher.points.find((p) => p.no === no);
+const receiptPoint = pointOf('四');
+const invoicePoint = pointOf('五');
+const uppercasePoint = pointOf('十三');
+
+/** 第四點五款的白話對照。條文原文照放，這裡只說「實務上這一格填什麼」。 */
+const FIELDS = [
+  { law: '受領事由', plain: '這筆錢是為了什麼付的', example: '114年度社區照顧關懷據點補助款' },
+  { law: '實收數額', plain: '實際收到多少，金額用國字大寫', example: toCurrency(240000).text },
+  { law: '機關名稱', plain: '付錢的機關全銜，不是自己的名字', example: '○○縣政府社會處' },
+  { law: '受領人之姓名或名稱、身分證明文件字號、統一編號', plain: '收錢的人或團體；團體填名稱與統一編號，個人填姓名與身分證字號', example: '○○社區發展協會（統一編號 00000000）' },
+  { law: '開立日期', plain: '開立這張領據的日期，用民國紀年', example: '中華民國114年9月10日' },
+];
+
+const CONFUSIONS = [
+  {
+    q: '領據跟收據差在哪？',
+    a: '在《政府支出憑證處理要點》裡沒有分。第四點管的是「各機關支付款項所取得之收據」，'
+      + '領據是實務上的叫法，指的就是這種收據。要記的欄位是同一組。',
+  },
+  {
+    q: '領據跟統一發票差在哪？',
+    a: '差在誰開、記什麼。統一發票是營業人銷售貨物或勞務時開的，依第五點要記營業人名稱與統一編號、'
+      + '品名及總價、開立日期、機關名稱或統一編號。領據是受領人出具的，記的是受領事由與實收數額。'
+      + '向廠商採購拿發票，領補助款出領據。',
+  },
+  {
+    q: '一次付給很多人，要每個人各開一張嗎？',
+    a: '不用。第四點第二項：同一受領事由支付不同受領人之款項，各機關得編製受領人清冊，'
+      + '載明應記明事項，並於最後結記總數。',
+  },
+];
+
+const MISTAKES = [
+  '金額沒用國字大寫。第十三點是規定不是慣例，例外只有機器作業、國外憑證，以及機關衡酌有佐證資料可證明金額正確。',
+  '把「機關名稱」填成自己的單位。那一格要填的是付錢的機關全銜。',
+  '團體漏填統一編號，或漏蓋圖記與理事長、會計、出納章 —— 各機關對用印的要求不同，先看核定函怎麼寫。',
+  '日期用西元。核銷文件一律民國紀年。',
+  '金額寫錯直接塗改。要由原出具者劃線註銷更正，並於更正處簽名證明（第十三點第二項）。',
+];
+
+const S = {
+  fields: { id: 'fields', label: '一、領據要記哪幾件事（條文原文＋白話）' },
+  uppercase: { id: 'uppercase', label: '二、金額為什麼一定要國字大寫' },
+  confusions: { id: 'confusions', label: '三、領據、收據、統一發票怎麼分' },
+  mistakes: { id: 'mistakes', label: `四、最常被退的 ${MISTAKES.length} 個地方` },
+  where: { id: 'where', label: '五、核銷還要附什麼' },
+};
+
+const description =
+  '領據要記受領事由、實收數額、機關名稱、受領人與統一編號、開立日期，金額須用國字大寫 ——'
+  + '逐條取自行政院主計總處《政府支出憑證處理要點》，並說明領據、收據與統一發票的差別。';
+
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Article',
+      '@id': `${pageUrl}#article`,
+      mainEntityOfPage: pageUrl,
+      headline: '領據怎麼寫：核銷用的必要記載事項',
+      description,
+      author: { '@type': 'Organization', name: '藥提醒科技有限公司', url: 'https://www.yao.care/' },
+      publisher: { '@type': 'Organization', name: '藥提醒科技有限公司', url: 'https://www.yao.care/' },
+      inLanguage: 'zh-Hant-TW',
+      citation: {
+        '@type': 'CreativeWork',
+        name: `${src.issuer}《${src.name}》${src.edition}`,
+        url: src.url,
+      },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: '首頁', item: 'https://www.ods.yao.care/' },
+        { '@type': 'ListItem', position: 2, name: '領據怎麼寫', item: pageUrl },
+      ],
+    },
+  ],
+};
+
+const faq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: '領據要寫哪些欄位？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text:
+          `依《${src.name}》第四點，各機關支付款項所取得之收據，應由受領人或其代領人簽名，`
+          + '並記明受領事由、實收數額、機關名稱、受領人之姓名或名稱與身分證明文件字號或統一編號、'
+          + '開立日期，以及各機關依業務性質增列的事項。',
+      },
+    },
+    ...CONFUSIONS.map((c) => ({
+      '@type': 'Question',
+      name: c.q,
+      acceptedAnswer: { '@type': 'Answer', text: c.a },
+    })),
+    {
+      '@type': 'Question',
+      name: '領據的金額一定要用國字大寫嗎？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text:
+          `是。《${src.name}》第十三點：${uppercasePoint.text.split('。')[0]}。`
+          + '例外只有採用機器作業、國外憑證無法用大寫數字表示，'
+          + '或各機關衡酌有相關佐證資料可證明支出憑證所列金額之正確性者。',
+      },
+    },
+  ],
+};
+---
+
+<ArticlePage
+  schemas={[schema, faq]}
+  title="領據怎麼寫：核銷用的必要記載事項與金額大寫"
+  description={description}
+  heading="領據怎麼寫"
+  lead="領補助款、領鐘點費要出具的那張紙。各機關的表格長得不一樣，但要記的事情是同一組 —— 通案規定在《政府支出憑證處理要點》第四點，各校各局處的版本都是從那裡來的。"
+>
+  <PageToc items={Object.values(S)} />
+
+  <h2 id={S.fields.id}>{S.fields.label}</h2>
+  <blockquote>{receiptPoint.text}</blockquote>
+  <p>白話對照：</p>
+  <table>
+    <thead><tr><th>條文欄位</th><th>實務上填什麼</th><th>例</th></tr></thead>
+    <tbody>
+      {FIELDS.map((f) => (
+        <tr>
+          <td>{f.law}</td>
+          <td class="plain">{f.plain}</td>
+          <td class="eg">{f.example}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  <p class="note">
+    第六款「其他由各機關依其業務性質及實際需要增列之事項」就是各機關表格長得不一樣的原因 ——
+    地址、聯絡電話、匯款帳號、扣繳稅額、印信與理事長／會計／出納章多半是這一款加上去的。
+    <strong>核定函怎麼寫就怎麼附，本頁只講通案的那五款。</strong>
+  </p>
+
+  <h2 id={S.uppercase.id}>{S.uppercase.label}</h2>
+  <p>因為那是規定，不是慣例。同一份要點第十三點：</p>
+  <blockquote>{uppercasePoint.text}</blockquote>
+  <p>
+    換算與對照表在<a href={`${base}numbers/`}>數字大寫怎麼寫</a>。
+    最常打錯的是三的大寫要用「參」，輸入法裡另一個筆畫相近的字是簡化字形，會被退。
+  </p>
+
+  <h2 id={S.confusions.id}>{S.confusions.label}</h2>
+  {CONFUSIONS.map((c) => (
+    <section class="qa">
+      <h3>{c.q}</h3>
+      <p>{c.a}</p>
+    </section>
+  ))}
+  <p class="note">統一發票與普通收據那一組的條文原文：</p>
+  <blockquote>{invoicePoint.text}</blockquote>
+
+  <h2 id={S.mistakes.id}>{S.mistakes.label}</h2>
+  <ul class="rules">
+    {MISTAKES.map((m) => <li>{m}</li>)}
+  </ul>
+
+  <h2 id={S.where.id}>{S.where.label}</h2>
+  <p>
+    領據只是核銷的其中一份。實際的核銷公文長什麼樣、附件清單怎麼寫，
+    看<a href={`${base}cases/grant-settlement/`}>補助經費核銷公文範例</a>；
+    請撥下一期款的公文看<a href={`${base}cases/subsidy-payment-request/`}>補助款請款公文範例</a>。
+  </p>
+  <p class="note">
+    申請補助時機關常一併要求切結所附文件與正本相符，那份的寫法在
+    <a href={`${base}private-documents/affidavit-documents-true/`}>切結書範例</a>。
+    公文本身的空白範本在<a href={`${base}templates/`}>Word 範本下載</a>
+    （共 {downloads.templates.length} 份）。
+  </p>
+
+  <p class="verified">
+    條文逐字取自 {src.issuer}《{src.name}》{src.edition}（資料產生日期 {voucher._generated}）。
+    正式出處：<a href={src.url} rel="noopener">{src.issuer}法規系統</a>；
+    該頁對本主機回 403，條文取自<a href={src.file} rel="noopener nofollow">同版彙編本</a>。
+    要點改版時重跑 <code>pnpm gen:voucher-rule</code>。
+  </p>
+</ArticlePage>
+
+<style>
+  blockquote {
+    margin: 0.75rem 0 0;
+    padding: 0.75rem 1rem;
+    border-inline-start: 3px solid var(--color-primary);
+    background: var(--color-bg-light);
+    color: var(--color-ink-soft);
+    font-size: var(--text-sm);
+    line-height: 2;
+  }
+  .plain {
+    font-size: var(--text-sm);
+  }
+  .eg {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+  .qa {
+    margin-block: 1.5rem;
+  }
+  .qa h3 {
+    margin-bottom: 0.25rem;
+  }
+  .rules li {
+    margin-block: 0.75rem;
+    line-height: 1.9;
+  }
+  .note {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+  .verified {
+    margin-top: 3rem;
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+</style>

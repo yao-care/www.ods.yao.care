@@ -207,6 +207,10 @@
     "file": "og/product.png",
     "title": "公文 AI 系統：功能、機關導入與電子公文系統的分工"
   },
+  "/receipt/": {
+    "file": "og/receipt.png",
+    "title": "領據怎麼寫：核銷用的必要記載事項與金額大寫"
+  },
   "/security/": {
     "file": "og/security.png",
     "title": "資料處理方式：去識別化與資料落地｜公文 AI"

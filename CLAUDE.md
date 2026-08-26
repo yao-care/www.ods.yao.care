@@ -318,6 +318,7 @@ node /root/seo-ops/bin/keyword-demand.mjs --site ods.yao.care   # 量現有釘�
 |---|---|---|---|
 | `src/data/gov-terms.json` | `scripts/fetch-gov-terms.py` | 行政院《文書處理手冊》 | 稱謂與期望語、擬稿注意事項、函與簽的撰擬要領、數字原則、用印，以及 `workflow`（文書處理五步驟、稿面 9 個欄位、陳核／核稿／會稿／閱稿／判行共 24 條） |
 | `src/data/ai-guidance.json` | `scripts/fetch-ai-guidance.py` | 行政院《使用生成式 AI 參考指引》 | 十點逐字 |
+| `src/data/voucher-rule.json` | `scripts/fetch-voucher-rule.py` | 主計總處《政府支出憑證處理要點》 | 第四點（收據應記載事項）、第五點（統一發票）、第十三點（總數大寫）逐字 |
 
 **不要在頁面裡手寫條文。** 網路流傳的整理多半轉錄自舊版或經過濃縮 ——
 參考指引第四點那句「但封閉式地端部署之生成式 AI 模型…得依文書或資訊機密等級分級使用」
@@ -331,6 +332,13 @@ node /root/seo-ops/bin/keyword-demand.mjs --site ods.yao.care   # 量現有釘�
   字面比對會失敗，頁眉會混進條文裡。兩支都已正規化。
 - 手冊本文各點用**國字**標號 `(一)(二)`，點內子項才用全形阿拉伯數字 `(１)(２)` ——
   `fetch-gov-terms.py` 因此有 `bracketed()` 與 `cjk_bracketed()` 兩支，別用錯。
+- **支出憑證處理要點沒有可抓的官方原始下載點**：主計總處法規頁對本主機回 403，
+  而抓得到的公務機關鏡像**版本會錯**（彰化地檢署那份是 98 年版的第十七點，
+  沒有 109 年新增的「佐證資料」但書）。腳本固定抓一份 .gov.tw 的 109-03-24 彙編本，
+  並在解析時**驗證版本字串**，抓到別的版本就中止，不會安靜地產出舊條文。
+- 那份彙編本每一點後面跟著〔立法理由〕，而**立法理由自己也用「一、二、三、」編號** ——
+  照點次去正則比對會把立法理由的「五、」當成第五點（實測踩過）。正確作法是拿
+  〔立法理由〕當分隔，見 `points_of()`。
 
 ## `llms.txt`／`llms-full.txt` 是產生的（不要手改）
 
@@ -485,6 +493,7 @@ pnpm build:docx       # 只重烘 Word（改案例資料或版面後）
 pnpm fetch:gov-template  # 規範改版才跑（會連外網，需 IPv4）
 pnpm gen:gov-terms       # 文書處理手冊改版才跑（會連外網，需 pdftotext）
 pnpm gen:ai-guidance     # 生成式 AI 參考指引改版才跑（會連外網，需 pdftotext）
+pnpm gen:voucher-rule    # 政府支出憑證處理要點改版才跑（會連外網，需 pdftotext）
 pnpm gen:simplified-set  # 重產簡體字集合（只在來源資料改版時，需 python3 opencc）
 ```
 
@@ -500,8 +509,9 @@ pnpm gen:simplified-set  # 重產簡體字集合（只在來源資料改版時�
    隔離驗收用 `node /root/seo-ops/bin/identity-audit.mjs --site ods.yao.care`
 6. ~~民間書件（委託書、授權書、切結書、聲明書、和解書）~~：**已全部上線**
    （2026-08-26，`private` 族群，8 則範例，見上面那節）。
-   下一輪的候選見 `docs/keyword-validation/2026-08-26-demand.md` 第五之二節，
-   **領據**（700，直接落在補助核銷、金額必須國字大寫）優先
+   下一輪的候選見 `docs/keyword-validation/2026-08-26-demand.md` 第五之二節。
+   **領據已做**（`/receipt/`）；剩下的候選裡職場證明（在職證明 2,543／離職證明書 1,889）量最大，
+   但那是雇主開給員工的表單，離本站主題最遠，要做要先想清楚算不算同一個站
 7. **站外連結只有 `www.yao.care/ai/ods/` 一條**。逐頁 URL Inspection 顯示 Google 對每頁認得的
    `referringUrls` 是 0～2 —— 這是曝光低最根本的原因，而且不是內容能解的。要用戶決定怎麼做。
 8. ~~「公告」的主旨該不該強制期望語~~：**已處理**（2026-08-26，用戶拍板）。

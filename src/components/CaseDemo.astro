@@ -67,7 +67,11 @@ const passed = checks.filter((c) => c.ok).length;
 
 <section class="demo" data-demo data-family={family} data-doc-title={title} data-check-count={checks.length}>
   <ol class="steps" aria-label="操作步驟">
-    {steps.map((step, index) => <li data-step={index + 1} class={index === 0 ? 'on' : undefined}>{step}</li>)}
+    {steps.map((step, index) => (
+      <li data-step={index + 1} class={index === 0 ? 'on' : undefined} aria-current={index === 0 ? 'step' : undefined}>
+        {step}
+      </li>
+    ))}
   </ol>
 
   <form class="compose" data-compose>
@@ -130,14 +134,14 @@ const passed = checks.filter((c) => c.ok).length;
     </p>
   </form>
 
-  <div class="progress" data-progress hidden>
+  <div class="progress" data-progress hidden role="status" aria-live="polite">
     <p data-progress-text>檢索機關知識庫與既有稿件…</p>
-    <div class="track"><span data-progress-bar></span></div>
+    <div class="track" aria-hidden="true"><span data-progress-bar></span></div>
   </div>
 
   <article class="result" data-result>
     <header class="result-head">
-      <h3>{isOfficial ? `${draft.doc_type}稿` : `${title}草稿`}</h3>
+      <h3 data-result-heading tabindex="-1">{isOfficial ? `${draft.doc_type}稿` : `${title}草稿`}</h3>
       {isOfficial ? (
         <p class="meta">{effectiveReceiver ? `受文者：${effectiveReceiver}` : '無受文者'}</p>
       ) : (
@@ -324,7 +328,16 @@ const passed = checks.filter((c) => c.ok).length;
     // 有 JS 才收合：無 JS 時公文全文與檢核結果本來就看得到
     result.hidden = true;
 
-    const setStep = (n) => steps.forEach((li) => li.classList.toggle('on', Number(li.dataset.step) <= n));
+    const resultHeading = root.querySelector('[data-result-heading]');
+
+    const setStep = (n) =>
+      steps.forEach((li) => {
+        const i = Number(li.dataset.step);
+        li.classList.toggle('on', i <= n);
+        // 走到哪一步不能只靠顏色，aria-current 才是輔助技術讀得到的那一份
+        if (i === n) li.setAttribute('aria-current', 'step');
+        else li.removeAttribute('aria-current');
+      });
 
     generate?.addEventListener('click', () => {
       generate.disabled = true;
@@ -343,6 +356,9 @@ const passed = checks.filter((c) => c.ok).length;
           setTimeout(() => {
             progress.hidden = true;
             result.hidden = false;
+            // 焦點跟著搬，否則鍵盤使用者按下「產生草稿」之後焦點還留在原地，
+            // 螢幕閱讀器也完全不會提到草稿已經出來了。
+            resultHeading?.focus({ preventScroll: true });
             result.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }, 600);
         }

@@ -513,7 +513,16 @@ pnpm build:docx           # 每次 build 自動跑：json + 案例資料 → pub
   前景／背景，未達 WCAG AA 內文 4.5:1 就擋 build。**新增會成對出現的顏色時，同一回合把它加進那支的 `PAIRS`。**
   改顏色時 hex 與 oklch 兩份要一起改（同一個顏色的兩種寫法，守門只讀得到 hex 那份）。
 
-沒做的：螢幕閱讀器實測、動態內容的 aria live region。要做機關採購的無障礙檢核前先補這兩項。
+- **動態內容的播報與焦點**（2026-08-26 補）：`CaseDemo` 的「產生草稿」原本只有視覺變化 ——
+  分段進度是直接改 `textContent`、結果出來只 `scrollIntoView`，
+  **螢幕閱讀器與純鍵盤使用者從頭到尾不知道發生了什麼事**。現在：
+  進度區是 `role="status" aria-live="polite"`（進度條 `aria-hidden`，免得逐格報數字）、
+  步驟列的當下那一步標 `aria-current="step"`（走到哪不能只靠顏色）、
+  草稿產好時焦點移到結果標題（`[data-result-heading] tabindex="-1"`）。
+  ⚠️ **live region 的內容在 `hidden` 容器裡不會被播報**，所以 JS 的順序必須是「先 unhide 再改字」，
+  改那段時不要把順序調換。
+
+沒做的：**螢幕閱讀器實測**（VoiceOver／NVDA 實際聽一遍，本主機沒有）。要做機關採購的無障礙檢核前先補。
 
 ## 追蹤事件怎麼實測（不污染 GA4、不寄出假申請）
 
@@ -521,8 +530,14 @@ pnpm build:docx           # 每次 build 自動跑：json + 案例資料 → pub
 帳面上完全看不出來**（GA4 只會顯示「這個事件沒有資料」，跟「還沒有人點」長得一模一樣）。
 2026-08-20 用無頭瀏覽器實測過一次，四支都正常、無 JS 錯誤。要重測：
 
-本站刻意不裝 playwright（零 npm 相依），借 `www.yao.care` 的：**把探針放進那個 repo 再執行**，
+本站刻意不裝 playwright（零 npm 相依），借別的 repo 的：**把探針放進那個 repo 再執行**，
 不能只 `cd` 過去跑外部路徑的檔（ESM 的套件解析看的是檔案本身的位置，不是 cwd）。
+
+⚠️ **playwright 在 `/root/seo-ops/node_modules`，不在 `www.yao.care`**（2026-08-26 實查；
+`www.yao.care/package.json` 的相依裡沒有它，`scripts/ga-event-probe.mjs` 那支現在跑不動）。
+瀏覽器在 `/root/.cache/ms-playwright`。探針放 `/root/seo-ops/` 底下、跑完刪掉。
+本機測 `dist` 用 `python3 -m http.server 8899 --bind 127.0.0.1`，
+**用完一定 kill 並 `ss -lntp | grep 8899` 確認**（主機紅線：自己起的背景 server 一定要收）。
 
 ```js
 // 兩個攔截缺一不可，否則會把假資料灌進正式 Property、或真的寄出一封申請信

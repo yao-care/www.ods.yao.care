@@ -6,33 +6,33 @@
     "family": "official"
   },
   "draft": {
-    "id": "drf_01M0YR8094ZZHJXZNGDE",
+    "id": "drf_01M0Z3S178SQZ8DN5QCW",
     "user_id": "usr_DEMO00000000000000",
     "unit": "民政課",
     "document_family": "official",
     "doc_type": "函",
     "classification": "普通",
     "topic": "社區照顧關懷據點補助核銷",
-    "subject": "檢陳本所114年度社區照顧關懷據點補助經費核銷資料，請查照。",
-    "sections_json": "[{\"title\":\"說明\",\"items\":[\"本案補助經費業奉核定金額新臺幣伍拾萬元整。\",\"本所實支金額為新臺幣肆拾捌萬陸仟參佰貳拾元整，餘款業已繳回。\",\"檢附核定函影本、支出憑證黏存單、原始憑證、領據、成果報告及活動照片等核銷資料，隨函檢陳。\"]}]",
+    "subject": "檢陳本所114年度社區照顧關懷據點補助經費核銷資料，餘款隨函繳回，請查照。",
+    "sections_json": "[{\"title\":\"說明\",\"items\":[\"本所114年度社區照顧關懷據點補助經費，經核定補助金額為新臺幣伍拾萬元整。\",\"實際支出金額為新臺幣肆拾捌萬陸仟參佰貳拾元整，餘款業已繳回。\",\"檢附核定函影本、支出憑證黏存單、原始憑證、領據、成果報告及活動照片等核銷資料一份，隨函檢陳。\"]}]",
     "fields_json": "{\"receiver\":\"○○縣政府社會處\",\"source_len\":58,\"scenario\":\"grant_report\"}",
     "engine": "llm",
     "model": "claude-sonnet-5",
     "degraded_reason": null,
-    "citations_json": "[\"knw_01M0YR7J29Q20PWNN3SG\"]",
+    "citations_json": "[\"knw_01M0Z3RG0F1X6DCMXPN8\"]",
     "checks_json": "[{\"id\":\"subject_present\",\"title\":\"主旨必填\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_single_paragraph\",\"title\":\"主旨不分項\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_length\",\"title\":\"主旨長度\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_expectation\",\"title\":\"主旨期望語\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_period\",\"title\":\"主旨句末句號\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_no_section_name\",\"title\":\"主旨不含段名\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"doc_type_valid\",\"title\":\"文別合法\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"classification_valid\",\"title\":\"密等合法\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_titles_valid\",\"title\":\"段名合法\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_not_empty\",\"title\":\"段落不得為空\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_item_period\",\"title\":\"分項句末句號\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_item_count\",\"title\":\"分項數量\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_item_length\",\"title\":\"分項長度\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_mask_token\",\"title\":\"無殘留代稱\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_placeholder\",\"title\":\"無未填佔位符\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_raw_id_number\",\"title\":\"無身分證字號\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_raw_mobile\",\"title\":\"無行動電話號碼\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"roc_year\",\"title\":\"民國紀年\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"currency_format\",\"title\":\"金額格式\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_colloquial\",\"title\":\"無口語詞\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_simplified\",\"title\":\"無簡體字\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"fullwidth_punctuation\",\"title\":\"全形標點\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"receiver_required\",\"title\":\"受文者必填\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_extra_blank\",\"title\":\"無多餘空白\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]}]",
     "confirmed": 0,
     "confirmed_by": null,
     "confirmed_at": null,
-    "created_at": "2026-08-26T10:00:56.357Z",
-    "updated_at": "2026-08-26T10:00:56.357Z",
+    "created_at": "2026-08-26T13:22:28.713Z",
+    "updated_at": "2026-08-26T13:22:28.713Z",
     "sections": [
       {
         "title": "說明",
         "items": [
-          "本案補助經費業奉核定金額新臺幣伍拾萬元整。",
-          "本所實支金額為新臺幣肆拾捌萬陸仟參佰貳拾元整，餘款業已繳回。",
-          "檢附核定函影本、支出憑證黏存單、原始憑證、領據、成果報告及活動照片等核銷資料，隨函檢陳。"
+          "本所114年度社區照顧關懷據點補助經費，經核定補助金額為新臺幣伍拾萬元整。",
+          "實際支出金額為新臺幣肆拾捌萬陸仟參佰貳拾元整，餘款業已繳回。",
+          "檢附核定函影本、支出憑證黏存單、原始憑證、領據、成果報告及活動照片等核銷資料一份，隨函檢陳。"
         ]
       }
     ],
@@ -42,7 +42,7 @@
       "scenario": "grant_report"
     },
     "citations": [
-      "knw_01M0YR7J29Q20PWNN3SG"
+      "knw_01M0Z3RG0F1X6DCMXPN8"
     ],
     "checks": [
       {

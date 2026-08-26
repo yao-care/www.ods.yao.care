@@ -6,40 +6,40 @@
     "family": "official"
   },
   "draft": {
-    "id": "drf_01M0YR7TVB37R9AY5V5B",
+    "id": "drf_01M0Z3RV6VQN5TQHKCJ7",
     "user_id": "usr_DEMO00000000000000",
     "unit": "民政課",
     "document_family": "official",
     "doc_type": "函",
     "classification": "普通",
     "topic": "道路破損陳情轉請養工單位處理",
-    "subject": "為轉知本鄉三盛村路段路面破損案，請貴處查照辦理。",
-    "sections_json": "[{\"title\":\"說明\",\"items\":[\"據本鄉三盛村林陳情，指稱中正路二段路面破損多處，機車行經常打滑，請求儘速修繕。\",\"本所已於114年3月5日派員赴現場會勘，查明該路段路面確有破損情形屬實。\",\"經查該路段修繕事宜非本所權責範圍，依權責劃分應由貴處辦理，爰檢附會勘紀錄及陳情資料移送貴處卓處。\"]},{\"title\":\"辦法\",\"items\":[\"請貴處派員實地勘查，並依權責妥為規劃修繕事宜。\",\"請貴處於辦理完竣後，惠復本所轉知陳情人林，俾利後續追蹤。\"]}]",
+    "subject": "為本鄉三盛村林陳情○○路二段路面破損多處，經會勘屬實，惟修繕事項非本所權責，檢陳相關資料，請查照辦理。",
+    "sections_json": "[{\"title\":\"說明\",\"items\":[\"本鄉三盛村林陳情，中正路二段路面破損多處，機車行經常打滑，請求儘速修繕。\",\"經本所於114年3月5日派員會勘，查該路段確有破損情形屬實。\",\"案關路面修繕事項核非本所權責範圍，依非權責案件移文原則，應查明權責機關逕行移送，並副知原陳情人，爰檢陳相關資料予貴處。\"]},{\"title\":\"辦法\",\"items\":[\"請貴處惠予派員勘查並儘速辦理修繕事宜。\",\"請貴處辦理結果惠予見復，以利轉知陳情人。\"]}]",
     "fields_json": "{\"receiver\":\"○○縣政府工務處\",\"source_len\":58,\"scenario\":\"repair\"}",
     "engine": "llm",
     "model": "claude-sonnet-5",
     "degraded_reason": null,
-    "citations_json": "[\"knw_01M0YR7J29DDA69ZSD5R\"]",
+    "citations_json": "[\"knw_01M0Z3RG0FZ6PGEYN73K\"]",
     "checks_json": "[{\"id\":\"subject_present\",\"title\":\"主旨必填\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_single_paragraph\",\"title\":\"主旨不分項\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_length\",\"title\":\"主旨長度\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_expectation\",\"title\":\"主旨期望語\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_period\",\"title\":\"主旨句末句號\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_no_section_name\",\"title\":\"主旨不含段名\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"doc_type_valid\",\"title\":\"文別合法\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"classification_valid\",\"title\":\"密等合法\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_titles_valid\",\"title\":\"段名合法\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_not_empty\",\"title\":\"段落不得為空\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_item_period\",\"title\":\"分項句末句號\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_item_count\",\"title\":\"分項數量\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_item_length\",\"title\":\"分項長度\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_mask_token\",\"title\":\"無殘留代稱\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_placeholder\",\"title\":\"無未填佔位符\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_raw_id_number\",\"title\":\"無身分證字號\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_raw_mobile\",\"title\":\"無行動電話號碼\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"roc_year\",\"title\":\"民國紀年\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"currency_format\",\"title\":\"金額格式\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_colloquial\",\"title\":\"無口語詞\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_simplified\",\"title\":\"無簡體字\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"fullwidth_punctuation\",\"title\":\"全形標點\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"receiver_required\",\"title\":\"受文者必填\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_extra_blank\",\"title\":\"無多餘空白\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]}]",
     "confirmed": 0,
     "confirmed_by": null,
     "confirmed_at": null,
-    "created_at": "2026-08-26T10:00:50.797Z",
-    "updated_at": "2026-08-26T10:00:50.797Z",
+    "created_at": "2026-08-26T13:22:22.557Z",
+    "updated_at": "2026-08-26T13:22:22.557Z",
     "sections": [
       {
         "title": "說明",
         "items": [
-          "據本鄉三盛村林陳情，指稱中正路二段路面破損多處，機車行經常打滑，請求儘速修繕。",
-          "本所已於114年3月5日派員赴現場會勘，查明該路段路面確有破損情形屬實。",
-          "經查該路段修繕事宜非本所權責範圍，依權責劃分應由貴處辦理，爰檢附會勘紀錄及陳情資料移送貴處卓處。"
+          "本鄉三盛村林陳情，中正路二段路面破損多處，機車行經常打滑，請求儘速修繕。",
+          "經本所於114年3月5日派員會勘，查該路段確有破損情形屬實。",
+          "案關路面修繕事項核非本所權責範圍，依非權責案件移文原則，應查明權責機關逕行移送，並副知原陳情人，爰檢陳相關資料予貴處。"
         ]
       },
       {
         "title": "辦法",
         "items": [
-          "請貴處派員實地勘查，並依權責妥為規劃修繕事宜。",
-          "請貴處於辦理完竣後，惠復本所轉知陳情人林，俾利後續追蹤。"
+          "請貴處惠予派員勘查並儘速辦理修繕事宜。",
+          "請貴處辦理結果惠予見復，以利轉知陳情人。"
         ]
       }
     ],
@@ -49,7 +49,7 @@
       "scenario": "repair"
     },
     "citations": [
-      "knw_01M0YR7J29DDA69ZSD5R"
+      "knw_01M0Z3RG0FZ6PGEYN73K"
     ],
     "checks": [
       {

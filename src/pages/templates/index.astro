@@ -14,6 +14,7 @@ import SiteFooter from '../../components/SiteFooter.astro';
 import { SERVICE_LINKS } from '../../site.config.js';
 import { CASES } from '../../data/cases.js';
 import { CITIZEN_EXAMPLES } from '../../data/citizen-examples.js';
+import { PRIVATE_DOCS } from '../../data/private-docs.js';
 import downloads from '../../data/downloads.json';
 import terms from '../../data/gov-terms.json';
 
@@ -21,15 +22,28 @@ const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 
+// 三個文書族群各自分區。2026-08-26 開了 private 族群之後，原本的二分法會把委託書、
+// 切結書、和解書一併掃進「民眾書件」——那是「民眾對機關」的區，放錯地方。
 const OFFICIAL_TYPES = ['函', '書函', '公告', '開會通知單', '簽'];
+const PRIVATE_TYPES = ['委託書', '授權書', '切結書', '聲明書', '和解書'];
 const officialTemplates = downloads.templates.filter((t) => OFFICIAL_TYPES.includes(t.docType));
-const citizenTemplates = downloads.templates.filter((t) => !OFFICIAL_TYPES.includes(t.docType));
+const privateTemplates = downloads.templates.filter((t) => PRIVATE_TYPES.includes(t.docType));
+const citizenTemplates = downloads.templates.filter(
+  (t) => !OFFICIAL_TYPES.includes(t.docType) && !PRIVATE_TYPES.includes(t.docType),
+);
 
 const caseRows = CASES.map((c) => ({
   ...downloads.cases[c.slug],
   title: c.seoTitle,
   href: `${base}cases/${c.slug}/`,
   lead: c.lead,
+})).filter((row) => row.path);
+
+const privateRows = PRIVATE_DOCS.map((d) => ({
+  ...downloads.private[d.slug],
+  title: d.seoTitle,
+  href: `${base}private-documents/${d.slug}/`,
+  lead: d.lead,
 })).filter((row) => row.path);
 
 const citizenRows = CITIZEN_EXAMPLES.map((e) => ({
@@ -39,7 +53,9 @@ const citizenRows = CITIZEN_EXAMPLES.map((e) => ({
   lead: e.lead,
 })).filter((row) => row.path);
 
-const total = officialTemplates.length + citizenTemplates.length + caseRows.length + citizenRows.length;
+const total =
+  officialTemplates.length + privateTemplates.length + citizenTemplates.length +
+  caseRows.length + citizenRows.length + privateRows.length;
 
 const description =
   `函、書函、公告、開會通知單、簽與民眾書件的空白 Word 範本，版面取自政府文書格式參考規範原始檔，` +
@@ -205,6 +221,23 @@ const faq = {
     </section>
 
     <section>
+      <h2>民間書件空白範本</h2>
+      <p>
+        委託別人代辦、向機關切結某件事屬實、跟對方和解時用的。這幾種不是公文，
+        沒有中央訂的通案格式；<strong>受理單位有制式表格時以那份為準</strong>。
+        用法與常踩的點在<a href={`${base}private-documents/`}>民間書件</a>。
+      </p>
+      <ul class="files">
+        {privateTemplates.map((t) => (
+          <li>
+            <a href={`${base}downloads/${t.path}`} download={t.filename}>{t.filename}</a>
+            <span>{t.note}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section>
       <h2>填好內容的公文範例</h2>
       <p>不想從空白開始的話，直接下載一份寫好的改。每一份都附完整全文與逐條格式檢核結果。</p>
       <ul class="files">
@@ -221,6 +254,18 @@ const faq = {
       <h2>填好內容的民眾書件與存證信函範例</h2>
       <ul class="files">
         {citizenRows.map((row) => (
+          <li>
+            <a href={`${base}downloads/${row.path}`} download={row.filename}>{row.filename}</a>
+            <span>{row.docType}　<a href={row.href}>看全文與檢核結果</a></span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section>
+      <h2>填好內容的民間書件範例</h2>
+      <ul class="files">
+        {privateRows.map((row) => (
           <li>
             <a href={`${base}downloads/${row.path}`} download={row.filename}>{row.filename}</a>
             <span>{row.docType}　<a href={row.href}>看全文與檢核結果</a></span>

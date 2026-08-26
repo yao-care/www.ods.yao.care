@@ -6,15 +6,15 @@
     "family": "official"
   },
   "draft": {
-    "id": "drf_01M0YRBFZE6S30VZKX4G",
+    "id": "drf_01M0Z3WJ4XXEWYAZ1XDA",
     "user_id": "usr_DEMO00000000000000",
     "unit": "民政課",
     "document_family": "official",
     "doc_type": "書函",
     "classification": "普通",
     "topic": "場地借用同意書函",
-    "subject": "復貴會申請借用本所活動中心辦理長者健康促進課程一案，請查照。",
-    "sections_json": "[{\"title\":\"說明\",\"items\":[\"復貴會114年8月1日申請借用本所活動中心辦理長者健康促進課程一案。\",\"同意自114年9月2日起至114年11月25日止，每週二上午9時至11時借用本所活動中心。\"]},{\"title\":\"辦法\",\"items\":[\"借用期間場地清潔及設備維護，請貴會自理。\"]}]",
+    "subject": "復貴會申請借用本所活動中心辦理長者健康促進課程一案，同意自114年9月2日起至114年11月25日止每週二上午9時至11時借用，請查照。",
+    "sections_json": "[{\"title\":\"說明\",\"items\":[\"復貴會114年8月1日申請借用本所活動中心辦理長者健康促進課程一案。\",\"同意自114年9月2日起至114年11月25日止，每週二上午9時至11時借用本所活動中心。\"]},{\"title\":\"辦法\",\"items\":[\"借用期間場地清潔及設備維護，請貴會自行負責處理。\"]}]",
     "fields_json": "{\"receiver\":\"○○社區發展協會\",\"source_len\":85,\"scenario\":\"venue_loan\"}",
     "engine": "llm",
     "model": "claude-sonnet-5",
@@ -24,8 +24,8 @@
     "confirmed": 0,
     "confirmed_by": null,
     "confirmed_at": null,
-    "created_at": "2026-08-26T10:02:50.735Z",
-    "updated_at": "2026-08-26T10:02:50.735Z",
+    "created_at": "2026-08-26T13:24:24.350Z",
+    "updated_at": "2026-08-26T13:24:24.350Z",
     "sections": [
       {
         "title": "說明",
@@ -37,7 +37,7 @@
       {
         "title": "辦法",
         "items": [
-          "借用期間場地清潔及設備維護，請貴會自理。"
+          "借用期間場地清潔及設備維護，請貴會自行負責處理。"
         ]
       }
     ],

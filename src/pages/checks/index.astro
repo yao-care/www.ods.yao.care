@@ -4,6 +4,8 @@ import PageToc from '../../components/PageToc.astro';
 import sample from '../../data/scenarios/grant_report.json';
 import meetingSample from '../../data/scenarios/meeting.json';
 import noticeSample from '../../data/scenarios/notice.json';
+import { PRIVATE_DOCS } from '../../data/private-docs.js';
+import { CITIZEN_EXAMPLES } from '../../data/citizen-examples.js';
 import downloads from '../../data/downloads.json';
 
 const base = import.meta.env.BASE_URL.endsWith('/')
@@ -59,6 +61,32 @@ const noticeCount = noticeSample.checks.length;
 // 公告少掉的那幾條（目前是主旨期望語），一樣用實際產物比對算出來，不寫死。
 const noticeIds = new Set(noticeSample.checks.map((c) => c.id));
 const notForNotice = checks.filter((c) => !noticeIds.has(c.id));
+
+// 民間書件（private 族群）另有一組：拿掉「請求事項必填」，另加這個族群才有的幾條。
+// 一樣用實際產物比對算出來，不寫死——規則改了這頁跟著變。
+// 「這個文別才有的」要同時排除機關公文與民眾書件那兩組 —— 只拿公文當基準的話，
+// sender_required（發文人必填）會被誤認成民間書件專屬，但民眾書件也有那一條。
+const sharedIds = new Set([
+  ...checks.map((c) => c.id),
+  ...(CITIZEN_EXAMPLES[0]?.checks ?? []).map((c) => c.id),
+]);
+const privatePayloads = import.meta.glob('../../data/scenarios/*.json', { eager: true });
+// 每一種民間書件的條目數與專屬檢核，都取實際烘出來的產物，不寫死。
+const privateByType = new Map();
+for (const d of PRIVATE_DOCS) {
+  const payload = privatePayloads[`../../data/scenarios/${d.key}.json`]?.default;
+  if (!payload) continue;
+  const docType = payload.draft.doc_type;
+  if (privateByType.has(docType)) continue;
+  privateByType.set(docType, {
+    docType,
+    count: payload.checks.length,
+    own: payload.checks.filter((c) => !sharedIds.has(c.id)),
+  });
+}
+const privateRows = [...privateByType.values()];
+const privateMin = Math.min(...privateRows.map((r) => r.count));
+const privateMax = Math.max(...privateRows.map((r) => r.count));
 const meetingOwn = meetingSample.checks.filter((c) => c.id.startsWith('meeting_'));
 const subjectCount = GROUPS.find((g) => g.id === 'subject').ids.length;
 const sectionCount = GROUPS.find((g) => g.id === 'sections').ids.length;
@@ -74,6 +102,7 @@ const S = {
   ),
   ...(others.length ? { others: { id: 'others', label: '其他' } } : {}),
   notice: { id: 'notice', label: `公告少一條（${noticeCount} 條）` },
+  private: { id: 'private-family', label: `民間書件另有一組（${privateMin}～${privateMax} 條，依文別而定）` },
   meeting: { id: 'meeting', label: `開會通知單另有一組（${meetingCount} 條）` },
   live: { id: 'live', label: '看實際跑出來的結果' },
 };
@@ -111,6 +140,7 @@ const faqPairs = [
     q: '公文格式檢核會檢查哪些項目？',
     a: `函、書函、簽共 ${count} 條，分成主旨（${subjectCount} 條）、文別與段落（${sectionCount} 條）、`
       + `個資與代稱、用字與格式、收發五組。公告 ${noticeCount} 條（不套主旨期望語那條）；`
+      + `民間書件（委託書、切結書、和解書等）另有一組 ${privateMin}～${privateMax} 條，依文別而定；`
       + '開會通知單是固定欄位表單，不套主旨與段落那兩組，'
       + `改查它自己的欄位，合計 ${meetingCount} 條。`,
   },
@@ -204,6 +234,35 @@ const faq = {
   </section>
 
   <section>
+    <h2 id={S.private.id}>民間書件另有一組（{privateMin}～{privateMax} 條，依文別而定）</h2>
+    <p>
+      委託書、授權書、切結書、聲明書、和解書不是公文，
+      套的是<a href={`${base}private-documents/`}>民間書件</a>那一組檢核：
+      拿掉「請求事項必填」（這幾種文件沒有那一段），另外加上這個族群才有的幾條 ——
+      而且<strong>只在適用的文別上才列出來</strong>，不適用的不會湊數。
+    </p>
+    <table>
+      <thead><tr><th>文別</th><th>條數</th><th>這個文別才有的</th></tr></thead>
+      <tbody>
+        {privateRows.map((r) => (
+          <tr>
+            <td>{r.docType}</td>
+            <td>{r.count}</td>
+            <td class="when">{r.own.length ? r.own.map((c) => c.title).join('、') : '（無）'}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <p class="note">
+      「責任文句」擋的是<strong>會被退件</strong>，不是「法律上不成立」——
+      不實陳述的責任來自刑法第 214 條與行政程序法第 119 條第 2 款，不是那句話創設的；
+      但它在許多作用法規裡是應記載字樣（土地登記規則第 97 條把該句寫進條文）。
+      「特別授權事項」對應民法第 534 條的六類行為；
+      「拋棄範圍」與「強制險」對應民法第 737 條與強制汽車責任保險法。
+    </p>
+  </section>
+
+  <section>
     <h2 id={S.meeting.id}>開會通知單另有一組（{meetingCount} 條）</h2>
     <p>
       這 {count} 條是「函」的檢核。開會通知單依<a href={downloads.source.page} rel="noopener">{downloads.source.name}</a>
@@ -233,12 +292,18 @@ const faq = {
     <h2 id={S.live.id}>看實際跑出來的結果</h2>
     <p>
       每一則<a href={`${base}cases/`}>公文範例</a>都附了逐條結果，可以直接看哪些通過、哪些被標記。
-      開會通知單那則跑的是上面那組 {meetingCount} 條，公告那幾則是 {noticeCount} 條。
+      開會通知單那則跑的是上面那組 {meetingCount} 條，公告那幾則是 {noticeCount} 條，
+      <a href={`${base}private-documents/`}>民間書件</a>那幾則依文別而定，{privateMin}～{privateMax} 條。
     </p>
   </section>
 </ArticlePage>
 
 <style>
+  .when {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+    white-space: nowrap;
+  }
   .critical {
     color: var(--color-critical);
   }

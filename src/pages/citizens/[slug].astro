@@ -29,6 +29,12 @@ const blankTemplate = downloads.templates.find((t) => t.docType === example.draf
 // Google 只從 sitemap 發現、遲遲不爬（2026-08-19 實測 8/10 頁未爬），所以補上橫向互連。
 const sameFamily = CITIZEN_EXAMPLES.filter((e) => e.family === example.family && e.slug !== example.slug);
 const otherFamily = CITIZEN_EXAMPLES.filter((e) => e.family !== example.family).slice(0, 2);
+// 民間書件是 2026-08-26 新開的一區，與這裡是同一批使用者（個人與企業），要有橫向入口。
+const PRIVATE_PICKS = [
+  { slug: 'power-of-attorney-household', title: '委託書範例：代領戶籍謄本' },
+  { slug: 'affidavit-documents-true', title: '切結書範例：切結所附文件屬實' },
+  { slug: 'settlement-traffic-accident', title: '車禍和解書範例：僅就車損和解' },
+];
 const familyLabelOf = (e) => (e.family === 'notice' ? '存證信函' : '民眾對機關');
 
 // 民眾端明細頁原本一條單頁結構化資料都沒有（只有 BaseLayout 給的 Organization／WebSite），
@@ -223,6 +229,19 @@ const faq = {
             <a href={`${base}cases/`}>機關端的公文範例庫</a>
             <span>函、公告、開會通知單、簽 —— 機關承辦寫的那一邊</span>
           </li>
+        </ul>
+
+        <h2>自己出具的文件</h2>
+        <p class="note">
+          委託別人代辦、切結某件事屬實、跟對方和解 —— 這幾種不是寫給機關、也不是為了留證據，
+          在<a href={`${base}private-documents/`}>民間書件</a>那一區。
+        </p>
+        <ul class="related">
+          {PRIVATE_PICKS.map((d) => (
+            <li>
+              <a href={`${base}private-documents/${d.slug}/`}>{d.title}</a>
+            </li>
+          ))}
         </ul>
       </>
     )}

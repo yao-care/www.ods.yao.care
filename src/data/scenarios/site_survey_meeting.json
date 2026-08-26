@@ -6,7 +6,7 @@
     "family": "official"
   },
   "draft": {
-    "id": "drf_01M0YRBZBBA8HZ34S43N",
+    "id": "drf_01M0Z3X3K5FDWSX55942",
     "user_id": "usr_DEMO00000000000000",
     "unit": "民政課",
     "document_family": "official",
@@ -15,7 +15,7 @@
     "topic": "召開排水溝改善工程會勘",
     "subject": "",
     "sections_json": "[]",
-    "fields_json": "{\"meeting_topic\":\"為研商本鄉三盛村中山路排水溝積淹水改善方案，訂於114年9月18日上午10時於現場召開會勘\",\"meeting_time\":\"中華民國114年9月18日（星期四）上午10時\",\"meeting_place\":\"本鄉三盛村中山路與民權街口（現場集合）\",\"attendees\":\"○○縣政府水利處、本鄉三盛村辦公處\",\"remarks\":\"請與會單位攜帶轄區排水系統圖資，並請三盛村辦公處通知受影響住戶到場陳述意見。\",\"meeting_chair\":\"○鄉長○○\",\"meeting_contact\":\"○○○　00-0000000 分機 0000\",\"observers\":\"本所工務課、清潔隊\",\"receiver\":\"○○縣政府水利處、本鄉三盛村辦公處\",\"source_len\":52,\"scenario\":\"site_survey_meeting\"}",
+    "fields_json": "{\"meeting_topic\":\"研商本鄉三盛村中山路排水溝積淹水改善方案\",\"meeting_time\":\"中華民國114年9月18日（星期四）上午10時\",\"meeting_place\":\"本鄉三盛村中山路與民權街口（現場集合）\",\"attendees\":\"○○縣政府水利處、本鄉三盛村辦公處\",\"remarks\":\"請與會單位攜帶轄區排水系統圖資，並請三盛村辦公處通知受影響住戶到場陳述意見。\",\"meeting_chair\":\"○鄉長○○\",\"meeting_contact\":\"○○○　00-0000000 分機 0000\",\"observers\":\"本所工務課、清潔隊\",\"receiver\":\"○○縣政府水利處、本鄉三盛村辦公處\",\"source_len\":52,\"scenario\":\"site_survey_meeting\"}",
     "engine": "llm",
     "model": "claude-sonnet-5",
     "degraded_reason": null,
@@ -24,11 +24,11 @@
     "confirmed": 0,
     "confirmed_by": null,
     "confirmed_at": null,
-    "created_at": "2026-08-26T10:03:06.476Z",
-    "updated_at": "2026-08-26T10:03:06.476Z",
+    "created_at": "2026-08-26T13:24:42.213Z",
+    "updated_at": "2026-08-26T13:24:42.213Z",
     "sections": [],
     "fields": {
-      "meeting_topic": "為研商本鄉三盛村中山路排水溝積淹水改善方案，訂於114年9月18日上午10時於現場召開會勘",
+      "meeting_topic": "研商本鄉三盛村中山路排水溝積淹水改善方案",
       "meeting_time": "中華民國114年9月18日（星期四）上午10時",
       "meeting_place": "本鄉三盛村中山路與民權街口（現場集合）",
       "attendees": "○○縣政府水利處、本鄉三盛村辦公處",

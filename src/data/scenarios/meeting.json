@@ -6,7 +6,7 @@
     "family": "official"
   },
   "draft": {
-    "id": "drf_01M0YR85F2P37PW4XGBH",
+    "id": "drf_01M0Z3S8A03C23ND8371",
     "user_id": "usr_DEMO00000000000000",
     "unit": "民政課",
     "document_family": "official",
@@ -15,7 +15,7 @@
     "topic": "召開里長座談會開會通知",
     "subject": "",
     "sections_json": "[]",
-    "fields_json": "{\"meeting_topic\":\"研商114年度基層建設需求事宜\",\"meeting_time\":\"中華民國114年4月10日（星期四）下午2時\",\"meeting_place\":\"本所三樓會議室\",\"attendees\":\"本鄉各里里長\",\"remarks\":\"請各里長於會前備妥所轄114年度基層建設需求清單，並準時出席。\",\"meeting_chair\":\"○鄉長○○\",\"meeting_contact\":\"○○○　00-0000000 分機 0000\",\"observers\":\"本所民政課、財政課\",\"receiver\":\"本鄉各里辦公處\",\"source_len\":55,\"scenario\":\"meeting\"}",
+    "fields_json": "{\"meeting_topic\":\"為研商114年度基層建設需求事宜，召開里長座談會\",\"meeting_time\":\"中華民國114年4月10日（星期四）下午2時\",\"meeting_place\":\"本所三樓會議室\",\"attendees\":\"本鄉各里里長\",\"remarks\":\"請各里長於會前備妥所轄114年度基層建設需求清單，並準時出席。\",\"meeting_chair\":\"○鄉長○○\",\"meeting_contact\":\"○○○　00-0000000 分機 0000\",\"observers\":\"本所民政課、財政課\",\"receiver\":\"本鄉各里辦公處\",\"source_len\":55,\"scenario\":\"meeting\"}",
     "engine": "llm",
     "model": "claude-sonnet-5",
     "degraded_reason": null,
@@ -24,11 +24,11 @@
     "confirmed": 0,
     "confirmed_by": null,
     "confirmed_at": null,
-    "created_at": "2026-08-26T10:01:01.667Z",
-    "updated_at": "2026-08-26T10:01:01.667Z",
+    "created_at": "2026-08-26T13:22:35.969Z",
+    "updated_at": "2026-08-26T13:22:35.969Z",
     "sections": [],
     "fields": {
-      "meeting_topic": "研商114年度基層建設需求事宜",
+      "meeting_topic": "為研商114年度基層建設需求事宜，召開里長座談會",
       "meeting_time": "中華民國114年4月10日（星期四）下午2時",
       "meeting_place": "本所三樓會議室",
       "attendees": "本鄉各里里長",

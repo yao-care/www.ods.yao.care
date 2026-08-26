@@ -6,26 +6,26 @@
     "family": "official"
   },
   "draft": {
-    "id": "drf_01M0YR8SM8MTWSZEAC85",
+    "id": "drf_01M0Z3SWTKQGRMZK2NN1",
     "user_id": "usr_DEMO00000000000000",
     "unit": "民政課",
     "document_family": "official",
     "doc_type": "公告",
     "classification": "普通",
     "topic": "公告禁止露天燃燒稻草",
-    "subject": "公告本鄉自114年3月1日起全面禁止露天燃燒稻草及農業廢棄物，違者依空氣污染防制法處罰。",
-    "sections_json": "[{\"title\":\"依據\",\"items\":[\"空氣污染防制法第75條規定。\"]},{\"title\":\"公告事項\",\"items\":[\"本鄉自114年3月1日起，全面禁止露天燃燒稻草及農業廢棄物，以維護空氣品質。\",\"違反前項規定者，依空氣污染防制法第75條規定，處新臺幣壹仟貳佰元以上拾萬元以下罰鍰。\",\"本案由本所民政課承辦，如有疑義，請洽本所民政課詢問。\"]}]",
+    "subject": "為維護空氣品質，公告本鄉自114年3月1日起全面禁止露天燃燒稻草及農業廢棄物。",
+    "sections_json": "[{\"title\":\"依據\",\"items\":[\"空氣污染防制法第75條規定。\"]},{\"title\":\"公告事項\",\"items\":[\"自114年3月1日起，本鄉全面禁止露天燃燒稻草及農業廢棄物。\",\"違反前項規定者，依空氣污染防制法第75條處新臺幣壹仟貳佰元以上拾萬元以下罰鍰。\",\"本公告如有未盡事宜，由本所民政課補充說明並公告之。\"]}]",
     "fields_json": "{\"receiver\":null,\"source_len\":52,\"scenario\":\"notice\"}",
     "engine": "llm",
     "model": "claude-sonnet-5",
     "degraded_reason": null,
-    "citations_json": "[\"knw_01M0YR7J29FA22WNV8W4\",\"knw_01M0YR7J29QH0C252NB2\"]",
+    "citations_json": "[\"knw_01M0Z3RG0FSTTEZWV64B\"]",
     "checks_json": "[{\"id\":\"subject_present\",\"title\":\"主旨必填\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_single_paragraph\",\"title\":\"主旨不分項\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_length\",\"title\":\"主旨長度\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_period\",\"title\":\"主旨句末句號\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_no_section_name\",\"title\":\"主旨不含段名\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"doc_type_valid\",\"title\":\"文別合法\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"classification_valid\",\"title\":\"密等合法\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_titles_valid\",\"title\":\"段名合法\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_not_empty\",\"title\":\"段落不得為空\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_item_period\",\"title\":\"分項句末句號\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_item_count\",\"title\":\"分項數量\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_item_length\",\"title\":\"分項長度\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_mask_token\",\"title\":\"無殘留代稱\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_placeholder\",\"title\":\"無未填佔位符\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_raw_id_number\",\"title\":\"無身分證字號\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_raw_mobile\",\"title\":\"無行動電話號碼\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"roc_year\",\"title\":\"民國紀年\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"currency_format\",\"title\":\"金額格式\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_colloquial\",\"title\":\"無口語詞\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_simplified\",\"title\":\"無簡體字\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"fullwidth_punctuation\",\"title\":\"全形標點\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"receiver_required\",\"title\":\"受文者必填\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_extra_blank\",\"title\":\"無多餘空白\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]}]",
     "confirmed": 0,
     "confirmed_by": null,
     "confirmed_at": null,
-    "created_at": "2026-08-26T10:01:22.313Z",
-    "updated_at": "2026-08-26T10:01:22.313Z",
+    "created_at": "2026-08-26T13:22:56.979Z",
+    "updated_at": "2026-08-26T13:22:56.979Z",
     "sections": [
       {
         "title": "依據",
@@ -36,9 +36,9 @@
       {
         "title": "公告事項",
         "items": [
-          "本鄉自114年3月1日起，全面禁止露天燃燒稻草及農業廢棄物，以維護空氣品質。",
-          "違反前項規定者，依空氣污染防制法第75條規定，處新臺幣壹仟貳佰元以上拾萬元以下罰鍰。",
-          "本案由本所民政課承辦，如有疑義，請洽本所民政課詢問。"
+          "自114年3月1日起，本鄉全面禁止露天燃燒稻草及農業廢棄物。",
+          "違反前項規定者，依空氣污染防制法第75條處新臺幣壹仟貳佰元以上拾萬元以下罰鍰。",
+          "本公告如有未盡事宜，由本所民政課補充說明並公告之。"
         ]
       }
     ],
@@ -48,8 +48,7 @@
       "scenario": "notice"
     },
     "citations": [
-      "knw_01M0YR7J29FA22WNV8W4",
-      "knw_01M0YR7J29QH0C252NB2"
+      "knw_01M0Z3RG0FSTTEZWV64B"
     ],
     "checks": [
       {

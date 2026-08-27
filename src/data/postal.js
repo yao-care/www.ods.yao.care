@@ -86,6 +86,55 @@ export const FORM_RULES = [
   },
 ];
 
+/**
+ * 用紙的格線規格。**逐格數自官方 PDF**（`存證信函新格式10206.pdf`，2026-08-27 實抓解析）：
+ * 表頭是「格 1…20」、「行 一…十」，所以**每頁 20 格 × 10 行 ＝ 200 字**。
+ *
+ * ⚠️ 這個數字一定要從官方檔數，不能憑印象：本 session 一開始講的是「20×20＝400 字」，
+ * 差了一倍——而頁數直接決定存證費（首頁 50、續頁每頁 30），錯了使用者會算錯錢。
+ */
+export const GRID = {
+  columns: 20,
+  rows: 10,
+  get charsPerPage() {
+    return this.columns * this.rows;
+  },
+  source: SOURCES.form,
+  file: 'https://www.post.gov.tw/post/download/%E5%AD%98%E8%AD%89%E4%BF%A1%E5%87%BD%E6%96%B0%E6%A0%BC%E5%BC%8F10206.pdf',
+};
+
+/**
+ * 算一段內文要用幾行。**不是字數除以 20** ——「每格限書一字」而且每一段都從新的一行起，
+ * 所以段落末尾那一行沒寫滿的部分是浪費掉的格子。逐段算才會準。
+ */
+export function rowsFor(paragraphs) {
+  const list = Array.isArray(paragraphs) ? paragraphs : String(paragraphs).split(/\n+/);
+  return list
+    .map((t) => String(t).trim())
+    .filter(Boolean)
+    .reduce((sum, t) => sum + Math.ceil([...t].length / GRID.columns), 0);
+}
+
+/** 行數換頁數。 */
+export const pagesForRows = (rows) => Math.max(1, Math.ceil(rows / GRID.rows));
+
+/**
+ * 存證費。官方原文：首頁 50 元，續頁每頁或附件每張 30 元。
+ * **郵資另計**（見 POSTAGE），這裡只算存證費，不要把兩者混在一個數字裡當承諾。
+ */
+export function certifyFee(pages, attachments = 0) {
+  const p = Math.max(1, Math.floor(pages));
+  const a = Math.max(0, Math.floor(attachments));
+  return CERTIFY_FEE.firstPage + (p - 1 + a) * CERTIFY_FEE.extraPage;
+}
+
+/** 一次算完：內文段落 → 行數、頁數、存證費。頁面與守門吃同一支。 */
+export function estimate(paragraphs, attachments = 0) {
+  const rows = rowsFor(paragraphs);
+  const pages = pagesForRows(rows);
+  return { rows, pages, fee: certifyFee(pages, attachments), attachments };
+}
+
 /** 使用說明 ODT 裡的軟體設定（本站產生的 Word 已照這些值設定）。 */
 export const TYPESETTING = {
   quote:

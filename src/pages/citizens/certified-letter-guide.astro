@@ -13,7 +13,7 @@
 import ArticlePage from '../../layouts/ArticlePage.astro';
 import PageToc from '../../components/PageToc.astro';
 import { CITIZEN_EXAMPLES } from '../../data/citizen-examples.js';
-import { CERTIFY_FEE, POSTAGE, FORM_RULES, TYPESETTING, SOURCES, VERIFIED_ON } from '../../data/postal.js';
+import { CERTIFY_FEE, POSTAGE, FORM_RULES, TYPESETTING, SOURCES, VERIFIED_ON, GRID, estimate } from '../../data/postal.js';
 import downloads from '../../data/downloads.json';
 
 const base = import.meta.env.BASE_URL.endsWith('/')
@@ -55,12 +55,20 @@ const faqPairs = [
 ];
 
 // 章節的單一真實來源；錨點由 scripts/check-anchors.mjs 守門。
+/** 對照表用的示範內文長度。伺服器端就渲染，沒有 JS 也看得到。 */
+const SAMPLES = [
+  { label: '短：催告還款一段話（約 60 字）', paras: ['字'.repeat(60)] },
+  { label: '中：三段各約 80 字', paras: Array.from({ length: 3 }, () => '字'.repeat(80)) },
+  { label: '長：五段各約 120 字', paras: Array.from({ length: 5 }, () => '字'.repeat(120)) },
+].map((x) => ({ ...x, ...estimate(x.paras) }));
+
 const S = {
   cost: { id: 'cost', label: '一、費用怎麼算' },
-  paper: { id: 'paper', label: '二、用紙上印的四條規定' },
-  sending: { id: 'sending', label: '三、交寄流程' },
-  effect: { id: 'effect', label: '四、有什麼效力：常見的誤會' },
-  format: { id: 'format', label: '五、內文格式怎麼設定' },
+  pages: { id: 'pages', label: '二、你的信要寫幾頁（每頁只有 200 格）' },
+  paper: { id: 'paper', label: '三、用紙上印的四條規定' },
+  sending: { id: 'sending', label: '四、交寄流程（含不用跑郵局的那條）' },
+  effect: { id: 'effect', label: '五、有什麼效力：常見的誤會' },
+  format: { id: 'format', label: '六、內文格式怎麼設定' },
   example: { id: 'example', label: '先看一份範例' },
 };
 
@@ -151,6 +159,42 @@ const faq = {
     <a href={CERTIFY_FEE.source.url} rel="noopener">{CERTIFY_FEE.source.label}</a>。
   </p>
 
+  <h2 id={S.pages.id}>{S.pages.label}</h2>
+  <p>
+    官方用紙每頁是<strong>{GRID.columns} 格 × {GRID.rows} 行 ＝ {GRID.charsPerPage} 格</strong>，
+    而備註欄寫明<strong>每格限書一字</strong> —— 標點與全形數字也各佔一格。
+    頁數直接決定存證費，所以先算再寫比較不會白填。
+  </p>
+  <p class="note">
+    <strong>不是「字數 ÷ {GRID.charsPerPage}」那麼簡單</strong>：每一段都從新的一行開始，
+    所以段末沒寫滿的格子是浪費掉的。三段各 21 字要用 6 行，不是 4 行。下面照逐段進位算。
+  </p>
+
+  <div class="calc" data-postal-calc>
+    <label class="calc-label" for="postal-input">把你的內文貼進來（沒有 JS 時看下面的對照表）</label>
+    <textarea id="postal-input" rows="5" placeholder="一段一行，空行分段。" hidden></textarea>
+    <p class="calc-out" data-postal-out hidden aria-live="polite"></p>
+  </div>
+
+  <table>
+    <thead><tr><th>內文長度</th><th>行數</th><th>頁數</th><th>存證費</th></tr></thead>
+    <tbody>
+      {SAMPLES.map((x) => (
+        <tr>
+          <td>{x.label}</td>
+          <td>{x.rows} 行</td>
+          <td>{x.pages} 頁</td>
+          <td>{x.fee} 元</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  <p class="note">
+    存證費＝首頁 {CERTIFY_FEE.firstPage} 元＋每續一頁或附件每張 {CERTIFY_FEE.extraPage} 元，
+    <strong>郵資另計</strong>（見上一節）。附件每張與續頁同價，所以附件多的時候要一起算進去。
+    格線規格逐格數自<a href={GRID.file} rel="noopener nofollow">官方用紙 PDF</a>。
+  </p>
+
   <h2 id={S.paper.id}>{S.paper.label}</h2>
   <p>
     這四條就印在郵局存證信函用紙的「備註」欄，是最權威的來源 ——
@@ -171,9 +215,18 @@ const faq = {
     <li>帶三份到郵局窗口辦理證明手續。郵局核對三份內容完全相同後蓋證明。</li>
     <li>以掛號交寄；要證明對方收到就加掛回執。</li>
   </ol>
+  <h3>不用跑郵局，也不用買用紙的那條路</h3>
+  <p>
+    中華郵政有<a href={SOURCES.online.url} rel="noopener">存證信函網路交寄</a>。
+    走這條的話<strong>整套紙本流程都不需要</strong> —— 不必下載用紙、不必一式三份、
+    不必蓋騎縫章、不必跑櫃檯，內容線上送出後由郵局列印交寄。
+  </p>
   <p class="note">
-    不想跑郵局的話，中華郵政有
-    <a href={SOURCES.online.url} rel="noopener">存證信函網路交寄</a>。
+    本站產生的 Word 內文格式（全形、字體 18、固定行高 34pt、字元間距 2.9pt）
+    就是照官方使用說明設定的，貼進網路交寄的內文欄或官方用紙都對得上格子。
+    <strong>本站不重製用紙本身</strong>：用紙的備註欄寫明「{TYPESETTING.prohibition}」，
+    自製的紙拿到櫃檯會被退，那個後果由使用者承擔。用紙一律用
+    <a href={SOURCES.form.url} rel="noopener">官方那份</a>。
   </p>
 
   <h2 id={S.effect.id}>{S.effect.label}</h2>
@@ -221,7 +274,65 @@ const faq = {
   </p>
 </ArticlePage>
 
+<script>
+  import { estimate, GRID } from '../../data/postal.js';
+
+  const root = document.querySelector('[data-postal-calc]');
+  if (root) {
+    const input = root.querySelector('#postal-input');
+    const out = root.querySelector('[data-postal-out]');
+
+    // 伺服器端刻意把輸入框藏起來：沒有 JS 時它是死的，
+    // 顯示一個打了字沒反應的框比不顯示更糟（同 /numbers/ 的作法）。
+    input.hidden = false;
+    out.hidden = false;
+
+    const render = () => {
+      const paras = input.value.split(/\n+/).map((t) => t.trim()).filter(Boolean);
+      if (!paras.length) {
+        out.textContent = `每頁 ${GRID.columns} 格 × ${GRID.rows} 行 ＝ ${GRID.charsPerPage} 格。貼上內文後這裡會算出行數、頁數與存證費。`;
+        return;
+      }
+      const e = estimate(paras);
+      const chars = paras.reduce((n, t) => n + [...t].length, 0);
+      out.textContent =
+        `${paras.length} 段、${chars} 字 → 佔 ${e.rows} 行、共 ${e.pages} 頁，存證費 ${e.fee} 元（郵資另計）。`;
+    };
+
+    input.addEventListener('input', render);
+    render();
+  }
+</script>
+
 <style>
+  .calc {
+    margin-block: 1.5rem;
+    padding: 1.25rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.5rem;
+    background: var(--color-bg-light);
+  }
+  .calc-label {
+    display: block;
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+    margin-bottom: 0.5rem;
+  }
+  .calc textarea {
+    width: 100%;
+    font-size: var(--text-base);
+    font-family: inherit;
+    line-height: 1.8;
+    padding: 0.5rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.25rem;
+  }
+  .calc-out {
+    margin-top: 0.75rem;
+    margin-bottom: 0;
+    font-size: var(--text-sm);
+  }
+
   .cross {
     background: var(--color-bg-light);
     padding: 1rem 1.25rem;

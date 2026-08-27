@@ -149,6 +149,68 @@ const faq = {
           關鍵是那份和解書載明<strong>「僅就系爭機車損害」</strong>——
           人身損害因此不在拋棄的射程內。
         </p>
+
+        <h3 class="danger-sub">「我沒注意到那一條」不會成立</h3>
+        <p>
+          這是簽和解書的人最常有的期待，而法院逐字堵死過。
+          <strong>臺灣高雄地方法院 110 年度簡上字第 168 號</strong>（111.01.14，不得上訴，已確定）
+          那份和解書的第 4 條寫的是：
+        </p>
+        <blockquote class="ruling">
+          嗣後無論任何情形乙方或任何其他人不得再向甲方要求其他賠償，並不得再有異議及追訴等情事，
+          如已提出刑事告訴，乙方同意簽立撤回狀向法院撤回告訴，並拋棄其餘請求權
+        </blockquote>
+        <p>受害人事後主張沒看到、看不懂、條款不公平，法院一條一條否掉：</p>
+        <blockquote class="ruling">
+          系爭和解書之和解條件共僅4 項，用字並不多且白話，閱者當可輕易注意到所有和解條件，
+          且其中位於第4 項之系爭條款排版，係置於系爭和解書中間，字體大小亦屬適中並無特別縮小，
+          且系爭條款用語係使用「無論任何情形」、「不得再向被上訴人要求其他賠償」之淺白、簡短且強烈之文字，
+          句末復以「拋棄其餘請求權」之用語，再次重申上訴人已拋棄其餘請求之權利
+        </blockquote>
+        <blockquote class="ruling">
+          系爭條款為車禍事故當事人於和解時為一次解決雙方紛爭而互相讓步後，
+          由損害賠償權利人拋棄對於義務人其餘請求之常見約定，
+          且屬權利人衡量利弊損失後所為決定，自無顯失公平之情形。
+        </blockquote>
+        <p class="danger-note">
+          法院還認定：和解書的肇事經過欄寫的是機車受損與人受傷，
+          <strong>「並無明確限制及界定」</strong>範圍，所以不能事後主張「當時只談修車費」。
+          <strong>範圍要在簽之前寫窄，不是事後解釋。</strong>
+        </p>
+
+        <h3 class="danger-sub">就算翻得回來，也回不到原點</h3>
+        <p>
+          有一條路可以翻，但條件很嚴，而且結果可能跟你想的差很遠。
+          <strong>臺灣高等法院臺中分院 107 年度上易字第 427 號</strong>（108.12.31，不得上訴，已確定）
+          撤銷了一份<strong>經法院核定的調解書</strong>——注意那是調解不是和解，
+          依據是鄉鎮市調解條例第 29 條第 1 項、民法第 88 條第 1 項與第 738 條第 3 款。
+          能撤銷的關鍵在法院區分了「不知」與「錯誤」：
+        </p>
+        <blockquote class="ruling">
+          單純無正當之認識乃不知，與錯誤乃具積極性的謬誤認識有別……
+          本件上訴人係至系爭調解成立後，始因進行ＭＲＩ檢查得以知其頸椎有破裂之現象……
+          足見上訴人於系爭調解時對其頸椎破裂一情確屬不知，而非出於謬誤之認識，自無動機錯誤可言。
+        </blockquote>
+        <p>
+          也就是說：<strong>「當時完全不知道有這個傷」才有機會撤銷；
+          「知道有傷但低估了嚴重程度」是動機錯誤，不能撤銷</strong>——
+          前面新竹那一則之所以救不回來，差別就在這裡。
+        </p>
+        <p>而撤銷成功之後，這位受害人實際拿到多少：</p>
+        <table class="gap-table">
+          <thead><tr><th>階段</th><th>金額</th><th>為什麼被扣</th></tr></thead>
+          <tbody>
+            <tr><td>實際損害</td><td>654,382 元</td><td>醫療 564,782＋看護 45,600＋工作損失 44,000</td></tr>
+            <tr><td>加計慰撫金</td><td>754,382 元</td><td>慰撫金請求被減為 10 萬元</td></tr>
+            <tr><td>扣舊疾比例</td><td>150,876 元</td><td>法院認舊疾佔 80%、車禍佔 20%</td></tr>
+            <tr><td>扣與有過失</td><td>105,613 元</td><td>對方整體負 70% 責任，其餘自負</td></tr>
+            <tr><td><strong>實際再拿到</strong></td><td><strong>35,613 元</strong></td><td>再扣掉調解時已領的 7 萬元</td></tr>
+          </tbody>
+        </table>
+        <p class="danger-note">
+          花了兩審把調解撤銷掉，從 65 萬的實際支出，最後再拿到三萬五。
+          <strong>事後救濟就算走通了，也回不到原點</strong> —— 這才是「先別急著簽」的真正理由。
+        </p>
         <ul>
           <li><strong>傷勢或損害還沒確定，就不要簽概括拋棄。</strong>把範圍寫窄，保留寫明。</li>
           <li>
@@ -377,6 +439,24 @@ const faq = {
   .danger h3 {
     font-size: var(--text-base);
     margin-bottom: 0.5rem;
+  }
+  .danger-sub {
+    margin-top: 2rem;
+    font-size: var(--text-lg);
+  }
+  .ruling {
+    margin: 0.75rem 0;
+    padding: 0.75rem 1rem;
+    border-inline-start: 3px solid var(--color-warn);
+    background: var(--color-bg-light);
+    color: var(--color-ink-soft);
+    font-size: var(--text-sm);
+    line-height: 2;
+  }
+  .gap-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-block: 1rem;
   }
   .danger-note {
     margin-bottom: 0;

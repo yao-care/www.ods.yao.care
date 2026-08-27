@@ -58,6 +58,28 @@ Astro 6 + @astrojs/sitemap，pnpm，無框架、無外部 CDN。
 —— 與應用端 tokens.css 整套冷藍軸（色相 250）同軸；強調色「朱磚」`oklch(0.58 0.13 40)`／`#b95c3a`
 —— 色相 40 與語意色 critical(25)、warn(80) 保持距離，不會被誤讀成檢核狀態。
 
+## 去 AI 味的守門掃的是 `dist`，不是原始碼（2026-08-27 的教訓）
+
+`scripts/check-content.mjs` 是跨站共用的去 AI 味引擎，但它**只掃 `src/**/*.md(x)`** ——
+而本站文案全在 `.astro`、`src/data/*.js`、`src/data/*.json` 裡，**一個 .md 都沒有**。
+也就是說它從上線起掃了 0 個檔，每次 build 都印「內容守門：無變動的 .md/.mdx 內容檔」，
+看起來全綠，其實**一句話都沒檢查過**。
+
+⚠️ 這與同日抓到的 index-ping 是同一個病：那支回報「成功 30／失敗 0」卻不含新頁。
+**綠燈不等於檢查過——要驗的是它到底掃了什麼。**
+
+修法是加 `pnpm check:copy`（`scripts/check-copy.mjs`，在 `astro build` **之後**跑），
+掃 `dist/**/*.html` 的可見文字。為什麼掃產物不掃 `.astro`：文案散在三種檔案裡，
+掃原始碼會漏（實測 `citizen-examples.js` 的 `watchOut` 就有一句命中），
+而 dist 正是使用者看到的字。規則抽到 `scripts/lib/ai-tone.mjs` 由兩支共用，避免各寫一份而漂移。
+
+判定沿用兩級制：ERROR（near-zero 誤判的強指紋）單一命中即擋；
+WARN 分詞彙／句式／結構／語氣四層，**同一頁跨 ≥3 層**才升級為 ERROR。
+
+首次全站盤點只有 5 處 ERROR，都已改（`值得注意的是` 刪掉；四處「不是X，而是Y」
+改寫成「是Y，不是X」——同義而且更像人話）。
+**軟訊號只有破折號一項但有 147 次**：那已經是本站的行文習慣，不擋 build，但心裡有數。
+
 ## 一律正體字（`pnpm check:zh-hant` 自動擋）
 
 **Unicode 沒有「繁體中文區間」**——繁簡同住 CJK 統一漢字 U+4E00–U+9FFF（「該」U+8A72 與它的
@@ -580,6 +602,7 @@ pnpm check:contrast   # 只跑色彩對比守門（不需要 dist）
 pnpm check:anchors    # 只跑錨點守門（要先有 dist/）
 pnpm check:og         # 只跑分享圖守門（要先有 dist/）
 pnpm check:inlinks    # 只跑內鏈守門（要先有 dist/）
+pnpm check:copy       # 只跑去 AI 味文案守門（要先有 dist/）
 pnpm check:numbers    # 只跑國字大寫換算守門（不需要 dist）
 pnpm gen:brand        # 重產站徽與分享圖（改標題或改品牌色後，需 python3 pillow + noto CJK）
 pnpm check:design

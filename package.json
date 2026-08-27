@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "node scripts/check-design.mjs && node scripts/check-contrast.mjs && node scripts/check-content.mjs && node scripts/check-zh-hant.mjs && node scripts/check-scenarios.mjs && node scripts/check-numbers.mjs && node scripts/check-postal.mjs && node scripts/build-docx.mjs && astro build && node scripts/check-anchors.mjs && node scripts/check-inlinks.mjs && node scripts/check-og.mjs",
+    "build": "node scripts/check-design.mjs && node scripts/check-contrast.mjs && node scripts/check-content.mjs && node scripts/check-zh-hant.mjs && node scripts/check-scenarios.mjs && node scripts/check-numbers.mjs && node scripts/check-postal.mjs && node scripts/build-docx.mjs && astro build && node scripts/check-anchors.mjs && node scripts/check-inlinks.mjs && node scripts/check-copy.mjs && node scripts/check-og.mjs",
     "preview": "astro preview",
     "check:design": "node scripts/check-design.mjs",
     "check:contrast": "node scripts/check-contrast.mjs",
@@ -28,7 +28,8 @@
     "check:postal": "node scripts/check-postal.mjs",
     "gen:voucher-rule": "python3 scripts/fetch-voucher-rule.py",
     "gen:travel-rule": "python3 scripts/fetch-travel-rule.py",
-    "check:inlinks": "node scripts/check-inlinks.mjs"
+    "check:inlinks": "node scripts/check-inlinks.mjs",
+    "check:copy": "node scripts/check-copy.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",

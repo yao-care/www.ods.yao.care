@@ -199,6 +199,10 @@
     "file": "og/private-documents-power-of-attorney-vehicle.png",
     "title": "委託書範例：代辦車輛過戶｜公文 AI"
   },
+  "/private-documents/promissory-note/": {
+    "file": "og/private-documents-promissory-note.png",
+    "title": "本票範例：必要記載事項與空白本票的風險｜公文 AI"
+  },
   "/private-documents/separation-certificate/": {
     "file": "og/private-documents-separation-certificate.png",
     "title": "離職證明書（服務證明書）範例：資遣、供請領失業給付｜公文 AI"
@@ -210,6 +214,10 @@
   "/private-documents/settlement-traffic-accident/": {
     "file": "og/private-documents-settlement-traffic-accident.png",
     "title": "車禍和解書範例：僅就車損和解、人身損害保留｜公文 AI"
+  },
+  "/private-documents/shareholder-proxy/": {
+    "file": "og/private-documents-shareholder-proxy.png",
+    "title": "股東會委託書範例（非公開發行公司）｜公文 AI"
   },
   "/private-documents/statement-no-income/": {
     "file": "og/private-documents-statement-no-income.png",

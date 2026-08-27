@@ -6,40 +6,42 @@
     "family": "private"
   },
   "draft": {
-    "id": "drf_01M0Z6KVVRXZ3KBCRQJ7",
+    "id": "drf_01M114C2T98BQ3D689X8",
     "user_id": "usr_DEMO00000000000000",
     "unit": "民政課",
     "document_family": "private",
     "doc_type": "聲明書",
     "classification": "普通",
     "topic": "聲明無固定工作收入",
-    "subject": "本聲明書旨在由劉春美聲明自114年3月起因照顧失能家屬離職迄今無固定工作收入且未領取失業給付或其他政府補助之事實，以供申請低收入戶資格審查之用。",
-    "sections_json": "[{\"title\":\"聲明事由\",\"items\":[\"依社會救助法第4條規定，低收入戶之認定須經戶籍所在地直轄市、縣（市）主管機關審核，其家庭總收入平均分配全家人口每人每月在最低生活費以下，且家庭財產未超過中央、直轄市主管機關公告之當年度一定金額。\",\"劉春美為配合前開低收入戶資格審查作業，就其現況收入情形提出本聲明書，以供主管機關審核參考。\"]},{\"title\":\"聲明事項\",\"items\":[\"劉春美自114年3月起因照顧失能家屬而離職，迄今無固定工作收入。\",\"劉春美迄今未領取失業給付或其他政府補助。\",\"以上聲明內容均屬實在，若有不實，願依相關規定接受處置。\"]},{\"title\":\"附件\",\"items\":[\"檢附離職證明影本1份。\"]}]",
+    "subject": "本人劉春美為申請低收入戶資格審查，就自身無固定工作收入及未領取相關給付之情形，特此聲明。",
+    "sections_json": "[{\"title\":\"聲明事由\",\"items\":[\"本人劉春美自民國114年3月起，因照顧失能家屬而離職，迄今無固定工作收入。\",\"本人未領取失業給付或其他政府補助。\",\"為供申請低收入戶資格審查之用，特此提出本聲明書。\"]},{\"title\":\"聲明事項\",\"items\":[\"本人自114年3月起迄今，無固定工作收入。\",\"本人迄今未曾領取失業給付。\",\"本人迄今未曾領取其他政府補助。\",\"以上聲明內容均屬實情，如有不實，本人願負相關法律責任。\"]},{\"title\":\"附件\",\"items\":[\"檢附離職證明影本1份。\"]}]",
     "fields_json": "{\"sender\":\"劉春美\",\"attachments\":[\"離職證明影本1份\"],\"receiver\":\"○○鄉公所\",\"source_len\":68,\"scenario\":\"statement_income\"}",
     "engine": "llm",
     "model": "claude-sonnet-5",
     "degraded_reason": null,
-    "citations_json": "[\"knw_01M0Z6EA4HBQ6QHJRPMB\"]",
+    "citations_json": "[]",
     "checks_json": "[{\"id\":\"subject_present\",\"title\":\"主旨必填\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_single_paragraph\",\"title\":\"主旨不分項\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_length\",\"title\":\"主旨長度\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"subject_period\",\"title\":\"主旨句末標點\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"doc_type_valid\",\"title\":\"文別合法\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_titles_valid\",\"title\":\"段名合法\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_not_empty\",\"title\":\"段落不得為空\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_item_period\",\"title\":\"分項句末標點\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_item_count\",\"title\":\"分項數量\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"section_item_length\",\"title\":\"分項長度\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_mask_token\",\"title\":\"無殘留代稱\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_placeholder\",\"title\":\"無未填佔位符\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_raw_id_number\",\"title\":\"無身分證字號\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_raw_mobile\",\"title\":\"無行動電話號碼\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_simplified\",\"title\":\"無簡體字\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"fullwidth_punctuation\",\"title\":\"全形標點\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_colloquial\",\"title\":\"無明顯口語詞\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_extra_blank\",\"title\":\"無多餘空白\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"sender_required\",\"title\":\"發文人必填\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"receiver_required\",\"title\":\"收文者必填\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]}]",
     "confirmed": 0,
     "confirmed_by": null,
     "confirmed_at": null,
-    "created_at": "2026-08-26T14:12:05.112Z",
-    "updated_at": "2026-08-26T14:12:05.112Z",
+    "created_at": "2026-08-27T08:11:21.802Z",
+    "updated_at": "2026-08-27T08:11:21.802Z",
     "sections": [
       {
         "title": "聲明事由",
         "items": [
-          "依社會救助法第4條規定，低收入戶之認定須經戶籍所在地直轄市、縣（市）主管機關審核，其家庭總收入平均分配全家人口每人每月在最低生活費以下，且家庭財產未超過中央、直轄市主管機關公告之當年度一定金額。",
-          "劉春美為配合前開低收入戶資格審查作業，就其現況收入情形提出本聲明書，以供主管機關審核參考。"
+          "本人劉春美自民國114年3月起，因照顧失能家屬而離職，迄今無固定工作收入。",
+          "本人未領取失業給付或其他政府補助。",
+          "為供申請低收入戶資格審查之用，特此提出本聲明書。"
         ]
       },
       {
         "title": "聲明事項",
         "items": [
-          "劉春美自114年3月起因照顧失能家屬而離職，迄今無固定工作收入。",
-          "劉春美迄今未領取失業給付或其他政府補助。",
-          "以上聲明內容均屬實在，若有不實，願依相關規定接受處置。"
+          "本人自114年3月起迄今，無固定工作收入。",
+          "本人迄今未曾領取失業給付。",
+          "本人迄今未曾領取其他政府補助。",
+          "以上聲明內容均屬實情，如有不實，本人願負相關法律責任。"
         ]
       },
       {
@@ -58,9 +60,7 @@
       "source_len": 68,
       "scenario": "statement_income"
     },
-    "citations": [
-      "knw_01M0Z6EA4HBQ6QHJRPMB"
-    ],
+    "citations": [],
     "checks": [
       {
         "id": "subject_present",

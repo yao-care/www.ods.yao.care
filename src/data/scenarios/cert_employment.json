@@ -6,15 +6,15 @@
     "family": "private"
   },
   "draft": {
-    "id": "drf_01M0Z6MBPCQ9Q8ERVT9Q",
+    "id": "drf_01M114CMARNNF1KFAW2E",
     "user_id": "usr_DEMO00000000000000",
     "unit": "民政課",
     "document_family": "private",
     "doc_type": "在職證明書",
     "classification": "普通",
     "topic": "在職證明（辦理貸款用）",
-    "subject": "茲證明蔡佩君君現仍任職於本公司，特開立本證明書供辦理貸款之用。",
-    "sections_json": "[{\"title\":\"證明事項\",\"items\":[\"茲證明蔡佩君君自112年3月1日起任職於本公司行政部，現任職務為行政專員，迄今仍在職中。\"]},{\"title\":\"用途\",\"items\":[\"本證明應蔡佩君君之申請開立，供其向金融機構辦理貸款之用。\"]}]",
+    "subject": "茲證明蔡佩君君目前仍在職於本公司，特此開立本證明供辦理貸款之用。",
+    "sections_json": "[{\"title\":\"證明事項\",\"items\":[\"受證明人：蔡佩君君。\",\"到職日：112年3月1日。\",\"現職單位：行政部。\",\"現任職稱：行政專員。\",\"迄今仍在職中。\"]},{\"title\":\"用途\",\"items\":[\"本證明應蔡佩君君之申請開立，供其向金融機構辦理貸款之用。\"]}]",
     "fields_json": "{\"sender\":\"○○科技股份有限公司\",\"receiver\":\"蔡佩君\",\"source_len\":69,\"scenario\":\"cert_employment\"}",
     "engine": "llm",
     "model": "claude-sonnet-5",
@@ -24,13 +24,17 @@
     "confirmed": 0,
     "confirmed_by": null,
     "confirmed_at": null,
-    "created_at": "2026-08-26T14:12:21.325Z",
-    "updated_at": "2026-08-26T14:12:21.325Z",
+    "created_at": "2026-08-27T08:11:39.736Z",
+    "updated_at": "2026-08-27T08:11:39.736Z",
     "sections": [
       {
         "title": "證明事項",
         "items": [
-          "茲證明蔡佩君君自112年3月1日起任職於本公司行政部，現任職務為行政專員，迄今仍在職中。"
+          "受證明人：蔡佩君君。",
+          "到職日：112年3月1日。",
+          "現職單位：行政部。",
+          "現任職稱：行政專員。",
+          "迄今仍在職中。"
         ]
       },
       {

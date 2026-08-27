@@ -234,6 +234,16 @@
       "path": "private/loan-iou.docx",
       "filename": "借據範例：金額、交付與返還期限（附本票必要記載事項）.docx",
       "docType": "借據"
+    },
+    "promissory-note": {
+      "path": "private/promissory-note.docx",
+      "filename": "本票範例：必要記載事項與空白本票的風險.docx",
+      "docType": "本票"
+    },
+    "shareholder-proxy": {
+      "path": "private/shareholder-proxy.docx",
+      "filename": "股東會委託書範例（非公開發行公司）.docx",
+      "docType": "股東會委託書"
     }
   },
   "templates": [

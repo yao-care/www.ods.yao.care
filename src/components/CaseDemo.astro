@@ -22,6 +22,7 @@ interface Props {
 }
 import { SERVICE_LINKS } from '../site.config.js';
 import { meetingFields } from '../data/meeting.js';
+import { noteRows, noteFlags } from '../data/note.js';
 
 const { scenario, draft, checks, receiver } = Astro.props;
 /**
@@ -36,6 +37,11 @@ const meeting = Astro.props.meeting ?? null;
 // 欄位與順序照規範第八點，與下載的 Word 共用同一支（src/data/meeting.js）。
 // 上一版只渲染有值的六個欄位，漏了規範裡同樣存在的「列席者」「副本」與「備註」。
 const meetingRows = meeting ? meetingFields(draft, meeting) : [];
+// 本票同樣是固定欄位（票據法第 120 條第 1 項八款），但用文別判就夠，不必像開會通知單那樣靠 props
+// ——那個 prop 是為了在重烘前把「函形狀」的舊資料拆成欄位，本票沒有舊資料要相容。
+const isNote = draft.doc_type === '本票';
+const noteFieldRows = isNote ? noteRows(draft) : [];
+const noteRisk = isNote ? noteFlags(draft) : null;
 const download = Astro.props.download ?? null;
 const family = Astro.props.family ?? draft.document_family ?? 'official';
 const isOfficial = family === 'official';
@@ -153,7 +159,24 @@ const passed = checks.filter((c) => c.ok).length;
     </header>
 
     <div class="doc">
-      {meeting ? (
+      {isNote ? (
+        <dl class="fixed-fields">
+          {noteFieldRows.map((f) => (
+            <div>
+              <dt>{f.label}{f.required && <span class="must" title="絕對必要記載事項">＊</span>}</dt>
+              <dd>
+                {f.filled
+                  ? f.value
+                  : <span class="blank">（未載）{f.absent}</span>}
+              </dd>
+            </div>
+          ))}
+          <div>
+            <dt>無條件擔任支付</dt>
+            <dd>{draft.fields?.note_remarks || '本本票無條件擔任支付。'}</dd>
+          </div>
+        </dl>
+      ) : meeting ? (
         <dl class="fixed-fields">
           {meetingRows.map((f) => (
             <div>
@@ -185,6 +208,15 @@ const passed = checks.filter((c) => c.ok).length;
       <p class="checks-head">
         {isOfficial ? '格式檢核' : '民眾文件檢核'} <strong>{passed}/{checks.length}</strong> 通過
       </p>
+      {isNote && (
+        <p class="checks-note">
+          本票是有價證券不是三段式文書，票據法第 120 條第 1 項列了八款應記載事項，
+          所以不套用主旨與段落那兩組檢核，改查那八款，共 {checks.length} 條。
+          標<span class="must">＊</span>的是<strong>絕對必要記載事項</strong> ——
+          缺了依第 11 條第 1 項票據無效；其餘四款有補充規定，未載不會無效但效果會變。
+          {noteRisk?.minAmountApplies && ' 本則未載受款人且未載到期日，另受第 6 項「金額須在五百元以上」限制。'}
+        </p>
+      )}
       {meeting && (
         <p class="checks-note">
           開會通知單是固定欄位表單，沒有主旨與段落，所以不套用函的 6 條主旨檢核與 5 條段落檢核，
@@ -384,6 +416,11 @@ const passed = checks.filter((c) => c.ok).length;
 </script>
 
 <style>
+  .must {
+    color: var(--color-critical);
+    font-weight: 700;
+  }
+
   .fixed-fields .blank {
     color: var(--color-ink-muted);
   }

@@ -9,6 +9,7 @@
  */
 import { p, blank } from './docx.mjs';
 import { meetingFields, meetingRemarks } from '../../src/data/meeting.js';
+import { noteRows } from '../../src/data/note.js';
 import format from '../../src/data/gov-format.json' with { type: 'json' };
 
 export const PAGE = format.page;
@@ -202,6 +203,22 @@ export function privateDocument(doc) {
     p('簽名或蓋章：', S.cc_to),
     blank(S.cc_to),
   ].join('');
+
+  // 本票不是三段式：票據法第 120 條第 1 項八款應記載事項，欄位與網頁共用 src/data/note.js。
+  // 沒有這一支的話，下載的 Word 會是一張只有「主旨：」空行的紙——網頁對、Word 錯，
+  // 正是 meeting.js 當初被抽出來共用要避免的那種漂移。
+  if (doc.docType === '本票') {
+    const rows = noteRows(doc);
+    return [
+      p('本票', S.agency_title),
+      // 第 1 款「表明其為本票之文字」由上面的標題提供；第 4 款是法定文義，固定列出。
+      ...rows.map((f) => p(`${f.label}：${f.value || '　'}`, S.subject)),
+      p(`無條件擔任支付：${doc.fields?.note_remarks || '本本票無條件擔任支付。'}`, S.subject),
+      blank(S.cc_to),
+      signer('發票人', doc.sender),
+      p('中華民國　　年　　月　　日', S.cc_to),
+    ].join('');
+  }
 
   return [
     p(doc.docType, S.agency_title),

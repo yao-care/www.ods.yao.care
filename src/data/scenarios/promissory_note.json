@@ -1,0 +1,338 @@
+{
+  "scenario": {
+    "key": "promissory_note",
+    "title": "借款擔保用本票",
+    "source": "立本票人陳文彬為擔保向林建良君之借款，簽發本票乙紙，憑票准於中華民國116年8月26日無條件支付受款人林建良新臺幣參拾萬元整（NT$300,000）。發票日為中華民國115年8月27日，發票地及付款地均為臺北市。",
+    "family": "private"
+  },
+  "draft": {
+    "id": "drf_01M114D2CGNAQZDA30ZM",
+    "user_id": "usr_DEMO00000000000000",
+    "unit": "民政課",
+    "document_family": "private",
+    "doc_type": "本票",
+    "classification": "普通",
+    "topic": "借款擔保用本票",
+    "subject": "",
+    "sections_json": "[]",
+    "fields_json": "{\"note_amount\":\"新臺幣參拾萬元整\",\"note_amount_digits\":\"300,000\",\"note_payee\":\"林建良\",\"note_due_date\":\"中華民國116年8月26日\",\"note_issue_date\":\"中華民國115年8月27日\",\"note_issue_place\":\"臺北市\",\"note_payment_place\":\"臺北市\",\"note_remarks\":\"本本票無條件擔任支付。\",\"sender\":\"陳文彬\",\"receiver\":\"林建良\",\"source_len\":106,\"scenario\":\"promissory_note\"}",
+    "engine": "llm",
+    "model": "claude-sonnet-5",
+    "degraded_reason": null,
+    "citations_json": "[]",
+    "checks_json": "[{\"id\":\"doc_type_valid\",\"title\":\"文別合法\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_mask_token\",\"title\":\"無殘留代稱\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_placeholder\",\"title\":\"無未填佔位符\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_raw_id_number\",\"title\":\"無身分證字號\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_raw_mobile\",\"title\":\"無行動電話號碼\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_simplified\",\"title\":\"無簡體字\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"fullwidth_punctuation\",\"title\":\"全形標點\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_colloquial\",\"title\":\"無明顯口語詞\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"no_extra_blank\",\"title\":\"無多餘空白\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"sender_required\",\"title\":\"發文人必填\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"note_declaration\",\"title\":\"表明其為本票之文字\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"note_amount_required\",\"title\":\"一定之金額\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"note_unconditional\",\"title\":\"無條件擔任支付\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"note_issue_date_required\",\"title\":\"發票年月日\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"note_no_blank\",\"title\":\"不得留空白（空白本票）\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"note_min_amount\",\"title\":\"見票即付且無記名時的最低金額\",\"severity\":\"critical\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"note_payee_named\",\"title\":\"受款人（未載即為無記名）\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]},{\"id\":\"note_due_date_named\",\"title\":\"到期日（未載即見票即付）\",\"severity\":\"warn\",\"ok\":true,\"detail\":null,\"hits\":[]}]",
+    "confirmed": 0,
+    "confirmed_by": null,
+    "confirmed_at": null,
+    "created_at": "2026-08-27T08:11:54.128Z",
+    "updated_at": "2026-08-27T08:11:54.128Z",
+    "sections": [],
+    "fields": {
+      "note_amount": "新臺幣參拾萬元整",
+      "note_amount_digits": "300,000",
+      "note_payee": "林建良",
+      "note_due_date": "中華民國116年8月26日",
+      "note_issue_date": "中華民國115年8月27日",
+      "note_issue_place": "臺北市",
+      "note_payment_place": "臺北市",
+      "note_remarks": "本本票無條件擔任支付。",
+      "sender": "陳文彬",
+      "receiver": "林建良",
+      "source_len": 106,
+      "scenario": "promissory_note"
+    },
+    "citations": [],
+    "checks": [
+      {
+        "id": "doc_type_valid",
+        "title": "文別合法",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "no_mask_token",
+        "title": "無殘留代稱",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "no_placeholder",
+        "title": "無未填佔位符",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "no_raw_id_number",
+        "title": "無身分證字號",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "no_raw_mobile",
+        "title": "無行動電話號碼",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "no_simplified",
+        "title": "無簡體字",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "fullwidth_punctuation",
+        "title": "全形標點",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "no_colloquial",
+        "title": "無明顯口語詞",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "no_extra_blank",
+        "title": "無多餘空白",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "sender_required",
+        "title": "發文人必填",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "note_declaration",
+        "title": "表明其為本票之文字",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "note_amount_required",
+        "title": "一定之金額",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "note_unconditional",
+        "title": "無條件擔任支付",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "note_issue_date_required",
+        "title": "發票年月日",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "note_no_blank",
+        "title": "不得留空白（空白本票）",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "note_min_amount",
+        "title": "見票即付且無記名時的最低金額",
+        "severity": "critical",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "note_payee_named",
+        "title": "受款人（未載即為無記名）",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      },
+      {
+        "id": "note_due_date_named",
+        "title": "到期日（未載即見票即付）",
+        "severity": "warn",
+        "ok": true,
+        "detail": null,
+        "hits": []
+      }
+    ]
+  },
+  "checks": [
+    {
+      "id": "doc_type_valid",
+      "title": "文別合法",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "no_mask_token",
+      "title": "無殘留代稱",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "no_placeholder",
+      "title": "無未填佔位符",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "no_raw_id_number",
+      "title": "無身分證字號",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "no_raw_mobile",
+      "title": "無行動電話號碼",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "no_simplified",
+      "title": "無簡體字",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "fullwidth_punctuation",
+      "title": "全形標點",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "no_colloquial",
+      "title": "無明顯口語詞",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "no_extra_blank",
+      "title": "無多餘空白",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "sender_required",
+      "title": "發文人必填",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "note_declaration",
+      "title": "表明其為本票之文字",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "note_amount_required",
+      "title": "一定之金額",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "note_unconditional",
+      "title": "無條件擔任支付",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "note_issue_date_required",
+      "title": "發票年月日",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "note_no_blank",
+      "title": "不得留空白（空白本票）",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "note_min_amount",
+      "title": "見票即付且無記名時的最低金額",
+      "severity": "critical",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "note_payee_named",
+      "title": "受款人（未載即為無記名）",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    },
+    {
+      "id": "note_due_date_named",
+      "title": "到期日（未載即見票即付）",
+      "severity": "warn",
+      "ok": true,
+      "detail": null,
+      "hits": []
+    }
+  ]
+}

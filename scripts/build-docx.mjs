@@ -142,6 +142,10 @@ const PRIVATE_LABELS = {
   在職證明書: { senderLabel: '出具單位', receiverLabel: '受證明人' },
   服務證明書: { senderLabel: '出具單位', receiverLabel: '受證明人' },
   借據: { senderLabel: '立借據人（借用人）', receiverLabel: '貸與人' },
+  本票: { senderLabel: '發票人', receiverLabel: null },
+  // 股東會委託書是股東交給**公司**的（公司法第 177 條第 3 項：應於開會五日前送達公司），
+  // 代理人寫在授權範圍裡，不是這張紙的相對人——所以是「此致」不是「受託人」。
+  股東會委託書: { senderLabel: '委託人（股東）', receiverLabel: '此致' },
 };
 for (const meta of PRIVATE_DOCS) {
   const payload = JSON.parse(readFileSync(join(ROOT, 'src/data/scenarios', `${meta.key}.json`), 'utf8'));
@@ -153,6 +157,10 @@ for (const meta of PRIVATE_DOCS) {
     sections: draft.sections,
     sender: fields.sender ?? '',
     receiver: fields.receiver ?? '',
+    // 本票是固定欄位（票據法第 120 條第 1 項八款），值全在 fields 裡，
+    // 不像其他民間書件放在 subject／sections。漏傳的話 Word 會印出一張空表格，
+    // 而網頁是對的——這種「網頁對、Word 錯」正是 meeting.js 抽出來共用要避免的。
+    fields,
     ...(PRIVATE_LABELS[draft.doc_type] ?? {}),
   };
   const file = `private/${meta.slug}.docx`;

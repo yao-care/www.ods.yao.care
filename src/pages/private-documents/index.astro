@@ -11,6 +11,7 @@
 import ArticlePage from '../../layouts/ArticlePage.astro';
 import PageToc from '../../components/PageToc.astro';
 import { SERVICE_LINKS } from '../../site.config.js';
+import PROC from '../../data/procurement-declaration.json';
 import { PRIVATE_DOCS, PRIVATE_CATEGORIES } from '../../data/private-docs.js';
 import index from '../../data/scenarios.json';
 import downloads from '../../data/downloads.json';
@@ -321,11 +322,34 @@ const faq = {
         只要載明授權範圍，那一種本站產得出來。
       </dd>
     </div>
+    <div>
+      <dt>政府採購的投標廠商聲明書</dt>
+      <dd>
+        這一份不是「我們不產」的問題，是<strong>它本來就不是你寫的</strong> ——
+        工程會的「投標須知範本」把投標廠商聲明書列在「全份招標文件包括：（可複選）」清單裡，
+        由<strong>機關</strong>決定要不要納入招標文件，廠商拿到的是機關發的那一份。
+        <br />
+        真正會害到廠商的不是格式，是<strong>答錯或漏答</strong>。範本附註第一段：
+        「第一項至第七項答『是』<strong>或未答</strong>者，不得參加投標；其投標者，不得作為決標對象」。
+        而那七項的敘述<strong>全部是否定句</strong>（「本廠商之營業項目<strong>不符合</strong>…」
+        「本廠商<strong>有違反</strong>…」），所以合格廠商要答的是「否」——
+        <strong>勾錯與整格空白的後果一樣：出局。</strong>
+        <br />
+        ⚠️ 還有一個陷阱在版本：現行中文正本是 <strong>114 年 6 月 4 日版</strong>，
+        簽名欄已改成「投標廠商負責人<strong>簽名或蓋章</strong>」；
+        但工程會站上另有一份掛在「英文招標文件範本（僅供參考）」底下的中英對照版，
+        停在舊版、仍寫「投標廠商章及負責人章」。
+        照舊版去蓋公司大小章沒有意義 —— 那次修正的理由正是要避免廠商因未蓋章
+        被依政府採購法第 50 條第 1 項第 2 款判定不合格。
+        <strong>一律用<a href={PROC.downloads.pdf} rel="noopener nofollow">工程會中文正本</a></strong>
+        （{PROC._source.edition}），不要用網路上流傳的舊檔。
+      </dd>
+    </div>
   </dl>
   <p class="note">
-    政府採購（工程會全國統一版）與地政的部分表格同樣以機關版本為準。
-    地政的優先購買權切結是個例外 —— 土地登記規則第 97 條把切結字樣直接寫進條文
-    （「如有不實，出賣人願負法律責任」），<strong>字樣是法定的、格式不是</strong>，所以那一種產得出來。
+    地政的部分表格同樣以機關版本為準，但<strong>優先購買權切結是個例外</strong> ——
+    土地登記規則第 97 條把切結字樣直接寫進條文（「如有不實，出賣人願負法律責任」），
+    <strong>字樣是法定的、格式不是</strong>，所以那一種產得出來。
   </p>
 
   {TYPES.map((t) => (

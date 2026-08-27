@@ -194,6 +194,16 @@ export function citizenDocument(doc) {
  * 讓同一批下載檔看起來是一套；格式本身沒有法定強制樣式。
  */
 export function privateDocument(doc) {
+  /**
+   * 「此致」不是欄位名，是行文結尾的敬語，後面接的是**收受這份文件的機關或公司**，
+   * 它不簽名、也沒有身分證字號 —— 切結書、聲明書、股東會委託書都屬這一型。
+   *
+   * 原本三者都走 signer()，於是印出「此致：○○縣政府社會處／國民身分證統一編號：／
+   * 聯絡地址：／聯絡電話：／簽名或蓋章：」——等於叫受文機關在你的切結書上簽名。
+   * （2026-08-27 修；先前三種文別的 Word 都是這個形狀。）
+   */
+  const addressee = (name) => [p('此致', S.cc_to), p(`　${name ?? ''}`, S.cc_to), blank(S.cc_to)].join('');
+
   const signer = (label, name, extra = []) => [
     p(`${label}：${name ?? ''}`, S.cc_to),
     p('國民身分證統一編號：', S.cc_to),
@@ -220,13 +230,19 @@ export function privateDocument(doc) {
     ].join('');
   }
 
+
   return [
     p(doc.docType, S.agency_title),
     p(`主旨：${doc.subject}`, S.subject),
     doc.sections.map((s) => sectionBlock(s)).join(''),
     blank(S.cc_to),
     signer(doc.senderLabel ?? '立書人', doc.sender),
-    doc.receiver || doc.receiverLabel ? signer(doc.receiverLabel ?? '相對人', doc.receiver) : '',
+    // 「此致」型的相對人只寫抬頭，不給簽名欄（見上面 addressee 的說明）。
+    doc.receiverLabel === '此致'
+      ? addressee(doc.receiver)
+      : doc.receiver || doc.receiverLabel
+        ? signer(doc.receiverLabel ?? '相對人', doc.receiver)
+        : '',
     p('中華民國　　年　　月　　日', S.cc_to),
   ].join('');
 }

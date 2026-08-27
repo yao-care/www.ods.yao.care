@@ -85,6 +85,7 @@ const TYPES = [
 
 const S = {
   what: { id: 'what', label: '這一區是什麼、跟民眾書件差在哪' },
+  notProduced: { id: 'not-produced', label: '哪幾種我們刻意不產出，為什麼' },
   ...Object.fromEntries(TYPES.map((t) => [t.id, { id: t.id, label: t.name }])),
   list: { id: 'list', label: '全部範例' },
   templates: { id: 'templates', label: '空白 Word 範本' },
@@ -263,8 +264,11 @@ const faq = {
     <strong>本票要單獨提醒：</strong>本票不是「比較有效的借據」。
     票據法第 123 條讓執票人可以<strong>聲請法院裁定後直接強制執行</strong>，不必先打民事官司；
     第 11 條第 2 項又讓善意執票人取得已具備應記載事項的票據時，發票人不得主張無效
-    ——所以空白本票特別危險。<strong>本站不產出本票</strong>，只在
-    <a href={`${base}private-documents/loan-iou/`}>借據那一頁</a>把必要記載事項與風險講清楚。
+    ——所以<strong>空白本票</strong>特別危險：金額或發票日留空交出去，被填上再轉手就很難翻案。
+    本站產出的本票<strong>填不齊就過不了檢核</strong>（金額、發票年月日、無條件擔任支付都是必填，
+    而且見票即付又不記載受款人時金額須在五百元以上——票據法第 120 條第 6 項），
+    這正是它與文具店那種空白格子的差別。風險的完整說明在
+    <a href={`${base}private-documents/loan-iou/`}>借據那一頁</a>。
   </p>
   <p class="danger-inline">
     <strong>離職證明要單獨提醒：</strong>離職原因照實寫。
@@ -277,6 +281,51 @@ const faq = {
     臺灣新竹地方法院 110 年度簡上字第 111 號 —— 一份 3,000 元的和解書，
     因為「並無其他損害賠償請求權保留之陳述或記載」，關掉了事後 1,253 萬元的請求。
     傷勢或損害還沒確定的，<a href={`${base}private-documents/settlement-traffic-accident/`}>先看這一則怎麼把範圍寫窄</a>。
+  </p>
+
+  <h2 id={S.notProduced.id}>{S.notProduced.label}</h2>
+  <p>
+    判準只有一條：<strong>該情境有沒有機關或法規指定的表格。</strong>
+    有的話，那份表格的用字往往是法規逐字規定的，自己生成等於讓案件被駁回；
+    沒有的話（切結書、聲明書、和解書、借據都是）才輪得到我們產。
+    下面三種是<strong>刻意不產出</strong>的，而且理由都不是「我們謹慎」，是白紙黑字寫著後果。
+  </p>
+  <dl class="not-produced">
+    <div>
+      <dt>移工的入國工作費用及工資切結書</dt>
+      <dd>
+        雇主聘僱外國人許可及管理辦法第 66 條第 3 項：「雇主應備置及保存下列文件，供主管機關檢查：
+        一、勞動契約書。二、<strong>經驗證之</strong>第二類外國人入國工作費用及工資切結書。」
+        <strong>「經驗證」是駐外館處的正式程序，自製的文件在定義上就不可能經驗證</strong> ——
+        產一份出來只會讓雇主在檢查時不合格。這一類請走勞動部與各地方政府提供的官方版本
+        （另有印尼文、越南文、泰文等版本，同辦法要求勞動契約應以中文為之並作成外國人母國文字譯本）。
+      </dd>
+    </div>
+    <div>
+      <dt>中華郵政的存證信函「用紙」</dt>
+      <dd>
+        用紙的備註欄自己寫著：「請依所提供之格式使用，<strong>變更樣式內容者，不予收寄</strong>。」
+        自製的紙拿到櫃檯會被退，而那個後果發生在郵局、不在我們這裡。
+        本站只產<strong>內文</strong>，格式已照官方使用說明設定，貼進官方用紙或
+        <a href={`${base}citizens/certified-letter-guide/`}>網路交寄</a>都對得上格子；
+        用紙本身用官方那份。
+      </dd>
+    </div>
+    <div>
+      <dt>公開發行公司的股東會委託書</dt>
+      <dd>
+        公開發行公司出席股東會使用委託書規則第 2 條：用紙<strong>以公司印發者為限</strong>；
+        第 22 條第 1 款：用紙非公司印發者，<strong>其代理之表決權不予計算</strong> ——
+        自製等於白跑一趟股東會。請向該公司或股務代理機構索取。
+        <strong>非公開發行公司則相反</strong>：公司法第 177 條第 1 項本文明文股東得自己出具委託書，
+        只要載明授權範圍，那一種本站產得出來。
+      </dd>
+    </div>
+  </dl>
+  <p class="note">
+    政府採購（工程會全國統一版）與地政的部分表格同樣以機關版本為準。
+    地政的優先購買權切結是個例外 —— 土地登記規則第 97 條把切結字樣直接寫進條文
+    （「如有不實，出賣人願負法律責任」），<strong>字樣是法定的、格式不是</strong>，所以那一種產得出來。
   </p>
 
   {TYPES.map((t) => (
@@ -333,6 +382,24 @@ const faq = {
 </ArticlePage>
 
 <style>
+  .not-produced {
+    display: grid;
+    gap: 1.25rem;
+    margin-block: 1.5rem;
+  }
+  .not-produced dt {
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+  }
+  .not-produced dd {
+    margin: 0;
+    font-size: var(--text-sm);
+    line-height: 1.9;
+    color: var(--color-ink-soft);
+    padding-inline-start: 1rem;
+    border-inline-start: 3px solid var(--color-line);
+  }
+
   .caution {
     margin-block: 1.5rem;
     padding: 0.875rem 1.125rem;

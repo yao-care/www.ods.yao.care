@@ -134,7 +134,16 @@ cp -r /tmp/…/out/scenarios /tmp/…/out/scenarios.json /tmp/…/out/knowledge.
 `cases.js` 的 `meeting` 只留作重烘前舊資料的後備。
 
 檢核條目數依族群與文別而定：函／簽／書函 24 條，公告 23 條，開會通知單 22 條；
-民間書件 20～22 條（`/checks/` 那頁逐文別列出來，數字取實際產物）。
+民間書件則每個文別各不相同（`/checks/` 那頁逐文別列出來，數字取實際產物）。
+**不要在文件或頁面寫死任何一個數字**——本檔第一鐵則就是現況數字不入文件。查法：
+
+```bash
+python3 -c "import json,glob;m={}
+for f in glob.glob('src/data/scenarios/*.json'):
+    d=json.load(open(f));m.setdefault(d['draft']['doc_type'],set()).add(len(d['checks']))
+print('\n'.join(f'{k}: {sorted(v)}' for k in sorted(m) for v in [m[k]]))"
+```
+
 開會通知單不套主旨類 6 條與段落類 5 條，改查那組固定欄位；**公告不套「主旨期望語」那一條**
 （2026-08-26 修正）—— 手冊對公告只要求主旨「扼要敘述公告之目的及要求」，沒有要求期望語，
 附錄 6 的兩則公告作法舉例主旨也都沒有（「主旨：公告民國00年出生的役男應辦理身家調查。」），
@@ -454,8 +463,10 @@ node /root/seo-ops/bin/keyword-demand.mjs --site ods.yao.care   # 量現有釘�
 這幾條**只在適用的文別上才列出來**（`checksFor()` 依 check 物件的 `docTypes` 過濾），
 不是在 `run()` 裡回傳恆真 —— 比照公告與開會通知單的作法。理由同上：
 「不適用」與「適用且通過」對使用者是兩件事，展示頁的條目數也應該照實反映。
-所以委託書 22、授權書 21、切結書 21、聲明書 20、和解書 22、在職證明書 20、服務證明書 21、
-借據 22，不是同一個數字。
+所以每個文別的條目數都不一樣，**不要背也不要寫死**（上面那段有查法）。
+⚠️ 這裡原本列著「委託書 22、授權書 21、切結書 21…」那一串，2026-08-27 已經過期兩處
+（切結書因 `land_priority_wording` 變 22、新增的本票 18 與股東會委託書 24 不在範圍內）——
+**這正是第一鐵則要禁的東西：寫死的現況數字不會有人發現它過期。**
 
 ⚠️ **有給 `fields.attachments` 的文別，`sectionTitlesByDocType` 一定要含「附件」**：
 `drafting.js` 的 `applyLocalFields()` 會依 attachments 自動補那一段，

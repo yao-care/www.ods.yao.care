@@ -120,7 +120,15 @@ function targetFiles() {
 
 const files = targetFiles();
 if (files === null) process.exit(0); // 無 git base，安全放行
-if (!files.length) { console.log("內容守門：無變動的 .md/.mdx 內容檔。"); process.exit(0); }
+if (!files.length) {
+  // 🔴 這一行原本只寫「無變動的 .md/.mdx 內容檔」，讀起來像「檢查過了、沒問題」，
+  //    但本站 0 個 .md，它其實一個檔都沒掃——我因此連續幾十次 build 誤以為文案檢查過了。
+  //    訊息要講實話：說清楚它掃了幾個檔、以及頁面文案由誰負責。
+  console.log(
+    "內容守門：本站沒有 .md/.mdx，這支掃 0 個檔（頁面文案由 check-copy.mjs 掃 dist 負責）。",
+  );
+  process.exit(0);
+}
 
 let errors = [], warns = [];
 for (const f of files) { const r = scanFile(f); errors.push(...r.errors); warns.push(...r.warns); }

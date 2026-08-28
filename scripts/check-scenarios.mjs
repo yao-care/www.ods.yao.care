@@ -57,7 +57,7 @@ for (const name of readdirSync(DIR).filter((f) => f.endsWith(".json"))) {
 if (problems.length) {
   console.error("案例資料守門未通過：");
   for (const p of problems) console.error(`  ✗ ${p}`);
-  console.error("\n重烘：cd /root/ods.yao.care && ODS_DATA_DIR=<暫存> node --env-file-if-exists=.env scripts/export-demo.js --llm <輸出>");
+  console.error("\n重烘：cd /mnt/yao-care/ods.yao.care && ODS_DATA_DIR=<暫存> node --env-file-if-exists=.env scripts/export-demo.js --llm <輸出>");
   console.error("再把 <輸出>/scenarios、scenarios.json、knowledge.json 複製到本站 src/data/。");
   process.exit(1);
 }

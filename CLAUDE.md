@@ -1,6 +1,6 @@
 # www.ods.yao.care
 
-公文 AI 訂閱服務的行銷站（Astro → GitHub Pages）。應用本體在 `/root/ods.yao.care`（private repo），
+公文 AI 訂閱服務的行銷站（Astro → GitHub Pages）。應用本體在 `/mnt/yao-care/ods.yao.care`（private repo），
 本站與它**完全分離**：純靜態、不呼叫應用的 API。
 
 **站的主體是公文案例庫**，不是產品簡報 —— 承辦開案時搜的是「補助核銷 公文 範例」，不是「公文 AI」。
@@ -8,7 +8,7 @@
 
 ## 開工前先建立正確的網站模型
 
-處理網域、註冊、使用流程、GA4、SEO、AEO 或 GEO 前，先讀本檔的「網域架構與客群」及應用 repo `/root/ods.yao.care/CLAUDE.md` 同名章節。以程式碼、測試與部署設定為準，不從 hostname 自行推測流程。
+處理網域、註冊、使用流程、GA4、SEO、AEO 或 GEO 前，先讀本檔的「網域架構與客群」及應用 repo `/mnt/yao-care/ods.yao.care/CLAUDE.md` 同名章節。以程式碼、測試與部署設定為準，不從 hostname 自行推測流程。
 
 - `www.ods.yao.care` 是本 repo 的公文案例庫、純靜態 Guest 體驗與行銷站；案例全文和檢核結果預先渲染進 HTML。
 - `ods.yao.care` 是 apex；目前部署定義為 301 導向 `www.ods.yao.care`。
@@ -76,6 +76,12 @@ Astro 6 + @astrojs/sitemap，pnpm，無框架、無外部 CDN。
 判定沿用兩級制：ERROR（near-zero 誤判的強指紋）單一命中即擋；
 WARN 分詞彙／句式／結構／語氣四層，**同一頁跨 ≥3 層**才升級為 ERROR。
 
+`check:copy` 另外擋一件與 AI 腔無關的事（2026-08-28 加）：**Markdown 記號漏到畫面上**。
+`src/data/*.js` 的 `watchOut`／`lead` 與頁面 frontmatter 的常數都是**純字串**，
+不會被當 markdown 算繪，在那裡寫 `**強調**` 就會原樣出現在使用者眼前。
+同一次動作就寫出三處（`/wills/` 與 `/private-documents/divorce-agreement/`）。
+要強調用 `<strong>`；產物裡不可能有正當的成對星號，所以判 ERROR。
+
 首次全站盤點只有 5 處 ERROR，都已改（`值得注意的是` 刪掉；四處「不是X，而是Y」
 改寫成「是Y，不是X」——同義而且更像人話）。
 **軟訊號只有破折號一項但有 147 次**：那已經是本站的行文習慣，不擋 build，但心裡有數。
@@ -105,9 +111,9 @@ WARN 分詞彙／句式／結構／語氣四層，**同一頁跨 ≥3 層**才�
 `src/data/scenarios/*.json` 與 `knowledge.json` 是 **ods 應用產出的**，不是手寫的：
 
 ```bash
-cd /root/ods.yao.care
+cd /mnt/yao-care/ods.yao.care
 ODS_DATA_DIR=/tmp/…/demo-llm node --env-file-if-exists=.env scripts/export-demo.js --llm /tmp/…/out
-cp -r /tmp/…/out/scenarios /tmp/…/out/scenarios.json /tmp/…/out/knowledge.json /root/www.ods.yao.care/src/data/
+cp -r /tmp/…/out/scenarios /tmp/…/out/scenarios.json /tmp/…/out/knowledge.json /mnt/yao-care/www.ods.yao.care/src/data/
 ```
 
 **一律用 `--llm`**：不加的話拿到的是規則引擎（降級路徑）產物，等於用產品最差的路徑做廣告。
@@ -196,7 +202,7 @@ import('/root/seo-ops/lib/google.mjs').then(async g=>{
 
 **站外那一條也算內鏈**：`www.yao.care/ai/ods/` 是 ODS 在 yao.care 的產品落地頁，
 2026-08-20 實查時它當天就被重爬過，是本站最快的被發現管道；那頁同日補上民眾書件與參考內容的
-產品段落（此前只描述機關側）—— **改的是 `/root/www.yao.care`，兩邊要一起維持**。
+產品段落（此前只描述機關側）—— **改的是 `/mnt/yao-care/www.yao.care`，兩邊要一起維持**。
 seo-ops 有一條「不為了 SEO 從自家站連自家站」的紅線，2026-08-20 用戶澄清過**判準是動機與內容，不是有沒有跨網域**：官網產品頁把自家產品講完＝產品說明，照做；為了灌連結而建的互推連結牆＝禁。所以那頁只寫 ODS 實際提供什麼。（判準原文見 `.claude/ops/seo-ops.md` 的互連那節）
 現況查法（那頁現在連過來幾條、有沒有被重爬）：
 
@@ -258,7 +264,7 @@ const S = { numbers: { id: 'numbers', label: '六、數字怎麼寫' }, … };
 
 ```bash
 curl -s https://www.ods.yao.care/sitemap-0.xml | grep -o '<lastmod>[^<]*' | sort | uniq -c
-git -C /root/www.ods.yao.care log -1 --format=%cI -- src/layouts src/components src/styles src/site.config.js
+git -C /mnt/yao-care/www.ods.yao.care log -1 --format=%cI -- src/layouts src/components src/styles src/site.config.js
 ```
 
 ## CTA 一律用乾淨網址，入口位置用 `data-cta`（2026-08-20 的教訓）
@@ -385,10 +391,39 @@ node /root/seo-ops/bin/keyword-demand.mjs --site ods.yao.care   # 量現有釘�
 | `src/data/ai-guidance.json` | `scripts/fetch-ai-guidance.py` | 行政院《使用生成式 AI 參考指引》 | 十點逐字 |
 | `src/data/voucher-rule.json` | `scripts/fetch-voucher-rule.py` | 主計總處《政府支出憑證處理要點》 | 第四點（收據應記載事項）、第五點（統一發票）、第十三點（總數大寫）逐字 |
 | `src/data/travel-rule.json` | `scripts/fetch-travel-rule.py` | 行政院《國內出差旅費報支要點》 | 第一、二、三、四、五、九、十一、十三、十五、十六點逐字，以及**附表一的數額與四則備註**（住宿費平日／假日上限、雜費上限、交通費艙等說明）|
+| `src/data/laws.json` | `scripts/fetch-laws.py` | 全國法規資料庫（HTML，非 PDF） | 民法 15 條（離婚、遺囑、特留分）、戶籍法第 34 條、人工智慧基本法 6 條。一支通吃，要哪幾條寫進 `WANTED` 就好 |
+
+**機關用 AI 寫公文的規範現在有兩層**（2026-08-28 補上母法那層）：
+《人工智慧基本法》**2026-01-14 公布施行**（第 20 條自公布之日起施行），
+第 19 條「政府使用人工智慧執行業務或提供服務，應進行風險評估，規劃風險因應措施；
+政府應依使用人工智慧之業務性質，訂定使用規範或內控管理機制」——
+主詞是**政府**不是承辦，也不是廠商，所以那是機關要訂的東西。
+第 2 條中央主管機關是**國家科學及技術委員會**（數位發展部 2025-12-24 新聞稿講的
+「於 114 年接手推動法案立法作業」是立法過程，不是主管機關，兩者不衝突但只有條文能引）。
+第 18 條另定政府應於施行後二年內（→ 2028-01-14）完成法規檢討，所以這批規範還會再動。
+`/ai-official-document/` 與 `/security/` 各有一節，條文走 `laws.json`。
 
 **不要在頁面裡手寫條文。** 網路流傳的整理多半轉錄自舊版或經過濃縮 ——
 參考指引第四點那句「但封閉式地端部署之生成式 AI 模型…得依文書或資訊機密等級分級使用」
 特別常被吃掉，而那個但書正是機關導入與承辦自己上網用之間的分野。
+
+### ⚠️ 法規資料庫會給你「已公布但尚未施行」的條文（2026-08-28 的教訓）
+
+`law.moj.gov.tw` 的 `LawSingle` 與 `LawAll` 顯示的是**最新公布**的條文，不是**現行有效**的條文。
+頁首只有一行「※本法規部分或全部條文尚未生效」，**不會標示是哪一條**；而民法還有一條長年
+未定施行日的第 166-1 條，所以那行警語平常就在，看到也不會警覺。
+
+實際差點寫錯：抓民法第 1223 條（特留分）拿回來的是四款版本（配偶排第一、沒有兄弟姊妹），
+查沿革才發現那是 **2026-08-17 公布、自公布六個月後施行**（→ 2027-02-17）的新版，
+現行有效的仍是五款（含兄弟姊妹三分之一）。**逐字照抄擋不住這種錯，抄回來的每個字都是真的。**
+
+`fetch-laws.py` 因此固定三步：`LawSingle` 取現在顯示的條文 → `LawHistory` 找出「延後施行且
+施行日未到」的條號 → 那幾條改從 `LawOldVer` 取現行有效版本，兩版都寫進 JSON
+（`pendingAmendment`）。`/wills/` 的特留分那節就是這樣同時呈現兩版的。
+
+⚠️ 沿革那一欄被 `<td>` 切成多行（「…第 11500076161 號」與「令修正公布第 1223 條條文；並自公布
+六個月後施行」分屬兩行），**逐行比對會兩邊都對不上而安靜地漏標** —— 要先把空白壓平再切段。
+另外連續請求會被丟回很短的頁面（抓到第 8 條左右開始），那不是版面改了是擋速率，腳本已加重試與間隔。
 
 兩支腳本的共同坑：
 - **`pdftotext` 要挑模式**。手冊用 `-layout`（表格才對得齊）；參考指引必須用 `-raw` ——
@@ -480,6 +515,23 @@ node /root/seo-ops/bin/keyword-demand.mjs --site ods.yao.care   # 量現有釘�
 發票人不得主張無效（空白本票的大坑）。站上只在借據那一頁把第 120 條的必要記載事項與風險
 講清楚 —— 與「不重製中華郵政存證信函用紙」同一個判準：**產出的形式錯了，比不產出更糟**。
 
+**離婚協議書是這一區量最大的一則，但它的風險在「以為簽完就辦好了」**（2026-08-28 加）：
+民法第 1050 條的兩願離婚有**三個要件，缺一不可** —— 書面、二人以上證人之簽名、
+**向戶政機關為離婚之登記**。只簽協議書而沒去登記，婚姻關係仍然存續；而且戶籍法第 34 條本文
+要求兩願離婚的登記以**雙方當事人**為申請人，簽完到登記之間對方反悔就得走法院。
+所以「登記與證人」獨立成一段、兩條檢核都是 critical，不藏在附註裡。
+另外兩條：`divorce_child_arrangement`（critical，提到子女才觸發，民法第 1055 條第 1 項）、
+`divorce_support_not_waivable`（warn）—— 民法第 1116-2 條明文扶養義務不因離婚受影響，
+協議寫「他方不得再請求扶養費」拘束的只有父母之間，**未成年子女本人的請求權不受影響**，
+寫成一次結清會誤導當事人。`divorce_property_remainder`（warn）對應第 1030-1 條。
+
+**遺囑刻意不產出，另開 `/wills/` 一頁講清楚**（2026-08-28）：民法第 1190 條要的是
+**自書遺囑全文**，打字列印、範本填空、請人代寫都不符合要件 —— 產一份排版整齊的 Word 給人
+列印簽名，那份東西不會因為簽了名就變成自書遺囑。與不重製中華郵政存證信函用紙、
+不自製公開發行公司股東會委託書同一個判準：**產出的形式錯了，比不產出更糟。**
+那頁同時列五種遺囑方式的見證人人數（代筆遺囑是**三人**以上，比公證與密封都多）、
+第 1198 條的見證人資格限制，以及特留分的**現行版本與 2027-02-17 起的新版**（見上面那節的坑）。
+
 **在職證明書與服務證明書（離職證明）也在這個族群**（2026-08-26 加）：
 勞動基準法第 19 條只寫「勞動契約終止時，勞工如請求發給服務證明書，雇主或其代理人不得拒絕」，
 **沒有規定內容**——施行細則全文也查不到「服務證明」四個字。
@@ -487,6 +539,9 @@ node /root/seo-ops/bin/keyword-demand.mjs --site ods.yao.care   # 量現有釘�
 「應載明申請人姓名、投保單位名稱及離職原因」，所以有 `separation_reason`（critical）這條。
 資遣、關廠、歇業、解散、破產宣告等屬非自願離職（同法第 11 條第 3 項），
 **寫成「個人因素」會讓勞工請領不到失業給付** —— 這是這一區第二個「寫錯會害人」的地方。
+⚠️ **市場用字是「非自願離職證明書」**（Bing exact 1,805，2026-08-28 量到）——
+那不是另一種文件，是離職原因屬非自願時的這一份。此前站上一個字都沒有，標題已補。
+勞保局書表下載專區有官方範本，頁面要指過去（有機關表格就用那一份，本區判準）。
 
 **和解書是這一區風險最高的一種，另有兩條檢核**：
 
@@ -602,13 +657,13 @@ await ctx.route('**://ods-apply-form.lightman-chang.workers.dev/**',
   (r) => r.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' }));
 ```
 
-參考現成的：`/root/www.yao.care/scripts/ga-event-probe.mjs`（那支沒有攔截，會真的送出，別直接對 ODS 用）。
+參考現成的：`/mnt/yao-care/www.yao.care/scripts/ga-event-probe.mjs`（那支沒有攔截，會真的送出，別直接對 ODS 用）。
 
 ## 常用指令
 
 ```bash
 pnpm dev              # 開發（起了就要記得 kill，主機紅線）
-pnpm build            # check-design && check-contrast && check-content && check-zh-hant && check-scenarios && build-docx && astro build && check-anchors && check-og
+pnpm build            # 守門一長串，實際內容以 package.json 的 scripts.build 為準（別在這裡抄第二份，會過期）
 pnpm check:contrast   # 只跑色彩對比守門（不需要 dist）
 pnpm check:anchors    # 只跑錨點守門（要先有 dist/）
 pnpm check:og         # 只跑分享圖守門（要先有 dist/）
@@ -625,6 +680,7 @@ pnpm gen:gov-terms       # 文書處理手冊改版才跑（會連外網，需 p
 pnpm gen:ai-guidance     # 生成式 AI 參考指引改版才跑（會連外網，需 pdftotext）
 pnpm gen:voucher-rule    # 政府支出憑證處理要點改版才跑（會連外網，需 pdftotext）
 pnpm gen:travel-rule     # 國內出差旅費報支要點改版才跑（會連外網，需 pdftotext）
+pnpm gen:laws            # 民法／戶籍法／人工智慧基本法條文（會連外網；自動避開尚未施行的條文）
 pnpm gen:simplified-set  # 重產簡體字集合（只在來源資料改版時，需 python3 opencc）
 ```
 

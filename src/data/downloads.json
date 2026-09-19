@@ -227,7 +227,7 @@
     },
     "separation-certificate": {
       "path": "private/separation-certificate.docx",
-      "filename": "離職證明書（服務證明書）範例：資遣、供請領失業給付.docx",
+      "filename": "非自願離職證明書範例：離職證明書（服務證明書）怎麼開、供請領失業給付.docx",
       "docType": "服務證明書"
     },
     "loan-iou": {
@@ -239,6 +239,11 @@
       "path": "private/promissory-note.docx",
       "filename": "本票範例：必要記載事項與空白本票的風險.docx",
       "docType": "本票"
+    },
+    "divorce-agreement": {
+      "path": "private/divorce-agreement.docx",
+      "filename": "離婚協議書範例：兩願離婚的三個要件與未成年子女約定.docx",
+      "docType": "離婚協議書"
     },
     "shareholder-proxy": {
       "path": "private/shareholder-proxy.docx",

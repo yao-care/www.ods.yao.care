@@ -183,6 +183,10 @@
     "file": "og/private-documents-authorization-collect-payment.png",
     "title": "授權書範例：代為領取款項｜公文 AI"
   },
+  "/private-documents/divorce-agreement/": {
+    "file": "og/private-documents-divorce-agreement.png",
+    "title": "離婚協議書範例：兩願離婚的三個要件與未成年子女約定｜公文 AI"
+  },
   "/private-documents/employment-certificate/": {
     "file": "og/private-documents-employment-certificate.png",
     "title": "在職證明書範例：辦理貸款、租屋、簽證用｜公文 AI"
@@ -205,7 +209,7 @@
   },
   "/private-documents/separation-certificate/": {
     "file": "og/private-documents-separation-certificate.png",
-    "title": "離職證明書（服務證明書）範例：資遣、供請領失業給付｜公文 AI"
+    "title": "非自願離職證明書範例：離職證明書（服務證明書）怎麼開、供請領失業給付｜公文 AI"
   },
   "/private-documents/settlement-property-damage/": {
     "file": "og/private-documents-settlement-property-damage.png",
@@ -250,6 +254,10 @@
   "/usage/": {
     "file": "og/usage.png",
     "title": "公文用語表：稱謂語、期望語與法律統一用字｜公文 AI"
+  },
+  "/wills/": {
+    "file": "og/wills.png",
+    "title": "遺囑怎麼寫才有效：自書遺囑的四個要件與五種方式"
   },
   "/writing/": {
     "file": "og/writing.png",

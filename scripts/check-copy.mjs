@@ -44,6 +44,20 @@ for (const file of walk(DIST)) {
   if (!text) continue;
   pages += 1;
 
+  // Markdown 記號漏到畫面上（2026-08-28）：`src/data/*.js` 的 watchOut／lead 與頁面
+  // frontmatter 的常數都是**純字串**，不會被當 markdown 算繪。在那裡寫 `**強調**`
+  // 就會原樣出現在使用者眼前。實測一次寫出三處（/wills/ 與 /private-documents/divorce-agreement/）。
+  // 這與 AI 腔無關，但同樣是「產物上看得到、原始碼看起來很正常」的漂移，順手一起擋。
+  // 要強調就用 <strong>；這裡不可能有正當的成對星號，所以是 ERROR 不是 WARN。
+  const md = text.match(/\*\*[^*\n]{1,40}\*\*/g);
+  if (md) {
+    errors.push({
+      route,
+      name: "Markdown 記號漏到畫面（資料檔的字串不會被算繪成 markdown，要強調請用 <strong>）",
+      sample: [...new Set(md)].slice(0, 3).join("／"),
+    });
+  }
+
   for (const [name, re] of ERROR_TELLS) {
     const hit = text.match(new RegExp(re, "g"));
     if (hit && !hit.every(allowed)) {

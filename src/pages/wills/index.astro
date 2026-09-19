@@ -1,0 +1,393 @@
+---
+/**
+ * 遺囑怎麼寫才有效 —— 這一頁刻意**不產出遺囑**。
+ *
+ * 為什麼有這一頁（2026-08-28，第五波關鍵字）：Bing 需求量實測「遺囑」409、「自書遺囑」119。
+ * 但這一則與站上其他民間書件不同，它是**產出的形式錯了就無效**的那一種：
+ * 民法第 1190 條要的是「自書遺囑全文」，用電腦打字、拿範本填空、請人代寫，
+ * 三種都不符合要件。我們產一份排版漂亮的 Word 給使用者列印簽名，等於幫他做出一份無效遺囑。
+ *
+ * 判準與「不重製中華郵政存證信函用紙」、「不自製公開發行公司股東會委託書」同一條：
+ * **產出的形式錯了，比不產出更糟。**（見 CLAUDE.md 民間書件那節；移工聘僱切結書亦同）
+ *
+ * ⚠️ 條文一律取自 src/data/laws.json（scripts/fetch-laws.py 產生），
+ * **不要在這頁手寫條文**。特別是第 1223 條特留分：2026-08-17 修正公布、2027-02-17 才施行，
+ * 全國法規資料庫的 LawSingle／LawAll 顯示的是尚未施行的新版；本頁用的是現行有效版本，
+ * 並把新版另外標示出來。那支腳本存在的一半理由就是這件事。
+ */
+import ArticlePage from '../../layouts/ArticlePage.astro';
+import PageToc from '../../components/PageToc.astro';
+import laws from '../../data/laws.json';
+import { SERVICE_LINKS } from '../../site.config.js';
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+
+const MF = laws.laws.B0000001.articles;
+/** 條文一律走這支取，頁面上不出現任何手打的條文字串。 */
+const art = (no) => MF[no].text;
+const paras = (no) => art(no).split('\n');
+
+const specialShare = MF['1223'];
+const pending = specialShare.pendingAmendment;
+
+/** 五種遺囑方式。見證人人數與「誰動筆」都直接對應條文，不是整理出來的印象。 */
+const METHODS = [
+  {
+    name: '自書遺囑',
+    article: '1190',
+    witnesses: '不需要',
+    writer: '遺囑人本人，全文親筆',
+    cost: '零',
+    catch: '全文必須親筆。列印、打字、代寫、範本填空都不符合要件。',
+  },
+  {
+    name: '公證遺囑',
+    article: '1191',
+    witnesses: '二人以上',
+    writer: '公證人筆記',
+    cost: '公證費用',
+    catch: '在公證人前口述，由公證人筆記、宣讀、講解，經認可後同行簽名。',
+  },
+  {
+    name: '密封遺囑',
+    article: '1192',
+    witnesses: '二人以上',
+    writer: '本人或他人繕寫皆可',
+    cost: '公證費用',
+    catch: '簽名後密封、於封縫處簽名，指定見證人向公證人提出並陳述。非本人自寫的要陳述繕寫人姓名住所。',
+  },
+  {
+    name: '代筆遺囑',
+    article: '1194',
+    witnesses: '三人以上',
+    writer: '見證人中之一人筆記',
+    cost: '零（但要湊到三位合格見證人）',
+    catch: '見證人要三人以上，且由其中一人筆記、宣讀、講解，全體與遺囑人同行簽名。',
+  },
+  {
+    name: '口授遺囑',
+    article: '1195',
+    witnesses: '二人以上',
+    writer: '見證人筆記或全程錄音',
+    cost: '零',
+    catch: '限於生命危急或其他特殊情形、不能依其他方式為遺囑時才能用。',
+  },
+];
+
+/** 第 1190 條把要件寫死了，拆開來就是這四件事，每一件都對得回條文。 */
+const REQUIREMENTS = [
+  {
+    key: '自書遺囑全文',
+    detail:
+      '整份遺囑要親筆寫。這是四個要件裡唯一沒有補救空間的一項 ——'
+      + '打字列印之後簽名不算自書遺囑，請人代寫也不算（那要走代筆遺囑，而代筆遺囑要三位見證人）。',
+  },
+  {
+    key: '記明年、月、日',
+    detail:
+      '三者缺一不可，而且要寫在遺囑上。日期決定的是前後遺囑相牴觸時哪一份算數，'
+      + '也決定立遺囑當時的行為能力狀態。',
+  },
+  {
+    key: '親自簽名',
+    detail: '條文寫的是「簽名」。第 1190 條沒有像代筆遺囑第 1194 條那樣給「不能簽名者按指印代之」的替代。',
+  },
+  {
+    key: '增減塗改要另行簽名',
+    detail:
+      '寫錯了不能只是塗掉重寫 —— 要註明增減、塗改的處所與字數，並在該處另行簽名。'
+      + '嫌麻煩就整張重寫，那比事後爭執划算。',
+  },
+];
+
+const S = {
+  why: { id: 'why', label: '一、為什麼這一頁不給你一份遺囑範本' },
+  self: { id: 'self', label: `二、自書遺囑的四個要件（民法第 1190 條）` },
+  methods: { id: 'methods', label: `三、五種遺囑方式怎麼選（民法第 1189 條）` },
+  witness: { id: 'witness', label: '四、誰不能當見證人（民法第 1198 條）' },
+  share: { id: 'share', label: '五、特留分：遺囑不能把人完全寫掉' },
+  next: { id: 'next', label: '六、站上能幫你的是哪些文件' },
+};
+
+const description =
+  '民法第 1190 條要求自書遺囑「自書遺囑全文、記明年月日、親自簽名」——'
+  + '打字列印或請人代寫都不符合要件，所以本站不產出遺囑，'
+  + '只把五種遺囑方式的見證人人數、誰動筆與特留分的現行規定逐條列出來。';
+
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Article',
+      '@id': `${pageUrl}#article`,
+      mainEntityOfPage: pageUrl,
+      headline: '遺囑怎麼寫才有效：自書遺囑的四個要件與五種方式',
+      description,
+      author: { '@type': 'Organization', name: '藥提醒科技有限公司', url: 'https://www.yao.care/' },
+      publisher: { '@type': 'Organization', name: '藥提醒科技有限公司', url: 'https://www.yao.care/' },
+      inLanguage: 'zh-Hant-TW',
+      citation: {
+        '@type': 'CreativeWork',
+        name: '中華民國民法（全國法規資料庫）',
+        url: 'https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=B0000001',
+      },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: '首頁', item: 'https://www.ods.yao.care/' },
+        { '@type': 'ListItem', position: 2, name: '民間書件', item: 'https://www.ods.yao.care/private-documents/' },
+        { '@type': 'ListItem', position: 3, name: '遺囑', item: pageUrl },
+      ],
+    },
+  ],
+};
+
+const faq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: '遺囑可以用電腦打字列印再簽名嗎？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text:
+          `不可以當成自書遺囑。民法第 1190 條：「${art('1190')}」`
+          + '「自書遺囑全文」指的是親筆書寫全文，列印之後簽名不符合這個要件。'
+          + '要用打字或請人繕寫的，可以走代筆遺囑（第 1194 條，需三人以上見證人）'
+          + '或密封遺囑（第 1192 條，非本人自寫時要陳述繕寫人姓名住所）。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '自書遺囑需要見證人嗎？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text:
+          '不需要。五種遺囑方式裡只有自書遺囑不必見證人：公證遺囑與密封遺囑各要二人以上、'
+          + '代筆遺囑要三人以上、口授遺囑要二人以上。'
+          + '這也是自書遺囑最常被選擇的原因——但代價是形式要件必須自己顧好。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '遺囑寫錯字可以直接塗掉重寫嗎？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text:
+          '不建議。第 1190 條後段規定「如有增減、塗改，應註明增減、塗改之處所及字數，另行簽名」。'
+          + '沒有照做的部分容易被爭執，整張重寫比較安全。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '子女或配偶可以當遺囑見證人嗎？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text:
+          `不可以。民法第 1198 條：「${art('1198').replace(/\n/g, '')}」`
+          + '繼承人、受遺贈人以及他們的配偶或直系血親都在排除之列。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '遺囑可以把財產全部留給一個人嗎？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text:
+          '不能完全排除其他繼承人。民法第 1223 條定有特留分，'
+          + `第 1225 條並規定「${art('1225')}」`
+          + '也就是遺贈超過的部分，應得特留分之人可以按不足之數扣減。',
+      },
+    },
+  ],
+};
+---
+
+<ArticlePage
+  schemas={[schema, faq]}
+  title="遺囑怎麼寫才有效：自書遺囑的四個要件與五種方式"
+  description={description}
+  heading="遺囑怎麼寫才有效"
+  lead={'自書遺囑的第一個要件是「自書遺囑全文」——親筆寫完整份。'
+    + '所以這一頁不給你一份可以下載列印的遺囑：那份東西一旦被當成自書遺囑，形式就已經錯了。'
+    + '這裡把五種遺囑方式的要件逐條列出來，讓你挑一種能自己完成的。'}
+>
+  <PageToc items={Object.values(S)} />
+
+  <h2 id={S.why.id}>{S.why.label}</h2>
+  <p>
+    站上其他民間書件（委託書、切結書、和解書、借據）都可以產出草稿，
+    因為那些文件<strong>沒有法定形式</strong>，寫得清不清楚是品質問題。遺囑不是。
+  </p>
+  <blockquote>民法第 1190 條：{art('1190')}</blockquote>
+  <p>
+    「自書遺囑全文」把整份文件的製作方式寫死了。我們產一份排版整齊的 Word 給你列印、簽名，
+    那份東西<strong>不會因為簽了名就變成自書遺囑</strong>——它是一份列印的文件，
+    形式上不符合第 1190 條。想用打字的，法律留的路是代筆遺囑或密封遺囑，兩條路都要見證人。
+  </p>
+  <p>
+    這與本站不重製中華郵政存證信函用紙、不自製公開發行公司股東會委託書是同一個判準：
+    <strong>產出的形式錯了，比不產出更糟</strong>——因為使用者會以為自己已經辦好了。
+  </p>
+
+  <h2 id={S.self.id}>{S.self.label}</h2>
+  <blockquote>{art('1190')}</blockquote>
+  <dl>
+    {REQUIREMENTS.map((r) => (
+      <>
+        <dt>{r.key}</dt>
+        <dd>{r.detail}</dd>
+      </>
+    ))}
+  </dl>
+
+  <h2 id={S.methods.id}>{S.methods.label}</h2>
+  <blockquote>{paras('1189').join('　')}</blockquote>
+  <div class="scroll-x">
+    <table>
+      <thead>
+        <tr>
+          <th>方式</th>
+          <th>見證人</th>
+          <th>誰動筆</th>
+          <th>要花錢嗎</th>
+          <th>條文的關鍵限制</th>
+        </tr>
+      </thead>
+      <tbody>
+        {METHODS.map((m) => (
+          <tr>
+            <th scope="row">{m.name}<br /><small>民法第 {m.article} 條</small></th>
+            <td>{m.witnesses}</td>
+            <td>{m.writer}</td>
+            <td>{m.cost}</td>
+            <td>{m.catch}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p>
+    要用打字或請人繕寫，就不是自書遺囑那一列。
+    <strong>代筆遺囑的見證人是三人以上</strong>（第 1194 條），比公證與密封都多，
+    而且要由見證人中的一人筆記、宣讀、講解，經遺囑人認可後全體同行簽名——
+    不是找三個人來簽名就算。
+  </p>
+
+  <h2 id={S.witness.id}>{S.witness.label}</h2>
+  <p>
+    自書遺囑不必見證人，但只要改走其他四種方式就會踩到這一條。
+    最常見的誤會是找子女或要受遺贈的人來當見證人——那正好是條文排除的對象。
+  </p>
+  <blockquote>{paras('1198').join('　')}</blockquote>
+
+  <h2 id={S.share.id}>{S.share.label}</h2>
+  <p>
+    遺囑可以決定財產怎麼分，但不能把應得特留分的人完全寫掉。現行條文是：
+  </p>
+  <blockquote>{paras('1223').join('　')}</blockquote>
+  <p>
+    超過的部分要由<strong>應得特留分之人主張扣減</strong>，不會自己失效：
+  </p>
+  <blockquote>民法第 1225 條：{art('1225')}</blockquote>
+  {pending && (
+    <aside class="callout">
+      <p>
+        <strong>這一條 {pending.effective} 起會變。</strong>
+        {pending.promulgated} 修正公布、自公布六個月後施行的新版是：
+      </p>
+      <blockquote>{pending.text.split('\n').join('　')}</blockquote>
+      <p>
+        差別是<strong>刪除兄弟姊妹的特留分</strong>，並把配偶移到第一款。
+        在 {pending.effective} 之前立的遺囑仍適用上面的現行條文。
+        全國法規資料庫的條文頁顯示的是這個尚未施行的新版，查的時候要看沿革確認施行日。
+      </p>
+    </aside>
+  )}
+
+  <h2 id={S.next.id}>{S.next.label}</h2>
+  <p>
+    遺囑本身請自己親筆寫，或找公證人。站上能幫上忙的是遺囑之外的那些文件：
+  </p>
+  <ul>
+    <li>
+      財產已經談好、要一次了結的，看
+      <a href={`${base}private-documents/settlement-property-damage/`}>和解書範例</a>——
+      但注意拋棄範圍要寫清楚。
+    </li>
+    <li>
+      要委託別人代辦戶政或監理事項的，看
+      <a href={`${base}private-documents/power-of-attorney-household/`}>委託書範例</a>。
+    </li>
+    <li>
+      家裡的借貸關係要留證據的，看
+      <a href={`${base}private-documents/loan-iou/`}>借據範例</a>；
+      本票的風險也寫在那一頁。
+    </li>
+    <li>
+      金額要寫國字大寫的，用
+      <a href={`${base}numbers/`}>國字大寫金額換算</a>。
+    </li>
+    <li>
+      其他民間書件見<a href={`${base}private-documents/`}>民間書件總覽</a>。
+    </li>
+  </ul>
+  <p class="note">
+    本頁條文逐字取自全國法規資料庫，由 <code>scripts/fetch-laws.py</code> 抓取產生。
+    這裡整理的是形式要件，不是法律意見；財產狀況複雜、有跨國財產或家族企業股權的，
+    請找律師或公證人。
+  </p>
+  <p>
+    <a {...SERVICE_LINKS.selfRegister('wills_self_register')}>建立個人工作區</a>，
+    可以寫委託書、切結書、和解書、借據這些站上有產出的民間書件。
+  </p>
+</ArticlePage>
+
+<style>
+  .scroll-x {
+    overflow-x: auto;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 44rem;
+  }
+  th,
+  td {
+    border: 1px solid var(--color-line);
+    padding: 0.6rem 0.75rem;
+    text-align: left;
+    vertical-align: top;
+    font-size: var(--text-sm);
+    line-height: 1.7;
+  }
+  thead th {
+    background: var(--color-bg-light);
+  }
+  tbody th[scope='row'] {
+    white-space: nowrap;
+  }
+  tbody th small {
+    font-weight: 400;
+    color: var(--color-ink-muted);
+  }
+  .callout {
+    border: 1px solid var(--color-warn);
+    border-radius: 0.5rem;
+    padding: 1rem 1.25rem;
+    margin: 1.5rem 0;
+  }
+  .callout p {
+    margin: 0.5rem 0;
+  }
+  .note {
+    color: var(--color-ink-muted);
+    font-size: var(--text-sm);
+  }
+</style>

@@ -28,6 +28,7 @@
     "check:postal": "node scripts/check-postal.mjs",
     "gen:voucher-rule": "python3 scripts/fetch-voucher-rule.py",
     "gen:travel-rule": "python3 scripts/fetch-travel-rule.py",
+    "gen:laws": "python3 scripts/fetch-laws.py",
     "check:inlinks": "node scripts/check-inlinks.mjs",
     "check:copy": "node scripts/check-copy.mjs"
   },

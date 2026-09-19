@@ -20,6 +20,7 @@ import PageToc from '../../components/PageToc.astro';
 import { SERVICE_LINKS } from '../../site.config.js';
 import { breadcrumb, faqPage } from '../../data/schema.js';
 import guidance from '../../data/ai-guidance.json';
+import laws from '../../data/laws.json';
 import terms from '../../data/gov-terms.json';
 import grantReport from '../../data/scenarios/grant_report.json';
 
@@ -29,6 +30,9 @@ const base = import.meta.env.BASE_URL.endsWith('/')
 
 const checkCount = grantReport.checks.length;
 const { _source: source, points } = guidance;
+/** 人工智慧基本法（2026-01-14 公布施行）。條文取 src/data/laws.json，不要手寫。 */
+const AI_ACT = laws.laws.H0160093.articles;
+const actArt = (no) => AI_ACT[no].text;
 
 /** 已公開的導入案例。每一則都要有出處，欄位只填新聞稿或官方稿寫得出來的東西。 */
 const DEPLOYMENTS = [
@@ -71,15 +75,17 @@ const DEPLOYMENTS = [
 const S = {
   who: { id: 'deployments', label: '一、哪些機關已經在用' },
   what: { id: 'capabilities', label: '二、這些系統實際在做的是哪幾件事' },
-  rules: { id: 'guidance', label: `三、規範怎麼說：參考指引${points.length}點逐字` },
-  limits: { id: 'limits', label: '四、哪幾件事不能交給 AI' },
-  diy: { id: 'diy', label: '五、機關還沒導入，承辦自己能做什麼' },
+  act: { id: 'ai-act', label: '三、母法：人工智慧基本法第 19 條' },
+  rules: { id: 'guidance', label: `四、行政規則：參考指引${points.length}點逐字` },
+  limits: { id: 'limits', label: '五、哪幾件事不能交給 AI' },
+  diy: { id: 'diy', label: '六、機關還沒導入，承辦自己能做什麼' },
 };
 
 const description =
   '雲林縣府與鴻海的「公文大腦」、臺北市府 CiviClaw、叡揚公文 AI 助理各自做到哪，'
   + '這類系統實際涵蓋的是草擬、檢核、格式提醒與知識查詢；'
-  + `並附行政院使用生成式 AI 參考指引${points.length}點逐字，說明機密文書與個資的界線。`;
+  + `並附人工智慧基本法第 19 條與行政院使用生成式 AI 參考指引${points.length}點逐字，`
+  + '說明機密文書與個資的界線。';
 
 const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
 
@@ -206,6 +212,29 @@ const faq = faqPage(faqPairs);
     電子公文系統裡走，各關在看什麼寫在<a href={`${base}writing/#workflow`}>公文怎麼寫</a>。
   </p>
 
+  <h2 id={S.act.id}>{S.act.label}</h2>
+  <p>
+    機關用 AI 寫公文的規範現在有兩層。上面那層是 2026 年 1 月 14 日公布施行的
+    <strong>人工智慧基本法</strong>——這是台灣第一部 AI 專法，
+    在此之前只有行政院的參考指引（行政規則）這一層。對承辦最直接的是第 19 條：
+  </p>
+  <blockquote>{actArt('19').split('\n').map((line) => (<span class="para">{line}</span>))}</blockquote>
+  <p>
+    注意它的主詞是<strong>政府</strong>，不是承辦個人：風險評估與使用規範是
+    <strong>機關要訂的東西</strong>。所以承辦在機關還沒訂之前自己上網用生成式 AI，
+    受規範的仍然是下一節那十點；而機關要導入，第 19 條就是那份內控管理機制的法源。
+  </p>
+  <p>
+    主管機關以條文為準，第 2 條：
+  </p>
+  <blockquote>{actArt('2').split('\n')[0]}</blockquote>
+  <p class="note">
+    第 18 條另定政府應檢討所主管之法規與行政措施，
+    有不符合本法規定或無法規可適用者，應<strong>自本法施行後二年內</strong>完成制（訂）定、修正或廢止。
+    也就是說現行這批規範在 2028 年 1 月 14 日前還會再動一次。
+    條文逐字取自全國法規資料庫，由 <code>scripts/fetch-laws.py</code> 抓取產生。
+  </p>
+
   <h2 id={S.rules.id}>{S.rules.label}</h2>
   <p>
     {source.issuer}《{source.name}》{source.promulgated}，共 {points.length} 點。
@@ -304,6 +333,12 @@ const faq = faqPage(faqPairs);
   .rules li {
     margin-block: 0.75rem;
     line-height: 1.9;
+  }
+  blockquote .para {
+    display: block;
+  }
+  blockquote .para + .para {
+    margin-top: 0.5rem;
   }
   .guidance {
     list-style: none;

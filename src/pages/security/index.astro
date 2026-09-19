@@ -1,6 +1,9 @@
 ---
 import ArticlePage from '../../layouts/ArticlePage.astro';
 import { SERVICE_LINKS } from '../../site.config.js';
+import laws from '../../data/laws.json';
+/** 人工智慧基本法第 19 條逐字。條文取 src/data/laws.json，不要手寫。 */
+const aiAct19 = laws.laws.H0160093.articles['19'].text.split('\n');
 import { ORGANIZATION, breadcrumb, faqPage } from '../../data/schema.js';
 
 const base = import.meta.env.BASE_URL.endsWith('/')
@@ -126,6 +129,20 @@ const faq = faqPage([
   </section>
 
   <section>
+    <h2>機關要做的風險評估，法源在哪</h2>
+    <p>
+      人工智慧基本法 2026 年 1 月 14 日公布施行（第 20 條自公布之日起施行），第 19 條規定：
+    </p>
+    <blockquote>{aiAct19.map((line) => (<span class="para">{line}</span>))}</blockquote>
+    <p>
+      主詞是<strong>政府</strong>，不是廠商 —— 風險評估與使用規範是貴機關要訂的，
+      我們能提供的是訂那份東西所需要的事實：資料送到哪裡、遮罩怎麼做、失敗時怎麼處理、
+      軌跡留在哪，也就是這一頁上面幾節。
+      機關內部的使用界線另見<a href={`${base}ai-official-document/#guidance`}>行政院使用生成式 AI 參考指引十點逐字</a>。
+    </p>
+  </section>
+
+  <section>
     <h2>還有什麼要問的</h2>
     <p>
       採購或資安審查需要更細的說明文件，<a {...SERVICE_LINKS.agencyApply('security_agency_apply')}>來信告訴我們</a>，
@@ -133,3 +150,13 @@ const faq = faqPage([
     </p>
   </section>
 </ArticlePage>
+
+<style>
+  /* 第 19 條有兩項，逐項換行；ArticlePage 的 blockquote 預設是單段。 */
+  blockquote .para {
+    display: block;
+  }
+  blockquote .para + .para {
+    margin-top: 0.5rem;
+  }
+</style>

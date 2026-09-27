@@ -263,7 +263,7 @@ export const CITIZEN_EXAMPLES = [
     slug: 'certified-letter-repair',
     family: 'notice',
     category: '個人／企業之間',
-    seoTitle: '存證信函範例｜催告租屋漏水修繕',
+    seoTitle: '漏水存證信函範本｜催告租屋漏水修繕',
     lead: '通知出租人房屋問題的發生時間、影響範圍與希望完成修繕的期限。',
     watchOut: ['記錄漏水或其他瑕疵發生的時間與位置', '附上照片、報修紀錄等可供確認的資料', '請求事項要寫成可執行的檢查、修繕與回覆內容'],
     scenario: scenario(

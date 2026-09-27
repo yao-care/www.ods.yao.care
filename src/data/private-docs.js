@@ -18,7 +18,7 @@ export const PRIVATE_DOCS = [
   {
     key: 'poa_household',
     slug: 'power-of-attorney-household',
-    seoTitle: '委託書範例：代領戶籍謄本',
+    seoTitle: '戶籍謄本委託書範本：代領謄本怎麼寫',
     category: '委託與授權',
     lead: '沒空自己跑戶政事務所，請人代領謄本。承辦看的是「委託事項寫得夠不夠具體」。',
     watchOut: [
@@ -31,7 +31,7 @@ export const PRIVATE_DOCS = [
   {
     key: 'poa_vehicle',
     slug: 'power-of-attorney-vehicle',
-    seoTitle: '委託書範例：代辦車輛過戶',
+    seoTitle: '汽車過戶委託書範本：代辦車輛過戶要帶的證件',
     category: '委託與授權',
     lead: '人在國外或無法親自到監理站，委託別人辦過戶。但只有一張委託書辦不成——法規要的是證件。',
     watchOut: [
@@ -72,7 +72,7 @@ export const PRIVATE_DOCS = [
   {
     key: 'affidavit_lost',
     slug: 'affidavit-lost-document',
-    seoTitle: '切結書範例：證件遺失申請補發',
+    seoTitle: '證件遺失切結書範本：申請補發怎麼寫',
     category: '切結與聲明',
     lead: '證件遺失要補發，機關要你切結遺失屬實。遺失的時間、地點與尋找經過都要寫。',
     watchOut: [
@@ -84,7 +84,7 @@ export const PRIVATE_DOCS = [
   {
     key: 'statement_income',
     slug: 'statement-no-income',
-    seoTitle: '聲明書範例：聲明無固定工作收入',
+    seoTitle: '無收入聲明書範本：聲明無固定工作收入',
     category: '切結與聲明',
     lead: '申請社福資格時要聲明自己的收入狀況。聲明的是你知道的事實，不要把推測寫成既成事實。',
     watchOut: [
@@ -108,7 +108,7 @@ export const PRIVATE_DOCS = [
   {
     key: 'settlement_damage',
     slug: 'settlement-property-damage',
-    seoTitle: '和解書範例：物品毀損賠償',
+    seoTitle: '物品損壞和解書範本：毀損賠償怎麼寫',
     category: '和解',
     lead: '損害已經確定、金額也談好，這種才適合一次了結。範圍仍然要寫清楚到哪裡為止。',
     watchOut: [
@@ -120,9 +120,9 @@ export const PRIVATE_DOCS = [
   {
     key: 'cert_employment',
     slug: 'employment-certificate',
-    seoTitle: '在職證明書範例：辦理貸款、租屋、簽證用',
+    seoTitle: '在職證明書範本：用途怎麼寫，貸款、租屋、簽證各不同',
     category: '任職與離職證明',
-    lead: '公司開給員工的在職證明。法律沒有規定內容，決定要寫什麼的是「拿去給誰看」。',
+    lead: '公司開給員工的在職證明，租屋時對方說的工作證明也是這一份。法律沒有規定內容，決定要寫什麼的是用途——拿去給誰看。',
     watchOut: [
       '寫到職日、現職職稱與部門，並明確寫「迄今仍在職中」——這是這份文件唯一要證明的事',
       '薪資要不要寫看用途：銀行貸款通常要，租屋多半不用。沒被要求就不要主動寫',
@@ -132,7 +132,7 @@ export const PRIVATE_DOCS = [
   {
     key: 'cert_separation',
     slug: 'separation-certificate',
-    seoTitle: '非自願離職證明書範例：離職證明書（服務證明書）怎麼開、供請領失業給付',
+    seoTitle: '非自願離職證明書範本：離職證明書（服務證明書）怎麼開、供請領失業給付',
     category: '任職與離職證明',
     lead: '勞基法第 19 條規定勞工請求時雇主不得拒絕發給。要拿去請領失業給付的話，離職原因是法定必載事項；資遣這類非自願離職開的就是俗稱的「非自願離職證明書」。',
     watchOut: [
@@ -146,7 +146,7 @@ export const PRIVATE_DOCS = [
   {
     key: 'loan_iou',
     slug: 'loan-iou',
-    seoTitle: '借據範例：金額、交付與返還期限（附本票必要記載事項）',
+    seoTitle: '借據範本：金額、交付與返還期限怎麼寫',
     category: '借貸',
     lead: '借據沒有法定格式，但漏了「錢已經交付」這件事，日後要另外舉證。本票是另一回事 —— 那個可以直接聲請法院強制執行。',
     watchOut: [
@@ -159,7 +159,7 @@ export const PRIVATE_DOCS = [
   {
     key: 'promissory_note',
     slug: 'promissory-note',
-    seoTitle: '本票範例：必要記載事項與空白本票的風險',
+    seoTitle: '本票範本：必要記載事項怎麼填、空白本票的風險',
     category: '借貸',
     lead: '本票不是「比較有效的借據」——執票人可以聲請法院裁定後直接強制執行，不必先打官司。所以每一格都要填滿。',
     watchOut: [
@@ -171,7 +171,7 @@ export const PRIVATE_DOCS = [
   {
     key: 'divorce_agreement',
     slug: 'divorce-agreement',
-    seoTitle: '離婚協議書範例：兩願離婚的三個要件與未成年子女約定',
+    seoTitle: '離婚協議書範本：兩願離婚的三個要件與未成年子女約定',
     category: '婚姻',
     lead: '寫好、簽好、找到兩個證人都還沒離成——民法第 1050 條的第三個要件是「向戶政機關為離婚之登記」，而且要雙方一起去。',
     watchOut: [
@@ -190,7 +190,7 @@ export const PRIVATE_DOCS = [
   {
     key: 'shareholder_proxy',
     slug: 'shareholder-proxy',
-    seoTitle: '股東會委託書範例（非公開發行公司）',
+    seoTitle: '股東會委託書範本（非公開發行公司）',
     category: '委託與授權',
     lead: '公司法明文股東可以自己出具委託書，但要載明授權範圍。公開發行公司則相反，用紙以公司印發者為限。',
     watchOut: [

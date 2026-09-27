@@ -39,9 +39,9 @@ export const CASES = [
   {
     key: 'meeting',
     slug: 'meeting-notice',
-    seoTitle: '開會通知單範例',
+    seoTitle: '開會通知單範例：公文的會議通知單怎麼填',
     category: '會議與通知',
-    lead: '開會通知單的時間、地點、出席人員各有固定欄位，寫進主旨反而不合格式。',
+    lead: '機關裡說的會議通知單就是這一份。時間、地點、出席人員各有固定欄位，寫進主旨反而不合格式。',
     watchOut: ['主旨不要以「開會通知單：」開頭', '期望語仍用「請查照」', '時間寫到星期與時分'],
     // 開會通知單的固定欄位（規範第八點）。應用產出的草稿是函的形狀 —— 時間地點寫在說明分項裡、
     // 主旨帶期望語；排成正式通知單時要拆進這些欄位。absorbedPrefixes 列出因此不再重複進備註的分項。
@@ -67,7 +67,7 @@ export const CASES = [
   {
     key: 'sign',
     slug: 'procurement-sign',
-    seoTitle: '採購簽呈範例',
+    seoTitle: '採購公文範例：採購簽呈怎麼寫',
     category: '內部簽核',
     lead: '簽是對內文書，結尾用「簽請核示」，不是對外的期望語。',
     watchOut: ['簽不需要受文者', '金額牽涉採購級距，要對照政府採購法', '擬辦事項要具體'],
@@ -83,7 +83,7 @@ export const CASES = [
   {
     key: 'personnel_award',
     slug: 'merit-award-sign',
-    seoTitle: '敘獎建議簽呈範例',
+    seoTitle: '敘獎簽呈範例：敘獎公文的擬辦怎麼寫',
     category: '內部簽核',
     lead: '建議敘獎要把具體事蹟、期間與人數寫清楚，記功與嘉獎分開列，長官才有辦法直接核定。',
     watchOut: ['具體事蹟要寫得出時間與工作內容，不能只寫「表現優良」', '記功與嘉獎的人數分別列明', '同一事由已受獎勵者不重複建議'],
@@ -107,7 +107,7 @@ export const CASES = [
   {
     key: 'procurement_request',
     slug: 'small-procurement-sign',
-    seoTitle: '請購單簽呈範例（小額採購）',
+    seoTitle: '小額採購簽呈範例：請購單怎麼簽',
     category: '內部簽核',
     lead: '金額落在哪個級距決定要走哪種程序，這是簽裡面最該先講清楚的事。',
     watchOut: ['金額要對照政府採購法的公告金額級距', '詢價家數與擬洽廠商的理由要寫', '國字大寫只用手冊附錄 3 那一組：壹貳參肆伍陸柒捌玖拾佰仟萬億'],
@@ -115,7 +115,7 @@ export const CASES = [
   {
     key: 'plan_approval',
     slug: 'activity-plan-sign',
-    seoTitle: '活動計畫報核簽呈範例',
+    seoTitle: '內部簽呈範例：活動計畫報核',
     category: '內部簽核',
     lead: '計畫報核的簽是給長官決定「辦不辦、花多少」，不是把計畫書再抄一遍。',
     watchOut: ['日期、地點、人數、經費四項要在簽裡就看得到', '計畫書列為附件，份數要寫', '擬辦段提出的是可以直接核定的方案'],
@@ -179,7 +179,7 @@ export const CASES = [
   {
     key: 'venue_loan',
     slug: 'venue-loan-memo',
-    seoTitle: '場地借用同意書函範例',
+    seoTitle: '借用場地公文範例：場地借用同意書函',
     category: '行政往來',
     lead: '同意借用要把時段與責任講死，事後才不會為了清潔或設備爭執。',
     watchOut: ['借用起訖日期與每次時段都要寫明', '清潔與設備維護責任歸屬要敘明', '復文用「復」起首'],
@@ -195,7 +195,7 @@ export const CASES = [
   {
     key: 'site_survey_meeting',
     slug: 'site-survey-notice',
-    seoTitle: '會勘通知單範例',
+    seoTitle: '會勘通知單範例：會勘公文怎麼寫',
     category: '會議與通知',
     lead: '會勘通知的地點要寫到路口與集合方式，不然與會單位會找不到人。',
     watchOut: ['地點寫到路口並註明現場集合', '請與會單位帶什麼資料寫在備註', '開會事由不要以文別開頭，也不帶期望語'],

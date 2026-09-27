@@ -17,7 +17,7 @@
   },
   "/cases/activity-plan-sign/": {
     "file": "og/cases-activity-plan-sign.png",
-    "title": "活動計畫報核簽呈範例｜公文 AI"
+    "title": "內部簽呈範例：活動計畫報核｜公文 AI"
   },
   "/cases/annual-work-plan/": {
     "file": "og/cases-annual-work-plan.png",
@@ -49,11 +49,11 @@
   },
   "/cases/meeting-notice/": {
     "file": "og/cases-meeting-notice.png",
-    "title": "開會通知單範例｜公文 AI"
+    "title": "開會通知單範例：公文的會議通知單怎麼填｜公文 AI"
   },
   "/cases/merit-award-sign/": {
     "file": "og/cases-merit-award-sign.png",
-    "title": "敘獎建議簽呈範例｜公文 AI"
+    "title": "敘獎簽呈範例：敘獎公文的擬辦怎麼寫｜公文 AI"
   },
   "/cases/noise-petition-reply/": {
     "file": "og/cases-noise-petition-reply.png",
@@ -69,7 +69,7 @@
   },
   "/cases/procurement-sign/": {
     "file": "og/cases-procurement-sign.png",
-    "title": "採購簽呈範例｜公文 AI"
+    "title": "採購公文範例：採購簽呈怎麼寫｜公文 AI"
   },
   "/cases/road-repair/": {
     "file": "og/cases-road-repair.png",
@@ -77,11 +77,11 @@
   },
   "/cases/site-survey-notice/": {
     "file": "og/cases-site-survey-notice.png",
-    "title": "會勘通知單範例｜公文 AI"
+    "title": "會勘通知單範例：會勘公文怎麼寫｜公文 AI"
   },
   "/cases/small-procurement-sign/": {
     "file": "og/cases-small-procurement-sign.png",
-    "title": "請購單簽呈範例（小額採購）｜公文 AI"
+    "title": "小額採購簽呈範例：請購單怎麼簽｜公文 AI"
   },
   "/cases/subsidy-application/": {
     "file": "og/cases-subsidy-application.png",
@@ -101,7 +101,7 @@
   },
   "/cases/venue-loan-memo/": {
     "file": "og/cases-venue-loan-memo.png",
-    "title": "場地借用同意書函範例｜公文 AI"
+    "title": "借用場地公文範例：場地借用同意書函｜公文 AI"
   },
   "/cases/volunteer-recruit-notice/": {
     "file": "og/cases-volunteer-recruit-notice.png",
@@ -141,7 +141,7 @@
   },
   "/citizens/certified-letter-repair/": {
     "file": "og/citizens-certified-letter-repair.png",
-    "title": "存證信函範例｜催告租屋漏水修繕｜公文 AI"
+    "title": "漏水存證信函範本｜催告租屋漏水修繕｜公文 AI"
   },
   "/citizens/certified-letter/": {
     "file": "og/citizens-certified-letter.png",
@@ -177,7 +177,7 @@
   },
   "/private-documents/affidavit-lost-document/": {
     "file": "og/private-documents-affidavit-lost-document.png",
-    "title": "切結書範例：證件遺失申請補發｜公文 AI"
+    "title": "證件遺失切結書範本：申請補發怎麼寫｜公文 AI"
   },
   "/private-documents/authorization-collect-payment/": {
     "file": "og/private-documents-authorization-collect-payment.png",
@@ -185,35 +185,35 @@
   },
   "/private-documents/divorce-agreement/": {
     "file": "og/private-documents-divorce-agreement.png",
-    "title": "離婚協議書範例：兩願離婚的三個要件與未成年子女約定｜公文 AI"
+    "title": "離婚協議書範本：兩願離婚的三個要件與未成年子女約定｜公文 AI"
   },
   "/private-documents/employment-certificate/": {
     "file": "og/private-documents-employment-certificate.png",
-    "title": "在職證明書範例：辦理貸款、租屋、簽證用｜公文 AI"
+    "title": "在職證明書範本：用途怎麼寫，貸款、租屋、簽證各不同｜公文 AI"
   },
   "/private-documents/loan-iou/": {
     "file": "og/private-documents-loan-iou.png",
-    "title": "借據範例：金額、交付與返還期限（附本票必要記載事項）｜公文 AI"
+    "title": "借據範本：金額、交付與返還期限怎麼寫｜公文 AI"
   },
   "/private-documents/power-of-attorney-household/": {
     "file": "og/private-documents-power-of-attorney-household.png",
-    "title": "委託書範例：代領戶籍謄本｜公文 AI"
+    "title": "戶籍謄本委託書範本：代領謄本怎麼寫｜公文 AI"
   },
   "/private-documents/power-of-attorney-vehicle/": {
     "file": "og/private-documents-power-of-attorney-vehicle.png",
-    "title": "委託書範例：代辦車輛過戶｜公文 AI"
+    "title": "汽車過戶委託書範本：代辦車輛過戶要帶的證件｜公文 AI"
   },
   "/private-documents/promissory-note/": {
     "file": "og/private-documents-promissory-note.png",
-    "title": "本票範例：必要記載事項與空白本票的風險｜公文 AI"
+    "title": "本票範本：必要記載事項怎麼填、空白本票的風險｜公文 AI"
   },
   "/private-documents/separation-certificate/": {
     "file": "og/private-documents-separation-certificate.png",
-    "title": "非自願離職證明書範例：離職證明書（服務證明書）怎麼開、供請領失業給付｜公文 AI"
+    "title": "非自願離職證明書範本：離職證明書（服務證明書）怎麼開、供請領失業給付｜公文 AI"
   },
   "/private-documents/settlement-property-damage/": {
     "file": "og/private-documents-settlement-property-damage.png",
-    "title": "和解書範例：物品毀損賠償｜公文 AI"
+    "title": "物品損壞和解書範本：毀損賠償怎麼寫｜公文 AI"
   },
   "/private-documents/settlement-traffic-accident/": {
     "file": "og/private-documents-settlement-traffic-accident.png",
@@ -221,11 +221,11 @@
   },
   "/private-documents/shareholder-proxy/": {
     "file": "og/private-documents-shareholder-proxy.png",
-    "title": "股東會委託書範例（非公開發行公司）｜公文 AI"
+    "title": "股東會委託書範本（非公開發行公司）｜公文 AI"
   },
   "/private-documents/statement-no-income/": {
     "file": "og/private-documents-statement-no-income.png",
-    "title": "聲明書範例：聲明無固定工作收入｜公文 AI"
+    "title": "無收入聲明書範本：聲明無固定工作收入｜公文 AI"
   },
   "/product/": {
     "file": "og/product.png",

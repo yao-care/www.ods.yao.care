@@ -21,6 +21,7 @@ import PageToc from '../../components/PageToc.astro';
 import terms from '../../data/gov-terms.json';
 import voucher from '../../data/voucher-rule.json';
 import { DIGIT_TABLE, UNIT_TABLE, EXAMPLES, toUppercase, toCurrency } from '../../data/uppercase-number.js';
+import downloads from '../../data/downloads.json';
 
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
@@ -43,11 +44,14 @@ const examples = EXAMPLES.map((e) => ({
 const S = {
   convert: { id: 'convert', label: '一、換算' },
   table: { id: 'table', label: '二、國字大寫對照表' },
-  examples: { id: 'examples', label: '三、進位與補零：容易寫錯的幾個' },
-  when: { id: 'when', label: '四、公文什麼時候用大寫、什麼時候用阿拉伯數字' },
-  voucher: { id: 'voucher', label: '五、核銷憑證為什麼一定要大寫' },
-  mistakes: { id: 'mistakes', label: '六、最常見的錯：三的大寫是「參」' },
+  download: { id: 'download', label: '三、對照表下載（Word）' },
+  examples: { id: 'examples', label: '四、進位與補零：容易寫錯的幾個' },
+  when: { id: 'when', label: '五、公文什麼時候用大寫、什麼時候用阿拉伯數字' },
+  voucher: { id: 'voucher', label: '六、核銷憑證為什麼一定要大寫' },
+  mistakes: { id: 'mistakes', label: '七、最常見的錯：三的大寫是「參」' },
 };
+
+const sheetFiles = downloads.extras.filter((x) => x.page === 'numbers/');
 
 const description =
   '阿拉伯數字轉國字大寫（壹貳參肆伍陸柒捌玖拾佰仟萬億）對照表，1到10每個數字怎麼寫都列出來，'
@@ -185,6 +189,24 @@ const faq = {
     大寫的用意就是讓字劃多到難以加筆竄改。
   </p>
 
+  <h2 id={S.download.id}>{S.download.label}</h2>
+  <p>
+    上面這幾張表加上進位範例與第十三點原文，另外有一份可列印的 .docx。
+    寫核銷憑證時擺在手邊比在螢幕上捲動好用；檔裡的換算是站上這支程式算出來的，
+    不是另外手打一份。
+  </p>
+  <ul class="files">
+    {sheetFiles.map((f) => (
+      <li>
+        <a href={`${base}downloads/${f.path}`} download={f.filename}>{f.filename}</a>
+        <span>{f.note}</span>
+      </li>
+    ))}
+  </ul>
+  <p class="note">
+    要開的是領據本身的話，空白與填好的兩份在<a href={`${base}receipt/#download`}>領據範本下載</a>。
+  </p>
+
   <h2 id={S.examples.id}>{S.examples.label}</h2>
   <table>
     <thead><tr><th>數字</th><th>國字大寫</th><th>金額寫法</th><th>為什麼挑這個</th></tr></thead>
@@ -300,6 +322,26 @@ const faq = {
 </script>
 
 <style>
+  /* 下載清單：與 /templates/ 同一個形狀（那頁是 Word 下載的樞紐，兩邊視覺要一致）。 */
+  .files {
+    display: grid;
+    gap: 0.5rem;
+    padding-inline-start: 0;
+    list-style: none;
+  }
+  .files li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .files span {
+    flex: 1 1 16rem;
+    font-size: var(--text-xs);
+    color: var(--color-ink-soft);
+  }
   .tool {
     margin-block: 1.5rem;
     padding: 1.25rem;

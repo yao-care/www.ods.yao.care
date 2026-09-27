@@ -375,5 +375,31 @@
       "path": "templates/certified-letter.docx",
       "filename": "存證信函內文空白範本.docx"
     }
+  ],
+  "extras": [
+    {
+      "slug": "receipt-blank",
+      "label": "領據空白範本",
+      "path": "receipt/receipt-blank.docx",
+      "filename": "領據空白範本.docx",
+      "note": "五款必要記載事項都留成待填欄位，金額分大寫與阿拉伯數字兩行。",
+      "page": "receipt/"
+    },
+    {
+      "slug": "receipt-example",
+      "label": "領據範例（填好的）",
+      "path": "receipt/receipt-example.docx",
+      "filename": "領據範例（填好的）.docx",
+      "note": "以社區發展協會領補助款為例填好一份，照著改成自己的事由與金額。",
+      "page": "receipt/"
+    },
+    {
+      "slug": "uppercase-table",
+      "label": "數字國字大寫對照表",
+      "path": "numbers/uppercase-table.docx",
+      "filename": "數字國字大寫對照表.docx",
+      "note": "0 到 9、位數、金額寫法與第十三點原文，列印出來放在手邊對照。",
+      "page": "numbers/"
+    }
   ]
 }

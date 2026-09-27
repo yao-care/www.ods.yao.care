@@ -55,7 +55,7 @@ const citizenRows = CITIZEN_EXAMPLES.map((e) => ({
 
 const total =
   officialTemplates.length + privateTemplates.length + citizenTemplates.length +
-  caseRows.length + citizenRows.length + privateRows.length;
+  caseRows.length + citizenRows.length + privateRows.length + downloads.extras.length;
 
 const description =
   `函、書函、公告、開會通知單、簽與民眾書件的空白 Word 範本，版面取自政府文書格式參考規範原始檔，` +
@@ -283,6 +283,22 @@ const faq = {
         但站上刻意不提供本票的 Word 檔，理由在該頁。要寫借貸關係的證明用
         <a href={`${base}private-documents/loan-iou/`}>借據</a>，那一則有檔可下載。
       </p>
+    </section>
+
+    <section>
+      <h2>表單與對照表</h2>
+      <p>
+        這兩類不是公文，版面只沿用同一套紙張、邊界與字級，讓下載檔看起來是一套。
+        領據的通案規定在《政府支出憑證處理要點》第四點，對照表則根本不是一種文書。
+      </p>
+      <ul class="files">
+        {downloads.extras.map((x) => (
+          <li>
+            <a href={`${base}downloads/${x.path}`} download={x.filename}>{x.filename}</a>
+            <span>{x.note}　<a href={`${base}${x.page}`}>看怎麼填</a></span>
+          </li>
+        ))}
+      </ul>
     </section>
 
     <section class="note-box">

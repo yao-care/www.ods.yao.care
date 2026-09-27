@@ -13,10 +13,12 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { docx, p } from './lib/docx.mjs';
 import { PAGE, renderOfficial, citizenDocument, certifiedLetter, privateDocument } from './lib/gov-format.mjs';
+import { receiptForm, uppercaseSheet } from './lib/reference-docs.mjs';
 import { CASES } from '../src/data/cases.js';
 import { CITIZEN_EXAMPLES } from '../src/data/citizen-examples.js';
 import { PRIVATE_DOCS } from '../src/data/private-docs.js';
 import format from '../src/data/gov-format.json' with { type: 'json' };
+import voucher from '../src/data/voucher-rule.json' with { type: 'json' };
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = join(ROOT, 'public', 'downloads');
@@ -75,7 +77,9 @@ const build = (title, notes, bodyXml) =>
   docx({ title, page: PAGE, body: note(notes) + bodyXml });
 
 // path 是相對 public/downloads/ 的路徑，頁面自己接 BASE_URL。
-const manifest = { source: format.source, postalGuide: 'https://www.post.gov.tw/post/internet/Download/index.jsp?ID=220301', cases: {}, citizens: {}, private: {}, templates: [] };
+// extras＝不是公文、但沿用同一套紙張的表單與對照表（領據、數字大寫對照表）。
+// 刻意不併進 templates：那個陣列被 /templates/ 依文別分成三族群，領據與對照表都不是文書族群。
+const manifest = { source: format.source, postalGuide: 'https://www.post.gov.tw/post/internet/Download/index.jsp?ID=220301', cases: {}, citizens: {}, private: {}, templates: [], extras: [] };
 
 // ── 機關公文案例 ───────────────────────────────────────────────
 for (const caseMeta of CASES) {
@@ -270,6 +274,58 @@ for (const template of TEMPLATES) {
   });
 }
 
+// ── 表單與對照表（不是公文，見 lib/reference-docs.mjs 檔頭的理由與量測） ────
+const RECEIPT_NOTE = [
+  '本檔為 www.ods.yao.care 的領據，可直接在 Word 修改後使用。',
+  `欄位逐款對應${voucher._source.issuer}《${voucher._source.name}》（${voucher._source.edition}）第四點第一項(一)～(五)。`,
+  '第(六)款「其他由各機關依其業務性質及實際需要增列之事項」由各機關自訂，本檔不預設。',
+  '金額須用國字大寫（第十三點）；受領機關另有制式表格時，以該機關的表格為準。',
+];
+const SHEET_NOTE = [
+  '本檔為 www.ods.yao.care 的數字國字大寫對照表，可直接在 Word 修改後使用。',
+  `大寫規定取自${voucher._source.issuer}《${voucher._source.name}》第十三點。`,
+  '換算結果由站上同一份程式產生（src/data/uppercase-number.js），網頁與本檔不會各算一套。',
+];
+
+const EXTRAS = [
+  {
+    slug: 'receipt-blank',
+    label: '領據空白範本',
+    file: 'receipt/receipt-blank.docx',
+    page: 'receipt/',
+    note: '五款必要記載事項都留成待填欄位，金額分大寫與阿拉伯數字兩行。',
+    body: () => build('領據空白範本', RECEIPT_NOTE, receiptForm(false)),
+  },
+  {
+    slug: 'receipt-example',
+    label: '領據範例（填好的）',
+    file: 'receipt/receipt-example.docx',
+    page: 'receipt/',
+    note: '以社區發展協會領補助款為例填好一份，照著改成自己的事由與金額。',
+    body: () => build('領據範例', RECEIPT_NOTE, receiptForm(true)),
+  },
+  {
+    slug: 'uppercase-table',
+    label: '數字國字大寫對照表',
+    file: 'numbers/uppercase-table.docx',
+    page: 'numbers/',
+    note: '0 到 9、位數、金額寫法與第十三點原文，列印出來放在手邊對照。',
+    body: () => build('數字國字大寫對照表', SHEET_NOTE, uppercaseSheet(voucher)),
+  },
+];
+
+for (const extra of EXTRAS) {
+  write(extra.file, extra.body());
+  manifest.extras.push({
+    slug: extra.slug,
+    label: extra.label,
+    path: extra.file,
+    filename: `${extra.label}.docx`,
+    note: extra.note,
+    page: extra.page,
+  });
+}
+
 writeFileSync(join(ROOT, 'src/data/downloads.json'), `${JSON.stringify(manifest, null, 2)}\n`);
 
 // 逐群都要列進來：原本漏了民間書件那一群，總數少報 13 檔而畫面上看不出來
@@ -279,6 +335,7 @@ const counts = [
   ['民眾書件', Object.keys(manifest.citizens).length],
   ['民間書件', Object.keys(manifest.private).length],
   ['空白範本', manifest.templates.length],
+  ['表單與對照表', manifest.extras.length],
 ];
 console.log(
   `Word 產生完成：${counts.reduce((n, [, c]) => n + c, 0)} 檔（${counts.map(([k, c]) => `${k} ${c}`).join('、')}）→ public/downloads/`,

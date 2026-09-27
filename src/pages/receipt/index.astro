@@ -19,7 +19,7 @@ import ArticlePage from '../../layouts/ArticlePage.astro';
 import PageToc from '../../components/PageToc.astro';
 import voucher from '../../data/voucher-rule.json';
 import downloads from '../../data/downloads.json';
-import { toCurrency } from '../../data/uppercase-number.js';
+import { RECEIPT_FIELDS } from '../../data/receipt.js';
 
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
@@ -31,14 +31,11 @@ const receiptPoint = pointOf('四');
 const invoicePoint = pointOf('五');
 const uppercasePoint = pointOf('十三');
 
-/** 第四點五款的白話對照。條文原文照放，這裡只說「實務上這一格填什麼」。 */
-const FIELDS = [
-  { law: '受領事由', plain: '這筆錢是為了什麼付的', example: '114年度社區照顧關懷據點補助款' },
-  { law: '實收數額', plain: '實際收到多少，金額用國字大寫', example: toCurrency(240000).text },
-  { law: '機關名稱', plain: '付錢的機關全銜，不是自己的名字', example: '○○縣政府社會處' },
-  { law: '受領人之姓名或名稱、身分證明文件字號、統一編號', plain: '收錢的人或團體；團體填名稱與統一編號，個人填姓名與身分證字號', example: '○○社區發展協會（統一編號 00000000）' },
-  { law: '開立日期', plain: '開立這張領據的日期，用民國紀年', example: '中華民國114年9月10日' },
-];
+/**
+ * 第四點五款的白話對照走 src/data/receipt.js —— 那一份同時餵給可下載的領據 Word，
+ * 兩邊不會各寫一套（同 meeting.js／note.js 的作法）。
+ */
+const FIELDS = RECEIPT_FIELDS;
 
 const CONFUSIONS = [
   {
@@ -68,12 +65,16 @@ const MISTAKES = [
 ];
 
 const S = {
-  fields: { id: 'fields', label: '一、領據要記哪幾件事（條文原文＋白話）' },
-  uppercase: { id: 'uppercase', label: '二、金額為什麼一定要國字大寫' },
-  confusions: { id: 'confusions', label: '三、領據、收據、統一發票怎麼分' },
-  mistakes: { id: 'mistakes', label: `四、最常被退的 ${MISTAKES.length} 個地方` },
-  where: { id: 'where', label: '五、核銷還要附什麼' },
+  download: { id: 'download', label: '一、領據範本下載（Word）' },
+  fields: { id: 'fields', label: '二、領據要記哪幾件事（條文原文＋白話）' },
+  uppercase: { id: 'uppercase', label: '三、金額為什麼一定要國字大寫' },
+  confusions: { id: 'confusions', label: '四、領據、收據、統一發票怎麼分' },
+  mistakes: { id: 'mistakes', label: `五、最常被退的 ${MISTAKES.length} 個地方` },
+  where: { id: 'where', label: '六、核銷還要附什麼' },
 };
+
+/** 領據那兩份放在第一節：2026-08-20 的教訓是「使用者要的是檔案，不該先讀一段說明」。 */
+const receiptFiles = downloads.extras.filter((x) => x.page === 'receipt/');
 
 const description =
   '領據要記受領事由、實收數額、機關名稱、受領人與統一編號、開立日期，金額須用國字大寫 ——'
@@ -146,12 +147,31 @@ const faq = {
 
 <ArticlePage
   schemas={[schema, faq]}
-  title="領據怎麼寫：核銷用的必要記載事項與金額大寫"
+  title="領據範本下載｜領據怎麼寫：核銷用的必要記載事項與金額大寫"
   description={description}
   heading="領據怎麼寫"
   lead="領補助款、領鐘點費要出具的那張紙。各機關的表格長得不一樣，但要記的事情是同一組 —— 通案規定在《政府支出憑證處理要點》第四點，各校各局處的版本都是從那裡來的。"
 >
   <PageToc items={Object.values(S)} />
+
+  <h2 id={S.download.id}>{S.download.label}</h2>
+  <p>
+    兩份都是 .docx，下載後用 Word 或 LibreOffice 開啟就能改。空白那份把第四點的五款
+    留成待填欄位，範例那份以社區發展協會領補助款填好一份給你照著改。
+  </p>
+  <ul class="files">
+    {receiptFiles.map((f) => (
+      <li>
+        <a href={`${base}downloads/${f.path}`} download={f.filename}>{f.filename}</a>
+        <span>{f.note}</span>
+      </li>
+    ))}
+  </ul>
+  <p class="note">
+    <strong>受領機關另有制式領據表格時，以那一份為準</strong> —— 第四點第六款讓各機關自行增列欄位，
+    所以各校各局處的版本長得不一樣。先看核定函怎麼寫，沒有指定表格再用這兩份。
+    金額的大寫換算另有一張可列印的<a href={`${base}numbers/`}>對照表</a>。
+  </p>
 
   <h2 id={S.fields.id}>{S.fields.label}</h2>
   <blockquote>{receiptPoint.text}</blockquote>
@@ -223,6 +243,26 @@ const faq = {
 </ArticlePage>
 
 <style>
+  /* 下載清單：與 /templates/ 同一個形狀（那頁是 Word 下載的樞紐，兩邊視覺要一致）。 */
+  .files {
+    display: grid;
+    gap: 0.5rem;
+    padding-inline-start: 0;
+    list-style: none;
+  }
+  .files li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .files span {
+    flex: 1 1 16rem;
+    font-size: var(--text-xs);
+    color: var(--color-ink-soft);
+  }
   blockquote {
     margin: 0.75rem 0 0;
     padding: 0.75rem 1rem;

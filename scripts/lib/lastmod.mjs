@@ -43,6 +43,10 @@ const SECTION_DATA = {
   templates: ['src/data/downloads.json', 'src/data/gov-format.json'],
   checks: ['src/data/scenarios'],
   'doc-types': ['src/data/cases.js', 'src/data/citizen-examples.js', 'src/data/scenarios.json'],
+  // 這兩頁自 2026-09-27 起也有可下載的檔（領據、數字大寫對照表），
+  // 檔案換了就要告訴 Google 這一頁動過，所以把清單與各自的資料來源列進來。
+  receipt: ['src/data/downloads.json', 'src/data/receipt.js', 'src/data/voucher-rule.json'],
+  numbers: ['src/data/downloads.json', 'src/data/uppercase-number.js', 'src/data/voucher-rule.json'],
 };
 
 /** 由網址路徑推回產生它的 .astro 檔（靜態頁優先，其次同層的動態路由）。 */

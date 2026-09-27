@@ -62,8 +62,10 @@ const others = [...new Set(PRIVATE_DOCS.map((d) => d.category))]
   .map((c) => PRIVATE_DOCS.find((d) => d.category === c))
   .filter(Boolean);
 
-const description =
-  `${meta.lead} 提供完整${docType}範例全文、${payload.checks.length} 條檢核結果與可自行編輯的 Word 檔。`;
+const description = meta.noDownload
+  ? `${meta.lead} 提供完整${docType}範例全文與 ${payload.checks.length} 條檢核結果；`
+    + `這一則刻意不提供 Word 檔，理由在頁內說明。`
+  : `${meta.lead} 提供完整${docType}範例全文、${payload.checks.length} 條檢核結果與可自行編輯的 Word 檔。`;
 const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
 
 const articleSchema = {
@@ -114,7 +116,8 @@ const faq = {
         '@type': 'Answer',
         text:
           `不一定。民間書件沒有法定強制格式，但受理的機關或對方常有自己的制式表格，` +
-          `有的話以那份為準。本頁提供的是通用結構與可編輯的 Word 檔。`,
+          `有的話以那份為準。本頁提供的是通用結構` +
+          (meta.noDownload ? `；這一則不提供 Word 檔，理由在頁內說明。` : `與可編輯的 Word 檔。`),
       },
     },
   ],
@@ -312,6 +315,23 @@ const faq = {
       receiver={listing?.receiver ?? null}
       download={download}
     />
+
+    {meta.noDownload && (
+      <>
+        <h2>這一份站上不給 Word 檔</h2>
+        <p>
+          上面的範例可以照著看、照著核對八款必要記載事項，但這一則沒有下載連結。
+          會這樣做是因為這張紙的效力：票據法第 123 條讓執票人聲請法院裁定後就能強制執行，
+          不必先打官司。一份排版整齊、只差簽名的本票檔案，簽下去就是一張執行名義，
+          而多數人是在不知道這件事的狀況下簽的。
+        </p>
+        <p>
+          要寫的是借貸關係的證明，用<a href={`${base}private-documents/loan-iou/`}>借據</a>那一則，
+          那頁有 Word 檔可下載。真的需要本票，請到文具店買制式本票用紙，
+          照上面的欄位逐格填，八款缺一款的法定效果也列在下面那一節。
+        </p>
+      </>
+    )}
 
     {download && (
       <>

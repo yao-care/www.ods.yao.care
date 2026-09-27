@@ -148,6 +148,9 @@ const PRIVATE_LABELS = {
   股東會委託書: { senderLabel: '委託人（股東）', receiverLabel: '此致' },
 };
 for (const meta of PRIVATE_DOCS) {
+  // `noDownload` 的文別只出網頁、不出 Word（目前只有本票，理由寫在 private-docs.js 那一則）。
+  // 跳在讀 scenario 之前：那份產物仍要留著，網頁與檢核照樣吃它。
+  if (meta.noDownload) continue;
   const payload = JSON.parse(readFileSync(join(ROOT, 'src/data/scenarios', `${meta.key}.json`), 'utf8'));
   const draft = payload.draft;
   const fields = draft.fields ?? {};
@@ -269,9 +272,12 @@ for (const template of TEMPLATES) {
 
 writeFileSync(join(ROOT, 'src/data/downloads.json'), `${JSON.stringify(manifest, null, 2)}\n`);
 
+// 逐群都要列進來：原本漏了民間書件那一群，總數少報 13 檔而畫面上看不出來
+// （「Word 產生完成：48 檔」實際上寫了 61 檔）。
 const counts = [
   ['公文案例', Object.keys(manifest.cases).length],
   ['民眾書件', Object.keys(manifest.citizens).length],
+  ['民間書件', Object.keys(manifest.private).length],
   ['空白範本', manifest.templates.length],
 ];
 console.log(

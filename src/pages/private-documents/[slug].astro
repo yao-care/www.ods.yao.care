@@ -265,6 +265,46 @@ const faq = {
       </p>
     )}
 
+    {meta.noDownload && (
+      <section class="danger">
+        <h2 class="danger-title">這一份站上不給 Word 檔，先看為什麼</h2>
+        <p>
+          找空白本票檔的人很多，但這一頁刻意沒有下載連結。
+          會這樣做是因為這張紙的效力：票據法第 123 條讓執票人<strong>聲請法院裁定後就能強制執行</strong>，
+          不必先打一場民事官司。一份排版整齊、只差簽名的本票檔案，簽下去就是一張執行名義，
+          而多數人是在不知道這件事的狀況下簽的。與站上不重製中華郵政存證信函用紙同一個判準。
+        </p>
+        <ul>
+          <li>
+            <strong>要證明借了錢、約定何時還</strong> —— 用
+            <a href={`${base}private-documents/loan-iou/`}>借據</a>那一則，那頁有 Word 檔可下載。
+            借據是證據，對方不還要經法院判決才能執行，風險跟本票差一個量級。
+          </li>
+          <li>
+            <strong>真的要開本票</strong> —— 到文具店或銀行買制式本票用紙，照下面八款
+            <a href="#note-items">必要記載事項</a>逐格填，<strong>金額與到期日當場填齊</strong>。
+          </li>
+          <li>
+            <strong>不要簽空白本票</strong> —— 票據法第 11 條第 2 項：執票人善意取得已具備應記載事項之票據者，
+            得依票據文義行使權利，票據債務人<strong>不得</strong>以票據原係欠缺應記載事項為理由主張無效。
+            金額或到期日留空交出去、被填上再轉手，就很難翻。
+            同條第 3 項另規定票據上的記載<strong>除金額外</strong>得由原記載人於交付前改寫 ——
+            也就是金額寫錯不能改，只能重開。
+          </li>
+        </ul>
+
+        <h3 class="danger-sub">本票的必要記載事項（票據法第 120 條第 1 項）</h3>
+        <ol class="note-items" id="note-items">
+          {NOTE_ITEMS.map((t) => <li>{t}</li>)}
+        </ol>
+        <p class="note">
+          同條後段另有補充：未載到期日者視為見票即付；未載受款人者以執票人為受款人；
+          未載發票地者以發票人之營業所、住所或居所所在地為發票地；未載付款地者以發票地為付款地。
+          見票即付並不記載受款人之本票，金額須在五百元以上。
+        </p>
+      </section>
+    )}
+
     {isLoan && (
       <section class="danger">
         <h2 class="danger-title">借據跟本票不是同一件事，差別很大</h2>
@@ -283,7 +323,7 @@ const faq = {
         <p>另外，同條第 3 項：票據上的記載<strong>除金額外</strong>得由原記載人於交付前改寫。
           也就是<strong>金額寫錯不能改，只能重開</strong>。</p>
         <h3>本票的必要記載事項（票據法第 120 條第 1 項）</h3>
-        <ol class="note-items">
+        <ol class="note-items" id="note-items">
           {NOTE_ITEMS.map((t) => <li>{t}</li>)}
         </ol>
         <p class="note">
@@ -315,23 +355,6 @@ const faq = {
       receiver={listing?.receiver ?? null}
       download={download}
     />
-
-    {meta.noDownload && (
-      <>
-        <h2>這一份站上不給 Word 檔</h2>
-        <p>
-          上面的範例可以照著看、照著核對八款必要記載事項，但這一則沒有下載連結。
-          會這樣做是因為這張紙的效力：票據法第 123 條讓執票人聲請法院裁定後就能強制執行，
-          不必先打官司。一份排版整齊、只差簽名的本票檔案，簽下去就是一張執行名義，
-          而多數人是在不知道這件事的狀況下簽的。
-        </p>
-        <p>
-          要寫的是借貸關係的證明，用<a href={`${base}private-documents/loan-iou/`}>借據</a>那一則，
-          那頁有 Word 檔可下載。真的需要本票，請到文具店買制式本票用紙，
-          照上面的欄位逐格填，八款缺一款的法定效果也列在下面那一節。
-        </p>
-      </>
-    )}
 
     {download && (
       <>

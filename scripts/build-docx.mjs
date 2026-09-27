@@ -12,7 +12,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { docx, p } from './lib/docx.mjs';
-import { PAGE, renderOfficial, citizenDocument, certifiedLetter, privateDocument } from './lib/gov-format.mjs';
+import { PAGE, renderOfficial, citizenDocument, certifiedLetter, privateDocument, briefSign } from './lib/gov-format.mjs';
 import { receiptForm, uppercaseSheet } from './lib/reference-docs.mjs';
 import { CASES } from '../src/data/cases.js';
 import { CITIZEN_EXAMPLES } from '../src/data/citizen-examples.js';
@@ -62,6 +62,15 @@ const PRIVATE_NOTE = [
   '和解書特別注意：民法第 737 條的和解會使所拋棄之權利消滅。傷勢或損害尚未確定時，',
   '請把拋棄範圍寫窄（例如「本件僅就車輛損害和解，人身損害之請求權不在本件範圍」），',
   '並考慮改由鄉鎮市區調解委員會調解（免費，調解書經法院核定有執行力）。',
+];
+
+// 便簽刻意不引「規範第某點」：手冊與規範都沒有這個文別，寫了就是憑空給它一個出處。
+const BRIEF_NOTE = [
+  '本檔為 www.ods.yao.care 的便簽空白範本，可直接在 Word 修改後使用。',
+  '《文書處理手冊》沒有「便簽」這個文別 —— 它是各機關對「案情簡單、不分段、以條列方式簽擬」那種簽的慣用叫法。',
+  '手冊的依據是簽的作法：簽稿併陳時如案情簡單可不分段、以條列式簽擬；一般存參或案情簡單之文件，得於原件文中空白處簽擬。',
+  '檔號與保存年限的字級、行距沿用政府文書格式參考規範原檔；其餘結構取自機關實際在用的附件範例。',
+  '貴機關文書單位另有便簽格式時，以那一份為準。',
 ];
 
 const NOTICE_NOTE = [
@@ -192,6 +201,9 @@ const TEMPLATES = [
     note: '開會事由、時間、地點、主持人、聯絡人及電話是固定欄位，不要塞進主旨。' },
   { slug: 'internal-sign', docType: '簽', label: '簽', kind: 'official', sections: empty(['說明', '擬辦']),
     note: '簽是對內文書，段名為主旨、說明、擬辦，結尾用「簽請核示」或「簽請鑒核」。' },
+  // 便簽不在手冊也不在規範裡，結構取自機關附件範例（見 gov-format.mjs 的 briefSign 檔頭）。
+  { slug: 'brief-sign', docType: '便簽', label: '便簽', kind: 'brief', sections: [],
+    note: '案情簡單時用的簽，不分段、直接條列，末行敬陳長官。手冊沒有這個文別，結構是各機關通用的。' },
   { slug: 'citizen-petition', docType: '陳情書', label: '陳情書', kind: 'citizen',
     sections: [{ title: '事實與理由', items: ['', ''] }, { title: '請求事項', items: [''] }, { title: '附件', items: [''] }],
     note: '民眾對機關的書件，段名為事實與理由、請求事項、附件。' },
@@ -254,14 +266,16 @@ for (const template of TEMPLATES) {
   };
   const body =
     template.kind === 'official' ? renderOfficial(doc)
-      : template.kind === 'notice' ? certifiedLetter(doc)
-        : template.kind === 'private' ? privateDocument({ ...doc, ...(template.labels ?? {}) })
-          : citizenDocument(doc);
+      : template.kind === 'brief' ? briefSign({ agency: '', items: ['', '', ''] })
+        : template.kind === 'notice' ? certifiedLetter(doc)
+          : template.kind === 'private' ? privateDocument({ ...doc, ...(template.labels ?? {}) })
+            : citizenDocument(doc);
   const notes =
     template.kind === 'official' ? CASE_NOTE
-      : template.kind === 'notice' ? NOTICE_NOTE
-        : template.kind === 'private' ? PRIVATE_NOTE
-          : CITIZEN_NOTE;
+      : template.kind === 'brief' ? BRIEF_NOTE
+        : template.kind === 'notice' ? NOTICE_NOTE
+          : template.kind === 'private' ? PRIVATE_NOTE
+            : CITIZEN_NOTE;
   const file = `templates/${template.slug}.docx`;
   write(file, build(`${template.label}空白範本`, notes, body));
   manifest.templates.push({

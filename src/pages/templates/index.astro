@@ -24,7 +24,7 @@ const base = import.meta.env.BASE_URL.endsWith('/')
 
 // 三個文書族群各自分區。2026-08-26 開了 private 族群之後，原本的二分法會把委託書、
 // 切結書、和解書一併掃進「民眾書件」——那是「民眾對機關」的區，放錯地方。
-const OFFICIAL_TYPES = ['函', '書函', '公告', '開會通知單', '簽'];
+const OFFICIAL_TYPES = ['函', '書函', '公告', '開會通知單', '簽', '便簽'];
 const PRIVATE_TYPES = ['委託書', '授權書', '切結書', '聲明書', '和解書', '在職證明書', '服務證明書', '借據'];
 const officialTemplates = downloads.templates.filter((t) => OFFICIAL_TYPES.includes(t.docType));
 const privateTemplates = downloads.templates.filter((t) => PRIVATE_TYPES.includes(t.docType));
@@ -183,6 +183,15 @@ const faq = {
             <td>簡簽</td>
             <td>案情簡單時的短簽，格式仍是主旨、說明、擬辦，只是篇幅短</td>
             <td>簽空白範本</td>
+          </tr>
+          <tr>
+            <td>便簽、小簽</td>
+            <td>
+              案情簡單到連分段都省掉，直接條列、末行敬陳長官。
+              <strong>手冊沒有這個文別名</strong>，依據是簽的作法「簽稿併陳：如案情簡單，可不分段，以條列式簽擬」；
+              各機關文書單位多半自己附一份格式，有就用那一份
+            </td>
+            <td>便簽空白範本</td>
           </tr>
           <tr>
             <td>以稿代簽</td>

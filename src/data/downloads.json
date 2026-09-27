@@ -288,6 +288,14 @@
       "filename": "簽空白範本.docx"
     },
     {
+      "slug": "brief-sign",
+      "label": "便簽",
+      "docType": "便簽",
+      "note": "案情簡單時用的簽，不分段、直接條列，末行敬陳長官。手冊沒有這個文別，結構是各機關通用的。",
+      "path": "templates/brief-sign.docx",
+      "filename": "便簽空白範本.docx"
+    },
+    {
       "slug": "citizen-petition",
       "label": "陳情書",
       "docType": "陳情書",

@@ -166,6 +166,33 @@ export function renderOfficial(doc) {
  * 這類不是公文，沒有檔號、發文字號與印信；紙張、邊界、字級與縮排沿用規範的公文版面，
  * 機關收到時的閱讀感受才會跟內部公文一致。
  */
+/**
+ * 便簽（小簽）。
+ *
+ * ⚠️ **「便簽」不在《文書處理手冊》裡**（全文查無這三個字），也不在政府文書格式參考規範的
+ * 文別清單裡 —— 它是各機關對「案情簡單、不分段、條列式簽擬」那種簽的慣用叫法。
+ * 手冊給得出的依據只有簽的作法那兩條：「簽稿併陳：如案情簡單，可不分段，以條列式簽擬」
+ * 與「一般存參或案情簡單之文件，得於原件文中空白處簽擬」（gov-terms.json 的 sign.style）。
+ *
+ * 版面結構取自機關實際在用的附件範例（臺北市政府法規查詢系統「附件四、便簽格式」，
+ * https://laws.gov.taipei/Law/File/0000317054 ，2026-09-27 抓取實見）：
+ * 檔號與保存年限置右上、「便簽 於 (機關或單位名稱) 年 月 日」一行、條列本文、末行「敬陳 Ｏ長」。
+ * 檔號與保存年限的字級、行距沿用規範原檔量到的值，其餘用簽的欄位樣式。
+ *
+ * **所以頁面上不可以寫成「依規範第某點」**——沒有那一點。要寫「各機關通用的結構」。
+ */
+export function briefSign(doc) {
+  return [
+    archiveHead(),
+    p('便簽', S.agency_title),
+    p(`於　${doc.agency ?? '(機關或單位名稱)'}　　　　年　　月　　日`, S.subject),
+    blank(S.subject),
+    ...(doc.items ?? []).map((item, i) => p(`${num(i)}${item}`, S.item)),
+    blank(S.cc_to),
+    p('敬陳　○長', S.cc_to),
+  ].join('');
+}
+
 export function citizenDocument(doc) {
   return [
     p(doc.docType, S.agency_title),

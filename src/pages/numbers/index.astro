@@ -42,14 +42,24 @@ const examples = EXAMPLES.map((e) => ({
 }));
 
 const S = {
+  quick: { id: 'examples', label: '金額範例：先看三個' },
   convert: { id: 'convert', label: '一、換算' },
   table: { id: 'table', label: '二、國字大寫對照表' },
   download: { id: 'download', label: '三、對照表下載（Word）' },
-  examples: { id: 'examples', label: '四、進位與補零：容易寫錯的幾個' },
+  carry: { id: 'carry', label: '四、進位與補零：容易寫錯的幾個' },
   when: { id: 'when', label: '五、公文什麼時候用大寫、什麼時候用阿拉伯數字' },
   voucher: { id: 'voucher', label: '六、核銷憑證為什麼一定要大寫' },
   mistakes: { id: 'mistakes', label: '七、最常見的錯：三的大寫是「參」' },
 };
+
+// 頁首的三個金額範例（2026-10-02）：查「數字大寫範例」的人要的是看一眼就懂的寫法，
+// 不是先捲過換算輸入框。三個例子各有用意：整千、補零、每位都有數字；
+// 大寫字串由站上同一支 toCurrency 算出，不手打。
+const quickExamples = [
+  [1000, '整千，結尾的零不寫'],
+  [10500, '中間有零，補一個「零」'],
+  [12345, '每一位都有數字，由大到小逐位讀出'],
+].map(([n, why]) => ({ n, why, currency: toCurrency(n).text }));
 
 const sheetFiles = downloads.extras.filter((x) => x.page === 'numbers/');
 
@@ -138,12 +148,29 @@ const faq = {
 
 <ArticlePage
   schemas={[schema, faq]}
-  title="數字大寫怎麼寫：國字大寫對照表可下載（Word）與金額換算"
+  title="國字三怎麼寫？三的大寫是「參」｜數字大寫範例、對照表可下載（Word）與換算"
   description={description}
-  heading="數字大寫怎麼寫"
-  lead="零壹貳參肆伍陸柒捌玖，依序對應阿拉伯數字0到9；十是拾，位數還有佰仟萬億。難的不是這十一個字，是中間有零的時候要補幾個、結尾的零要不要寫。"
+  heading="數字大寫怎麼寫：國字三是「參」"
+  lead="三的大寫是「參」，公文與核銷憑證都用這個字。零壹貳參肆伍陸柒捌玖，依序對應阿拉伯數字0到9；十是拾，位數還有佰仟萬億。難的不是這十一個字，是中間有零的時候要補幾個、結尾的零要不要寫。"
 >
   <PageToc items={Object.values(S)} />
+
+  <h2 id={S.quick.id}>{S.quick.label}</h2>
+  <table>
+    <thead><tr><th>數字</th><th>金額寫法</th><th>重點</th></tr></thead>
+    <tbody>
+      {quickExamples.map((e) => (
+        <tr>
+          <td>{e.n.toLocaleString('en-US')}</td>
+          <td class="upper">{e.currency}</td>
+          <td class="why">{e.why}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  <p class="note">
+    更多進位與補零的寫法在<a href={`#${S.carry.id}`}>第四節</a>，輸入任意數字馬上換算在下一節。
+  </p>
 
   <h2 id={S.convert.id}>{S.convert.label}</h2>
   <div class="tool" data-uppercase-tool>
@@ -210,7 +237,7 @@ const faq = {
     要開的是領據本身的話，空白與填好的兩份在<a href={`${base}receipt/#download`}>領據範本下載</a>。
   </p>
 
-  <h2 id={S.examples.id}>{S.examples.label}</h2>
+  <h2 id={S.carry.id}>{S.carry.label}</h2>
   <table>
     <thead><tr><th>數字</th><th>國字大寫</th><th>金額寫法</th><th>為什麼挑這個</th></tr></thead>
     <tbody>

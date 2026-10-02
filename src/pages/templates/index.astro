@@ -57,6 +57,8 @@ const total =
   officialTemplates.length + privateTemplates.length + citizenTemplates.length +
   caseRows.length + citizenRows.length + privateRows.length + downloads.extras.length;
 
+const exampleCount = caseRows.length + citizenRows.length + privateRows.length;
+
 const description =
   `函、書函、公告、開會通知單、簽與民眾書件的空白 Word 範本，版面取自政府文書格式參考規範原始檔，` +
   `另附 ${caseRows.length + citizenRows.length} 份填好內容的範例檔，下載後直接編輯。`;
@@ -69,7 +71,7 @@ const schema = {
     {
       '@type': 'CollectionPage',
       '@id': `${pageUrl}#page`,
-      name: '公文格式 Word 範本下載',
+      name: '政府公文格式 Word 範本與公文範例下載',
       description,
       inLanguage: 'zh-Hant-TW',
       isPartOf: { '@type': 'WebSite', url: 'https://www.ods.yao.care/' },
@@ -130,18 +132,60 @@ const faq = {
 
 <BaseLayout
   schemas={[schema, faq]}
-  title="公文格式 Word 範本下載｜函、公告、開會通知單、簽、存證信函"
+  title="政府公文格式 Word 範本與公文範例下載｜函、公告、開會通知單、簽"
   description={description}
 >
   <SiteHeader />
   <main id="main">
-    <h1>公文格式 Word 範本下載</h1>
+    <h1>政府公文格式 Word 範本與公文範例下載</h1>
     <p class="lead">
-      共 {total} 份 .docx，下載後用 Word 或 LibreOffice 開啟就能改。
-      版面不是自己排的 —— 字級、行距、縮排、邊界都取自
-      <a href={downloads.source.page} rel="noopener">{downloads.source.name}</a>的原始檔
-      （{downloads.source.promulgated}）。
+      空白範本加 {exampleCount} 份填好的公文範例，皆為 Word 檔，版面取自政府文書格式參考規範
+      （<a href={downloads.source.page} rel="noopener">{downloads.source.name}</a>的原始檔，{downloads.source.promulgated}）。
+      共 {total} 份 .docx，下載後用 Word 或 LibreOffice 開啟就能改；字級、行距、縮排、邊界都不是自己排的。
     </p>
+
+    <section>
+      <h2>填好內容的公文範例</h2>
+      <p>直接下載一份寫好的改。每一份都附完整全文與逐條格式檢核結果。要從空白開始，往下看空白範本。</p>
+      <ul class="files">
+        {caseRows.map((row) => (
+          <li>
+            <a href={`${base}downloads/${row.path}`} download={row.filename}>{row.filename}</a>
+            <span>{row.docType}　<a href={row.href}>看全文與檢核結果</a></span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section>
+      <h2>填好內容的民眾書件與存證信函範例</h2>
+      <ul class="files">
+        {citizenRows.map((row) => (
+          <li>
+            <a href={`${base}downloads/${row.path}`} download={row.filename}>{row.filename}</a>
+            <span>{row.docType}　<a href={row.href}>看全文與檢核結果</a></span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section>
+      <h2>填好內容的民間書件範例</h2>
+      <ul class="files">
+        {privateRows.map((row) => (
+          <li>
+            <a href={`${base}downloads/${row.path}`} download={row.filename}>{row.filename}</a>
+            <span>{row.docType}　<a href={row.href}>看全文與檢核結果</a></span>
+          </li>
+        ))}
+      </ul>
+      <p class="more">
+        上面沒有本票。票據法第 120 條的八款必要記載事項與空白本票的風險寫在
+        <a href={`${base}private-documents/promissory-note/`}>本票範本</a>那一頁，
+        但站上刻意不提供本票的 Word 檔，理由在該頁。要寫借貸關係的證明用
+        <a href={`${base}private-documents/loan-iou/`}>借據</a>，那一則有檔可下載。
+      </p>
+    </section>
 
     <section>
       <h2>機關公文空白範本</h2>
@@ -249,49 +293,6 @@ const faq = {
           </li>
         ))}
       </ul>
-    </section>
-
-    <section>
-      <h2>填好內容的公文範例</h2>
-      <p>不想從空白開始的話，直接下載一份寫好的改。每一份都附完整全文與逐條格式檢核結果。</p>
-      <ul class="files">
-        {caseRows.map((row) => (
-          <li>
-            <a href={`${base}downloads/${row.path}`} download={row.filename}>{row.filename}</a>
-            <span>{row.docType}　<a href={row.href}>看全文與檢核結果</a></span>
-          </li>
-        ))}
-      </ul>
-    </section>
-
-    <section>
-      <h2>填好內容的民眾書件與存證信函範例</h2>
-      <ul class="files">
-        {citizenRows.map((row) => (
-          <li>
-            <a href={`${base}downloads/${row.path}`} download={row.filename}>{row.filename}</a>
-            <span>{row.docType}　<a href={row.href}>看全文與檢核結果</a></span>
-          </li>
-        ))}
-      </ul>
-    </section>
-
-    <section>
-      <h2>填好內容的民間書件範例</h2>
-      <ul class="files">
-        {privateRows.map((row) => (
-          <li>
-            <a href={`${base}downloads/${row.path}`} download={row.filename}>{row.filename}</a>
-            <span>{row.docType}　<a href={row.href}>看全文與檢核結果</a></span>
-          </li>
-        ))}
-      </ul>
-      <p class="more">
-        上面沒有本票。票據法第 120 條的八款必要記載事項與空白本票的風險寫在
-        <a href={`${base}private-documents/promissory-note/`}>本票範本</a>那一頁，
-        但站上刻意不提供本票的 Word 檔，理由在該頁。要寫借貸關係的證明用
-        <a href={`${base}private-documents/loan-iou/`}>借據</a>，那一則有檔可下載。
-      </p>
     </section>
 
     <section>

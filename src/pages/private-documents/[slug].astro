@@ -14,6 +14,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import SiteHeader from '../../components/SiteHeader.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import CaseDemo from '../../components/CaseDemo.astro';
+import UniqueContent from '../../components/UniqueContent.astro';
+import { uniqueFor, uniqueFaqEntities } from '../../data/unique.js';
 import { SERVICE_LINKS } from '../../site.config.js';
 import { PRIVATE_DOCS } from '../../data/private-docs.js';
 import index from '../../data/scenarios.json';
@@ -35,6 +37,9 @@ const base = import.meta.env.BASE_URL.endsWith('/')
 
 const docType = payload.draft.doc_type;
 const isSettlement = docType === '和解書';
+// 判決實例與未成年人、保險那一大段原本兩則和解書全文重複（約 3,000 字，頁間重複最多的一塊）。
+// 2026-10-03 起只放在車禍那一則（判決本身就是車禍案），物品損壞那一則留摘要＋連過去。
+const settlementFull = isSettlement && meta.slug === 'settlement-traffic-accident';
 const isLoan = docType === '借據';
 
 // 本票的絕對必要記載事項（票據法第 120 條第 1 項八款，逐字）。
@@ -52,6 +57,7 @@ const NOTE_ITEMS = [
   '到期日。',
 ];
 const download = downloads.private?.[meta.slug] ?? null;
+const uq = uniqueFor(`private-documents/${meta.slug}`);
 const blankTemplate = downloads.templates.find((t) => t.docType === docType) ?? null;
 const failed = payload.checks.filter((c) => !c.ok);
 const related = PRIVATE_DOCS.filter((d) => d.category === meta.category && d.slug !== meta.slug);
@@ -120,6 +126,7 @@ const faq = {
           (meta.noDownload ? `；這一則不提供 Word 檔，理由在頁內說明。` : `與可編輯的 Word 檔。`),
       },
     },
+    ...uniqueFaqEntities(uq),
   ],
 };
 ---
@@ -134,8 +141,8 @@ const faq = {
     <h1>{meta.seoTitle}</h1>
     <p class="lead">{meta.lead}</p>
 
-    {isSettlement ? (
-      <section class="danger">
+    {settlementFull ? (
+      <section class="danger" id="before-signing">
         <h2 class="danger-title">簽之前先看這一段</h2>
         <p>
           民法第 737 條：<strong>和解有使當事人所拋棄之權利消滅的效力</strong>。
@@ -258,6 +265,19 @@ const faq = {
           不要自己簽。本頁提供的是結構與用字參考，不是法律意見。
         </p>
       </section>
+    ) : isSettlement ? (
+      <section class="danger">
+        <h2 class="danger-title">簽之前先看這一段</h2>
+        <p>
+          民法第 737 條：<strong>和解有使當事人所拋棄之權利消滅的效力</strong>。
+          簽了「不再為其他請求」，之後發現損失比談的大，原則上要不回來。
+        </p>
+        <p class="danger-note">
+          法院怎麼看「我沒注意到那一條」、什麼情況才撤銷得了、撤銷後實際拿回多少，
+          以及當事人有未成年人時誰能簽，整理在
+          <a href={`${base}private-documents/settlement-traffic-accident/#before-signing`}>車禍和解書那一則</a>。
+        </p>
+      </section>
     ) : (
       <p class="caution">
         機關或對方另有制式表格時<strong>以那份為準</strong>。這類文件多半由受理單位自訂格式，
@@ -315,21 +335,9 @@ const faq = {
           所以隨手簽一張本票，跟簽一張借據的風險完全不同。
         </p>
         <p>
-          <strong>更該小心的是空白本票。</strong>票據法第 11 條第 1 項雖然說欠缺應記載事項的票據無效，
-          但同條第 2 項接著寫：「執票人<strong>善意取得已具備本法規定應記載事項之票據者</strong>，
-          得依票據文義行使權利；票據債務人不得以票據原係欠缺應記載事項為理由，
-          對於執票人，主張票據無效。」金額或到期日留空交出去，被填上再轉手，就很難主張無效。
-        </p>
-        <p>另外，同條第 3 項：票據上的記載<strong>除金額外</strong>得由原記載人於交付前改寫。
-          也就是<strong>金額寫錯不能改，只能重開</strong>。</p>
-        <h3>本票的必要記載事項（票據法第 120 條第 1 項）</h3>
-        <ol class="note-items" id="note-items">
-          {NOTE_ITEMS.map((t) => <li>{t}</li>)}
-        </ol>
-        <p class="note">
-          同條後段另有補充：未載到期日者視為見票即付；未載受款人者以執票人為受款人；
-          未載發票地者以發票人之營業所、住所或居所所在地為發票地；未載付款地者以發票地為付款地。
-          見票即付並不記載受款人之本票，金額須在五百元以上。
+          <strong>更該小心的是空白本票</strong>：金額或到期日留空交出去，被填上再轉手，
+          依票據法第 11 條第 2 項就很難主張無效。本票的八款必要記載事項與空白本票的風險，
+          整理在<a href={`${base}private-documents/promissory-note/#note-items`}>本票範本那一則</a>。
         </p>
         <p class="danger-note">
           <strong>本站不產出本票。</strong>那是有價證券，不是可以用文書草擬工具產一份 Word 出來的東西 ——
@@ -345,6 +353,8 @@ const faq = {
       <div><dt>檢核</dt><dd>{payload.checks.length - failed.length}/{payload.checks.length} 通過</dd></div>
     </dl>
 
+    <UniqueContent data={uq} part="intro" />
+
     <h2>試做這個範例</h2>
     <p class="note">流程與實際使用相同。範例內容可以看，改成自己的事情需要建立工作區。</p>
     <CaseDemo
@@ -355,6 +365,8 @@ const faq = {
       receiver={listing?.receiver ?? null}
       download={download}
     />
+
+    <UniqueContent data={uq} part="body" />
 
     {download && (
       <>

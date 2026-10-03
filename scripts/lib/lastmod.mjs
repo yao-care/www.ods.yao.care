@@ -67,6 +67,8 @@ export function createLastmod(buildTime = new Date().toISOString()) {
     const date = newest(
       iso(routeFiles(segments)),
       SECTION_DATA[section] ? iso(SECTION_DATA[section]) : null,
+      // 每頁獨有內容（2026-10-03 起，src/data/unique.js）：一頁一檔，只推動那一頁。
+      iso([`src/data/unique/${segments.join('/') || 'home'}.json`]),
     );
     if (!date && !warned) {
       warned = true;

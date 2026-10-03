@@ -9,6 +9,8 @@
  * 站上原本一頁都沒有，同期 GSC 這些字本網域一次曝光都沒有。
  */
 import ArticlePage from '../../layouts/ArticlePage.astro';
+import UniqueContent from '../../components/UniqueContent.astro';
+import { uniqueFor } from '../../data/unique.js';
 import PageToc from '../../components/PageToc.astro';
 import { SERVICE_LINKS } from '../../site.config.js';
 import PROC from '../../data/procurement-declaration.json';
@@ -396,7 +398,10 @@ const faq = {
     </section>
   ))}
 
-  <h2 id={S.templates.id}>{S.templates.label}</h2>
+  <UniqueContent data={uniqueFor('private-documents')} part="intro" />
+    <UniqueContent data={uniqueFor('private-documents')} part="body" />
+
+    <h2 id={S.templates.id}>{S.templates.label}</h2>
   <p>不想從範例改的，直接下載空白的。</p>
   <ul class="files">
     {blankTemplates.map((t) => (

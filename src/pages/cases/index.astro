@@ -2,6 +2,8 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SiteHeader from '../../components/SiteHeader.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
+import UniqueContent from '../../components/UniqueContent.astro';
+import { uniqueFor } from '../../data/unique.js';
 import { CASES, CATEGORIES } from '../../data/cases.js';
 import index from '../../data/scenarios.json';
 // 條目數取實際產物，不寫死 —— 函與開會通知單各有一組，數字改版時這頁跟著變。
@@ -126,7 +128,10 @@ const faq = {
         </ul>
       </section>
     ))}
-  </main>
+  <UniqueContent data={uniqueFor('cases')} part="intro" />
+    <UniqueContent data={uniqueFor('cases')} part="body" />
+
+    </main>
   <SiteFooter />
 </BaseLayout>
 

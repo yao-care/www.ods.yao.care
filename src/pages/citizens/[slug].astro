@@ -3,6 +3,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import SiteHeader from '../../components/SiteHeader.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import CaseDemo from '../../components/CaseDemo.astro';
+import UniqueContent from '../../components/UniqueContent.astro';
+import { uniqueFor, uniqueFaqEntities } from '../../data/unique.js';
 import { SERVICE_LINKS } from '../../site.config.js';
 import { CITIZEN_EXAMPLES } from '../../data/citizen-examples.js';
 import downloads from '../../data/downloads.json';
@@ -22,6 +24,7 @@ const failed = example.checks.filter((check) => !check.ok);
 const familyLabel = example.family === 'notice' ? '個人／企業之間' : '民眾對機關';
 const description = `${example.lead} 提供完整${example.draft.doc_type}示範、民眾文件檢核流程與可自行編輯的 Word 檔。`;
 const download = downloads.citizens[example.slug] ?? null;
+const uq = uniqueFor(`citizens/${example.slug}`);
 const isNotice = example.family === 'notice';
 const blankTemplate = downloads.templates.find((t) => t.docType === example.draft.doc_type) ?? null;
 
@@ -102,6 +105,7 @@ const faq = {
           },
         ]
       : []),
+    ...uniqueFaqEntities(uq),
   ],
 };
 ---
@@ -126,6 +130,8 @@ const faq = {
       <div><dt>文件檢核</dt><dd>{example.checks.length - failed.length}/{example.checks.length} 通過</dd></div>
     </dl>
 
+    <UniqueContent data={uq} part="intro" />
+
     <h2>試做這個文件</h2>
     <p class="note">
       流程與實際使用相同：先看範例內容，再產生草稿、查看檢核結果；改成自己的資料或匯出文件需要工作區。
@@ -139,14 +145,15 @@ const faq = {
       download={download}
     />
 
+    <UniqueContent data={uq} part="body" />
+
     {download && (
       <>
         <h2>下載 Word 自己改</h2>
         {isNotice ? (
           <p class="note">
-            存證信函的用紙由中華郵政規定，且明文「請依所提供之格式使用，變更樣式內容者，不予收寄」，
-            所以這裡不重製用紙，只把內文照官方使用說明設定好：英數符號全形、字體 18、
-            段落固定行高 34pt 靠左對齊、字元間距加寬 2.9pt。下載後複製貼進官方用紙，字就會落在格子內。
+            用紙由中華郵政規定「請依所提供之格式使用，變更樣式內容者，不予收寄」，這裡只給內文：
+            英數全形、字體 18、固定行高 34pt、字距 2.9pt，貼進官方用紙就落在格子內。
           </p>
         ) : (
           <p class="note">
@@ -190,9 +197,6 @@ const faq = {
     <ul class="watch">
       {example.watchOut.map((item) => <li>{item}</li>)}
     </ul>
-    <p class="note">
-      民眾文件會依文件族群檢查主旨、段落、請求事項、個資與必要欄位；不會套用機關公文的期望語或簽核規則。
-    </p>
 
     {isNotice && (
       <p class="guide-link">
@@ -208,7 +212,6 @@ const faq = {
           {sameFamily.map((e) => (
             <li>
               <a href={`${base}citizens/${e.slug}/`}>{e.seoTitle}</a>
-              <span>{e.lead}</span>
             </li>
           ))}
         </ul>
@@ -227,15 +230,11 @@ const faq = {
           ))}
           <li>
             <a href={`${base}cases/`}>機關端的公文範例庫</a>
-            <span>函、公告、開會通知單、簽 —— 機關承辦寫的那一邊</span>
           </li>
         </ul>
 
         <h2>自己出具的文件</h2>
-        <p class="note">
-          委託別人代辦、切結某件事屬實、跟對方和解 —— 這幾種不是寫給機關、也不是為了留證據，
-          在<a href={`${base}private-documents/`}>民間書件</a>那一區。
-        </p>
+        <p class="note">委託、切結、和解這類自己出具的文件在<a href={`${base}private-documents/`}>民間書件</a>。</p>
         <ul class="related">
           {PRIVATE_PICKS.map((d) => (
             <li>
@@ -248,10 +247,7 @@ const faq = {
 
     <section class="cta-box">
       <h2>用自己的事情開始</h2>
-      <p>
-        建立個人工作區後，可以選擇申請書、陳情書、申訴書、說明書或存證信函，填入自己的事實與必要欄位，
-        再查看檢核結果並匯出純文字或 Word 文件。
-      </p>
+      <p>建立個人工作區後填入自己的事實與必要欄位，檢核後匯出 Word。</p>
       <div class="cta-row">
         <a class="primary" {...SERVICE_LINKS.selfRegister(`citizens_${example.slug}_register`)}>建立個人工作區</a>
         <a class="secondary" href={`${base}citizens/`}>回到民眾文件</a>

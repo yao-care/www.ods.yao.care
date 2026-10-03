@@ -69,6 +69,13 @@ const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 const passed = checks.filter((c) => c.ok).length;
+// 2026-10-03：逐條檢核清單原本在每一個案例頁全文列出（同一組 21～24 個項目名稱），
+// 是全站頁間重複最多的區塊之一，收錄掉到 28/66 時判定為「頁面高度模板化」的主因之一。
+// 改成只列沒通過的＋連到 /checks/ 的完整清單。本票（八款應記載事項）與開會通知單
+// （規範第八點固定欄位）的檢核項目是該頁獨有的內容，照舊全列。
+const showAllChecks = isNote || Boolean(meeting);
+const failedChecks = checks.filter((c) => !c.ok);
+const checksHref = `${base}checks/${isPrivate ? '#private-family' : ''}`;
 ---
 
 <section class="demo" data-demo data-family={family} data-doc-title={title} data-check-count={checks.length}>
@@ -223,15 +230,35 @@ const passed = checks.filter((c) => c.ok).length;
           改查規範第八點的固定欄位（開會事由、時間、地點、主持人、聯絡人及電話、出席者），共 {checks.length} 條。
         </p>
       )}
-      <ul>
-        {checks.map((c) => (
-          <li class={c.ok ? 'ok' : 'bad'}>
-            <span class="mark" aria-hidden="true">{c.ok ? '✓' : '✗'}</span>
-            <span class="name">{c.title}</span>
-            {!c.ok && c.detail && <span class="why">{c.detail}</span>}
-          </li>
-        ))}
-      </ul>
+      {showAllChecks ? (
+        <ul>
+          {checks.map((c) => (
+            <li class={c.ok ? 'ok' : 'bad'}>
+              <span class="mark" aria-hidden="true">{c.ok ? '✓' : '✗'}</span>
+              <span class="name">{c.title}</span>
+              {!c.ok && c.detail && <span class="why">{c.detail}</span>}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <>
+          <p class="checks-note">
+            逐條查了哪些項目、各依據哪一條規定，集中寫在<a href={checksHref}>格式檢核</a>那一頁；
+            這裡只列沒通過的{failedChecks.length === 0 && '，本則沒有'}。
+          </p>
+          {failedChecks.length > 0 && (
+            <ul>
+              {failedChecks.map((c) => (
+                <li class="bad">
+                  <span class="mark" aria-hidden="true">✗</span>
+                  <span class="name">{c.title}</span>
+                  {c.detail && <span class="why">{c.detail}</span>}
+                </li>
+              ))}
+            </ul>
+          )}
+        </>
+      )}
     </div>
 
     <div class="actions">
@@ -246,13 +273,7 @@ const passed = checks.filter((c) => c.ok).length;
         <button type="button" data-gate="export">匯出文件</button>
       )}
     </div>
-    {download && (
-      <p class="download-note">
-        {isNotice
-          ? '下載的是存證信函內文，字體、行高與字元間距已依中華郵政使用說明設定，貼進郵局官方用紙即可。'
-          : `下載的${title}已套用${isOfficial ? '政府文書格式參考規範' : '規範'}的紙張、邊界、字級與縮排，開啟後直接改成自己的內容。`}
-      </p>
-    )}
+    {/* 下載檔的版面說明原本在這裡再講一次，與頁面「下載 Word 自己改」那段重複，2026-10-03 拿掉。 */}
   </article>
 </section>
 
@@ -672,13 +693,6 @@ const passed = checks.filter((c) => c.ok).length;
   }
   .actions .download:hover {
     background: var(--color-primary-a80);
-  }
-  .download-note {
-    font-size: var(--text-xs);
-    line-height: 1.8;
-    color: var(--color-ink-soft);
-    margin: 0;
-    padding: 0 1.25rem 1.25rem;
   }
 
   .gate {

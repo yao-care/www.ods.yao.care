@@ -778,3 +778,16 @@ pnpm gen:simplified-set  # 重產簡體字集合（只在來源資料改版時�
    `subject_expectation` 從公告的檢核裡移除（公告 23 條），`/checks/` 有專節說明。
    **這類「規則對某文別適不適用」的問題，去翻手冊的分段要領與附錄 6 的作法舉例，
    不要憑印象**
+
+## 每頁獨有內容（2026-10-03 起）
+
+收錄從 66/66 掉到 28/66（Crawled - currently not indexed），技術面排除後判定為頁面高度模板化。
+因此：(1) 逐條檢核清單、下載版面說明、同族群導言這些頁間重複區塊縮成摘要＋連到單一頁
+（`/checks/`、`/templates/`；本票與開會通知單的檢核照舊全列，那是該頁獨有）；
+兩則和解書共用的判決段只留在車禍那則、借據的本票八款改連本票那則。
+(2) 新增一頁一檔的獨有內容：`src/data/unique/<網址路徑>.json`（首頁 `home.json`），
+由 `src/components/UniqueContent.astro` 渲染，欄位空就不出現；FAQ 會併進該頁 FAQPage。
+欄位規格、字數、出處格式（法條只收全國法規資料庫 LawSingle）、判決字號必附司法院連結、AI 腔與簡體字
+都由 `node scripts/check-unique.mjs [檔]` 單檔驗（已串進 build）；加 `--online` 會實際打開每條連結、
+核對條號與 quote 逐字。sitemap `lastmod` 會吃該頁自己的 unique 檔。
+示範頁：`src/data/unique/cases/noise-petition-reply.json`。

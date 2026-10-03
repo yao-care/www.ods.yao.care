@@ -2,6 +2,8 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import UniqueContent from '../components/UniqueContent.astro';
+import { uniqueFor } from '../data/unique.js';
 import { SERVICE_LINKS } from '../site.config.js';
 import { CASES } from '../data/cases.js';
 import index from '../data/scenarios.json';
@@ -214,6 +216,9 @@ const homeSchema = {
         </p>
       </div>
     </section>
+
+    <UniqueContent data={uniqueFor('home')} part="intro" />
+    <UniqueContent data={uniqueFor('home')} part="body" />
 
     <section class="who">
       <h2>三種使用方式</h2>

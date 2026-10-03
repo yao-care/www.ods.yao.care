@@ -1,5 +1,7 @@
 ---
 import ArticlePage from '../../layouts/ArticlePage.astro';
+import UniqueContent from '../../components/UniqueContent.astro';
+import { uniqueFor } from '../../data/unique.js';
 import { SERVICE_LINKS } from '../../site.config.js';
 import { CITIZEN_CATEGORIES, CITIZEN_EXAMPLES } from '../../data/citizen-examples.js';
 
@@ -185,7 +187,10 @@ const faq = {
     </p>
   </section>
 
-  <section>
+  <UniqueContent data={uniqueFor('citizens')} part="intro" />
+    <UniqueContent data={uniqueFor('citizens')} part="body" />
+
+    <section>
     <h2>怎麼開始</h2>
     <ol>
       <li>以 Google 或 LINE 登入，建立個人工作區。</li>

@@ -11,6 +11,8 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SiteHeader from '../../components/SiteHeader.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
+import UniqueContent from '../../components/UniqueContent.astro';
+import { uniqueFor } from '../../data/unique.js';
 import { SERVICE_LINKS } from '../../site.config.js';
 import { CASES } from '../../data/cases.js';
 import { CITIZEN_EXAMPLES } from '../../data/citizen-examples.js';
@@ -310,6 +312,9 @@ const faq = {
         ))}
       </ul>
     </section>
+
+    <UniqueContent data={uniqueFor('templates')} part="intro" />
+    <UniqueContent data={uniqueFor('templates')} part="body" />
 
     <section class="note-box">
       <h2>使用前請注意</h2>

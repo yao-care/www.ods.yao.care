@@ -1,0 +1,229 @@
+---
+/**
+ * 每頁獨有內容的渲染（資料在 src/data/unique/**，說明見 src/data/unique.js）。
+ *
+ * part="intro"：使用情境，放在頁首說明之後、範例之前。
+ * part="body" ：逐段說明、常見錯誤與改法、與相近文件的差異、法源與出處、常見問題。
+ * 任何欄位缺或是空陣列就整段不渲染；data 為 null 時什麼都不輸出，既有頁面不受影響。
+ *
+ * 問答一律直接攤開，不收進 <details>：Google 對問答的唯一要求是內容對人立即可見
+ * （見 seo-ops rules/jsonld-rules.json），藏在展開區的不算。
+ */
+interface Props {
+  data: Record<string, any> | null;
+  part?: 'intro' | 'body';
+}
+const { data, part = 'body' } = Astro.props;
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const local = (h: string) => (h.startsWith('/') ? `${base}${h.slice(1)}` : h);
+const H = {
+  scenario: '什麼時候用這一份',
+  structure: '逐段怎麼寫',
+  mistakes: '實際常見的錯，怎麼改',
+  compare: '跟相近的文件差在哪',
+  legal: '法源與出處',
+  faq: '常見問題',
+  ...(data?.headings ?? {}),
+};
+const has = (k: string) => Array.isArray(data?.[k]) && data[k].length > 0;
+const hasLegal = has('legal') || has('sources');
+---
+
+{data && part === 'intro' && has('scenario') && (
+  <section class="uq" id="u-when">
+    <h2>{H.scenario}</h2>
+    {data.scenario.map((p: string) => <p>{p}</p>)}
+  </section>
+)}
+
+{data && part === 'body' && (
+  <>
+    {has('structure') && (
+      <section class="uq" id="u-structure">
+        <h2>{H.structure}</h2>
+        <dl class="structure">
+          {data.structure.map((s: any) => (
+            <div>
+              <dt>{s.part}</dt>
+              <dd>{s.explain}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+    )}
+
+    {has('mistakes') && (
+      <section class="uq" id="u-mistakes">
+        <h2>{H.mistakes}</h2>
+        <ol class="mistakes">
+          {data.mistakes.map((m: any) => (
+            <li>
+              <p class="wrong"><span class="tag">常見寫法</span>{m.wrong}</p>
+              <p class="fix"><span class="tag">改成</span>{m.fix}</p>
+              {m.why && <p class="why">{m.why}</p>}
+            </li>
+          ))}
+        </ol>
+      </section>
+    )}
+
+    {has('compare') && (
+      <section class="uq" id="u-compare">
+        <h2>{H.compare}</h2>
+        <dl class="compare">
+          {data.compare.map((c: any) => (
+            <div>
+              <dt>{c.href ? <a href={local(c.href)}>{c.with}</a> : c.with}</dt>
+              <dd>{c.diff}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+    )}
+
+    {hasLegal && (
+      <section class="uq" id="u-legal">
+        <h2>{H.legal}</h2>
+        <ul class="legal">
+          {(data.legal ?? []).map((l: any) => (
+            <li>
+              <p class="cite">
+                <a href={l.url} rel="noopener">{l.law}{l.article ? ` ${l.article}` : ''}</a>
+              </p>
+              {l.quote && <blockquote>{l.quote}</blockquote>}
+              <p>{l.point}</p>
+            </li>
+          ))}
+          {(data.sources ?? []).map((s: any) => (
+            <li>
+              <p class="cite">
+                <a href={s.url} rel="noopener">{s.title}</a>
+                <span class="pub">{s.publisher}</span>
+              </p>
+              {s.point && <p>{s.point}</p>}
+            </li>
+          ))}
+        </ul>
+        {has('legal') && (
+          <p class="small">條文連結到法務部全國法規資料庫，以該處顯示的現行條文為準。本頁是寫法參考，不是法律意見。</p>
+        )}
+      </section>
+    )}
+
+    {has('faq') && (
+      <section class="uq" id="u-faq">
+        <h2>{H.faq}</h2>
+        {data.faq.map((f: any) => (
+          <div class="qa">
+            <h3>{f.q}</h3>
+            <p>{f.a}</p>
+          </div>
+        ))}
+      </section>
+    )}
+  </>
+)}
+
+<style>
+  .uq h2 {
+    font-size: var(--text-xl);
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+  }
+  .uq p,
+  .uq dd,
+  .uq li {
+    font-size: var(--text-base);
+    line-height: 1.9;
+  }
+  .uq > p + p {
+    margin-top: 0.75rem;
+  }
+  .structure,
+  .compare {
+    display: grid;
+    gap: 1rem;
+    margin: 0;
+  }
+  .structure div,
+  .compare div {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .structure dt,
+  .compare dt {
+    font-size: var(--text-base);
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+  .compare dt a,
+  .cite a {
+    color: var(--color-primary);
+  }
+  .structure dd,
+  .compare dd {
+    margin: 0;
+    color: var(--color-ink-soft);
+  }
+  .mistakes {
+    display: grid;
+    gap: 1.25rem;
+    padding-inline-start: 1.5rem;
+  }
+  .mistakes p {
+    margin: 0.25rem 0;
+  }
+  .tag {
+    display: inline-block;
+    font-size: var(--text-xs);
+    margin-inline-end: 0.5rem;
+    padding: 0 0.5rem;
+    border-radius: 0.25rem;
+    background: var(--color-bg-light);
+    color: var(--color-ink-soft);
+  }
+  .fix .tag {
+    color: var(--color-primary);
+  }
+  .why {
+    color: var(--color-ink-soft);
+  }
+  .legal {
+    display: grid;
+    gap: 1.25rem;
+    list-style: none;
+    padding-inline-start: 0;
+  }
+  .legal li {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .cite {
+    font-weight: 700;
+  }
+  .pub {
+    font-weight: 400;
+    font-size: var(--text-xs);
+    color: var(--color-ink-muted);
+    margin-inline-start: 0.75rem;
+  }
+  .legal blockquote {
+    margin: 0.5rem 0;
+    padding: 0.5rem 1rem;
+    border-inline-start: 3px solid var(--color-line);
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+    line-height: 1.9;
+  }
+  .small {
+    font-size: var(--text-xs);
+    color: var(--color-ink-muted);
+    margin-top: 1rem;
+  }
+  .qa h3 {
+    font-size: var(--text-lg);
+    margin: 1.5rem 0 0.5rem;
+  }
+</style>

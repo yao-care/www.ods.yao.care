@@ -146,7 +146,7 @@ export const PRIVATE_DOCS = [
   {
     key: 'loan_iou',
     slug: 'loan-iou',
-    seoTitle: '借據範本：金額、交付與返還期限怎麼寫',
+    seoTitle: '借據範本 Word 下載：借錢給親友要寫的欄位、利息上限與交付證明',
     category: '借貸',
     lead: '借據沒有法定格式，但漏了「錢已經交付」這件事，日後要另外舉證。本票是另一回事 —— 那個可以直接聲請法院強制執行。',
     watchOut: [

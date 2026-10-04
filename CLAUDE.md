@@ -199,6 +199,8 @@ import('/root/seo-ops/lib/google.mjs').then(async g=>{
 
 `/templates/` 是為「公文格式 word」「公文範本下載」這類高意圖字開的落地頁，
 同時也是全站每一頁都連得到的 Word 下載入口（導覽列「格式與用語」群組內）。
+2026-10-04 起填好的公文範例改成「依交辦的事」分群（`src/pages/templates/index.astro` 的 `TASK_GROUPS`），
+頁首另有開會通知單與函兩份直達下載。**新增公文案例時要把 slug 歸進某一群，否則 build 直接丟錯**（刻意不設「其他」）。
 
 **站外那一條也算內鏈**：`www.yao.care/ai/ods/` 是 ODS 在 yao.care 的產品落地頁，
 2026-08-20 實查時它當天就被重爬過，是本站最快的被發現管道；那頁同日補上民眾書件與參考內容的

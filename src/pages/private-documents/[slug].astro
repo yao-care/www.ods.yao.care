@@ -141,6 +141,30 @@ const faq = {
     <h1>{meta.seoTitle}</h1>
     <p class="lead">{meta.lead}</p>
 
+    {isLoan && download && (
+      <section class="get-file" id="download">
+        <h2>先拿檔案</h2>
+        <ul class="downloads">
+          <li>
+            <a href={`${base}downloads/${download.path}`} download={download.filename}>借據範本（填好的）.docx</a>
+            <span>30 萬元、匯款交付、一年後一次返還、不計利息的完整寫法，姓名與日期改成自己的</span>
+          </li>
+          {blankTemplate && (
+            <li>
+              <a href={`${base}downloads/${blankTemplate.path}`} download={blankTemplate.filename}>
+                {blankTemplate.filename}
+              </a>
+              <span>{blankTemplate.note}</span>
+            </li>
+          )}
+        </ul>
+        <p class="note">
+          Word 或 LibreOffice 開啟就能改，不用註冊。下載前先看下面那張表，
+          <a href="#checklist">七個欄位</a>少一個，日後要對方還錢就多一道舉證。
+        </p>
+      </section>
+    )}
+
     {settlementFull ? (
       <section class="danger" id="before-signing">
         <h2 class="danger-title">簽之前先看這一段</h2>
@@ -297,7 +321,8 @@ const faq = {
         <ul>
           <li>
             <strong>要證明借了錢、約定何時還</strong> —— 用
-            <a href={`${base}private-documents/loan-iou/`}>借據</a>那一則，那頁有 Word 檔可下載。
+            <a href={`${base}private-documents/loan-iou/`}>借據</a>那一則，那頁有 Word 檔可下載，
+            兩者的差別也逐項對照在<a href={`${base}private-documents/loan-iou/#vs-promissory`}>借據頁</a>。
             借據是證據，對方不還要經法院判決才能執行，風險跟本票差一個量級。
           </li>
           <li>
@@ -326,13 +351,94 @@ const faq = {
     )}
 
     {isLoan && (
-      <section class="danger">
-        <h2 class="danger-title">借據跟本票不是同一件事，差別很大</h2>
+      <section class="checklist" id="checklist">
+        <h2>借錢給親友那天，借據要寫的七個欄位</h2>
         <p>
-          借據是<strong>證據</strong> —— 對方不還錢，你還是要去法院請求，由法院判決後才能執行。
-          本票是<strong>有價證券</strong>：票據法第 123 條規定「執票人向本票發票人行使追索權時，
-          <strong>得聲請法院裁定後強制執行</strong>」，不必先打一場民事官司。
-          所以隨手簽一張本票，跟簽一張借據的風險完全不同。
+          借據沒有法定格式，寫在 A4 白紙上、手寫或打字都可以。
+          它的用處只有一個：對方不還錢、你要上法院的時候，證明「錢給了、約好什麼時候還」。
+          民事訴訟法第 277 條：「當事人主張有利於己之事實者，就其事實有舉證之責任」。要錢的人負責舉證，所以下面每一欄都是替貸與人準備的。
+        </p>
+        <table class="gap-table">
+          <thead><tr><th>欄位</th><th>怎麼寫</th><th>漏了會怎樣</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>誰向誰借</td>
+              <td>借款人與貸與人的姓名、身分證統一編號、地址</td>
+              <td>同名同姓或搬家後找不到人，起訴時連被告都要先查</td>
+            </tr>
+            <tr>
+              <td>金額</td>
+              <td>新臺幣，國字大寫與阿拉伯數字各寫一次，例如「新臺幣參拾萬元整（300,000 元）」</td>
+              <td>只寫阿拉伯數字容易被添一個 0；大寫怎麼寫查<a href={`${base}numbers/`}>數字大寫對照表</a></td>
+            </tr>
+            <tr>
+              <td>交付</td>
+              <td>哪一天、用什麼方式交的錢：匯款寫日期與帳戶，現金寫當面點交，並寫「已如數收訖」</td>
+              <td>民法第 474 條的消費借貸，是一方把錢的所有權移轉給他方；錢沒有真的交出去，借貸就不成立。對方一句「錢沒拿到」，你就得另外證明</td>
+            </tr>
+            <tr>
+              <td>返還期限</td>
+              <td>確定日期，例如「115 年 8 月 19 日前一次返還」；分期就寫每期日期與金額</td>
+              <td>沒寫期限，要先定一個月以上的期限催告才能請求返還（民法第 478 條）</td>
+            </tr>
+            <tr>
+              <td>利息</td>
+              <td>不收就寫「不計利息」；要收就寫週年利率，不得超過百分之十六</td>
+              <td>民法第 205 條：超過週年百分之十六的部分無效。約定要付利息卻沒寫利率，依第 203 條按週年百分之五計算。預扣利息、收手續費這類變相多拿，第 206 條也禁止</td>
+            </tr>
+            <tr>
+              <td>附件</td>
+              <td>匯款單、轉帳紀錄影本，訂在借據後面</td>
+              <td>借據寫「已收訖」是借款人自己承認，匯款紀錄是銀行的紀錄，兩樣都在最難推翻</td>
+            </tr>
+            <tr>
+              <td>簽名與日期</td>
+              <td>借款人親筆簽名或蓋章，寫立據日期，一式兩份各留一份</td>
+              <td>民法第 3 條：蓋章與簽名效力相同。用指印代替簽名的，要有兩個人在文件上簽名證明</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3 id="guarantor">要不要加保證人或見證人</h3>
+        <p>
+          兩個欄位看起來很像，責任差很多。借據上多一個人名卻沒寫他是什麼身分，
+          日後連他是保證人、見證人還是共同借款人都說不清。
+        </p>
+        <ul class="watch">
+          <li>
+            <strong>保證人</strong>：借款人不還時由他代為償還（民法第 739 條）。要寫明他保證的是哪一筆、
+            含不含利息。保證人可以先要求你對借款人的財產強制執行，執行沒有結果他才還（第 745 條）；
+            要他一開始就負責，借據裡要寫保證人拋棄這項權利（第 746 條第 1 款）。
+          </li>
+          <li>
+            <strong>見證人</strong>：法律沒有要求借據要有見證人，沒有也不影響借據成立。
+            他的用處是吵起來時能出面說明當天怎麼交錢、誰簽的名。
+            只簽「見證人」不用替人還錢；要他負責，就寫成保證人。
+          </li>
+          <li>
+            <strong>借款人不識字或只能按指印</strong>：這時才真的需要兩個人在借據上簽名證明（民法第 3 條第 3 項），
+            找兩位在場的人簽，不要事後補。
+          </li>
+        </ul>
+      </section>
+    )}
+
+    {isLoan && (
+      <section class="danger" id="vs-promissory">
+        <h2 class="danger-title">借據跟本票不是同一件事，差別很大</h2>
+        <table class="gap-table">
+          <thead><tr><th></th><th>借據</th><th>本票</th></tr></thead>
+          <tbody>
+            <tr><td>是什麼</td><td>證明借貸的書面證據</td><td>有價證券，發票人承諾無條件付款</td></tr>
+            <tr><td>對方不還</td><td>起訴、拿到判決才能強制執行</td><td>聲請法院裁定後就能強制執行（票據法第 123 條）</td></tr>
+            <tr><td>請求期限</td><td>十五年（民法第 125 條）</td><td>對發票人自到期日起三年（票據法第 22 條）</td></tr>
+            <tr><td>格式</td><td>沒有法定格式</td><td>八款必要記載事項，缺一款原則上無效（票據法第 120 條、第 11 條）</td></tr>
+            <tr><td>本站</td><td>有 Word 檔</td><td>只講怎麼填，不給 Word 檔</td></tr>
+          </tbody>
+        </table>
+        <p>
+          差在第二列：本票不必先打一場民事官司就能強制執行，所以隨手簽一張本票，跟簽一張借據的風險完全不同。
+          親友借錢要的是「證明借過、約好何時還」，借據就夠了。
         </p>
         <p>
           <strong>更該小心的是空白本票</strong>：金額或到期日留空交出去，被填上再轉手，
@@ -368,7 +474,7 @@ const faq = {
 
     <UniqueContent data={uq} part="body" />
 
-    {download && (
+    {download && !isLoan && (
       <>
         <h2>下載 Word 自己改</h2>
         <p class="note">
@@ -512,6 +618,47 @@ const faq = {
     width: 100%;
     border-collapse: collapse;
     margin-block: 1rem;
+  }
+  .checklist .gap-table th,
+  .checklist .gap-table td,
+  #vs-promissory .gap-table th,
+  #vs-promissory .gap-table td {
+    font-size: var(--text-sm);
+    line-height: 1.8;
+    text-align: start;
+    vertical-align: top;
+    padding: 0.625rem 0.5rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .checklist .gap-table :is(th, td):first-child,
+  #vs-promissory .gap-table :is(th, td):first-child {
+    white-space: nowrap;
+  }
+  .checklist .gap-table th,
+  #vs-promissory .gap-table th {
+    color: var(--color-ink-soft);
+  }
+  .get-file {
+    margin-block: 1.5rem;
+    padding: 1.25rem 1.5rem;
+    border: 2px solid var(--color-primary);
+    border-radius: 0.375rem;
+  }
+  .get-file h2 {
+    margin-top: 0;
+    font-size: var(--text-lg);
+  }
+  .get-file .downloads a {
+    font-size: var(--text-base);
+    color: var(--color-primary);
+  }
+  .checklist p {
+    font-size: var(--text-sm);
+    line-height: 1.9;
+  }
+  .checklist h3 {
+    font-size: var(--text-lg);
+    margin-top: 2rem;
   }
   .danger-note {
     margin-bottom: 0;

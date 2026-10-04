@@ -36,6 +36,8 @@ for (const file of files) {
   // Astro 把 404 產成 dist/404.html（不是 404/index.html），所以兩種形狀都要放行。
   // 它借用首頁那張圖、也不進 sitemap，沒有對帳標題的意義。
   if (route === '/404/' || route === '/404.html') continue;
+  // 合併轉址頁（2026-10-04 起，meta refresh＋canonical 指向主頁）沒有自己的標題與分享圖。
+  if (/<meta http-equiv="refresh"/i.test(html)) continue;
 
   const title = html.match(/<title>(.*?)<\/title>/s)?.[1];
   const image = html.match(/<meta property="og:image" content="([^"]+)"/)?.[1];

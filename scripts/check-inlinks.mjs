@@ -21,7 +21,9 @@ const walk = (dir) =>
     return statSync(full).isDirectory() ? walk(full) : full.endsWith('index.html') ? [full] : [];
   });
 
-const files = walk(DIST);
+// 合併轉址頁（Astro redirects 產的 meta refresh，2026-10-04 起）不是內容頁，不稽核也不算連出。
+const isRedirect = (f) => /<meta http-equiv="refresh"/i.test(readFileSync(f, 'utf8'));
+const files = walk(DIST).filter((f) => !isRedirect(f));
 const routeOf = (f) => {
   const rel = f.slice(DIST.length).replace(/index\.html$/, '');
   return rel === '/' ? '/' : rel;

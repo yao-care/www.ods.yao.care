@@ -18,6 +18,8 @@ export const PRIVATE_DOCS = [
   {
     key: 'poa_household',
     slug: 'power-of-attorney-household',
+    // 2026-10-04 用戶拍板合併進 /private-documents/power-of-attorney-vehicle/，本網址轉址過去（src/data/indexing.js）。
+    mergedInto: 'power-of-attorney-vehicle',
     seoTitle: '戶籍謄本委託書範本：代領謄本怎麼寫',
     category: '委託與授權',
     lead: '沒空自己跑戶政事務所，請人代領謄本。承辦看的是「委託事項寫得夠不夠具體」。',
@@ -60,6 +62,8 @@ export const PRIVATE_DOCS = [
   {
     key: 'affidavit_documents',
     slug: 'affidavit-documents-true',
+    // 2026-10-04 用戶拍板合併進 /private-documents/affidavit-lost-document/，本網址轉址過去（src/data/indexing.js）。
+    mergedInto: 'affidavit-lost-document',
     seoTitle: '切結書範例：切結所附文件屬實',
     category: '切結與聲明',
     lead: '申請補助時機關要求切結檢附文件與正本相符。切結書的核心不是敘述，是那句法律責任。',
@@ -208,7 +212,12 @@ export const PRIVATE_DOCS = [
   },
 ];
 
-export const PRIVATE_CATEGORIES = [...new Set(PRIVATE_DOCS.map((d) => d.category))];
+/** 有自己網址的民間書件（排除已併入其他頁的）。列表、內鏈、產頁一律用這份；PRIVATE_DOCS 只給產 Word 與資料對帳。 */
+export const LISTED_PRIVATE_DOCS = PRIVATE_DOCS.filter((d) => !d.mergedInto);
+/** 併進某頁的民間書件：主頁 slug → [被併入的…] */
+export const mergedPrivateInto = (slug) => PRIVATE_DOCS.filter((d) => d.mergedInto === slug);
+
+export const PRIVATE_CATEGORIES = [...new Set(LISTED_PRIVATE_DOCS.map((d) => d.category))];
 
 export function findPrivateDocBySlug(slug) {
   return PRIVATE_DOCS.find((d) => d.slug === slug);

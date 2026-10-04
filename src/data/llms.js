@@ -7,9 +7,9 @@
  * 現在改由 src/pages/llms.txt.js 與 llms-full.txt.js 於 build 時從同一份資料產生，
  * 並且 assertCoversAllRoutes() 會拿實際路由表對帳，漏一頁就擋 build。
  */
-import { CASES } from './cases.js';
+import { LISTED_CASES as CASES } from './cases.js';
 import { CITIZEN_EXAMPLES } from './citizen-examples.js';
-import { PRIVATE_DOCS } from './private-docs.js';
+import { LISTED_PRIVATE_DOCS as PRIVATE_DOCS } from './private-docs.js';
 import index from './scenarios.json';
 import downloads from './downloads.json';
 

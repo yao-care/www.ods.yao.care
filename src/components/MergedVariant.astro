@@ -1,0 +1,214 @@
+---
+/**
+ * 併進本頁的另一則範例（2026-10-04 起，用戶拍板合併三組內容相近的配對頁）。
+ *
+ * 被併的那一頁網址已轉址到這裡的 `#v-<slug>`（src/data/indexing.js），所以它原本的
+ * 全文、逐段說明、常見錯誤、法源、問答與 Word 檔都要在這一段看得到，不能只剩一行連結。
+ * 範例全文直接攤開成靜態文字，不再放第二個互動體驗器（同頁兩個 CaseDemo 只是重複的介面）。
+ *
+ * 問答一樣直接攤開；呼叫端要把 `uniqueFaqEntities(uq)` 併進該頁的 FAQPage。
+ */
+interface Props {
+  slug: string;
+  title: string;
+  lead: string;
+  draft: Record<string, any>;
+  uq: Record<string, any> | null;
+  download: { path: string; filename: string } | null;
+  /** 主頁已列過的法條網址，避免同頁重複 */
+  skipLegalUrls?: string[];
+}
+const { slug, title, lead, draft, uq, download, skipLegalUrls = [] } = Astro.props;
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const sections: { title: string; items: string[] }[] = Array.isArray(draft.sections) ? draft.sections : (() => {
+  try {
+    return JSON.parse(draft.sections_json || '[]');
+  } catch {
+    return [];
+  }
+})();
+const isOfficial = draft.document_family === 'official';
+const has = (k: string) => Array.isArray(uq?.[k]) && uq![k].length > 0;
+const legal = (uq?.legal ?? []).filter((l: any) => !skipLegalUrls.includes(l.url));
+const cn = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十'];
+---
+
+<section class="variant" id={`v-${slug}`}>
+  <h2>{title}</h2>
+  <p class="lead">{lead}</p>
+
+  {has('scenario') && uq!.scenario.map((p: string) => <p>{p}</p>)}
+
+  <h3>範例全文（{draft.doc_type}）</h3>
+  <div class="paper">
+    {draft.subject && (
+      <p><strong>{isOfficial ? '主旨：' : ''}</strong>{draft.subject}</p>
+    )}
+    {sections.map((s) => (
+      <>
+        <p class="sec">{s.title}：</p>
+        <ol class="items">
+          {s.items.map((it, i) => <li><span class="no">{s.items.length > 1 ? `${cn[i] ?? i + 1}、` : ''}</span>{it}</li>)}
+        </ol>
+      </>
+    ))}
+  </div>
+
+  {has('structure') && (
+    <>
+      <h3>逐段怎麼寫</h3>
+      <dl class="structure">
+        {uq!.structure.map((s: any) => (
+          <div><dt>{s.part}</dt><dd>{s.explain}</dd></div>
+        ))}
+      </dl>
+    </>
+  )}
+
+  {has('mistakes') && (
+    <>
+      <h3>這一則常見的錯</h3>
+      <ol class="mistakes">
+        {uq!.mistakes.map((m: any) => (
+          <li>
+            <p><span class="tag">常見寫法</span>{m.wrong}</p>
+            <p><span class="tag fix">改成</span>{m.fix}</p>
+            {m.why && <p class="why">{m.why}</p>}
+          </li>
+        ))}
+      </ol>
+    </>
+  )}
+
+  {legal.length > 0 && (
+    <>
+      <h3>這一則另外用到的法條</h3>
+      <ul class="legal">
+        {legal.map((l: any) => (
+          <li>
+            <a href={l.url} rel="noopener">{l.law}{l.article ? ` ${l.article}` : ''}</a>
+            <span>{l.point}</span>
+          </li>
+        ))}
+      </ul>
+    </>
+  )}
+
+  {has('faq') && (
+    <>
+      <h3>這一則的常見問題</h3>
+      {uq!.faq.map((f: any) => (
+        <div class="qa">
+          <p class="q">{f.q}</p>
+          <p>{f.a}</p>
+        </div>
+      ))}
+    </>
+  )}
+
+  {download && (
+    <p class="dl">
+      <a href={`${base}downloads/${download.path}`} download={download.filename}>{download.filename}</a>
+      <span>這一則的 Word 檔，姓名、日期與金額改成自己的</span>
+    </p>
+  )}
+</section>
+
+<style>
+  .variant {
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 2px solid var(--color-line);
+  }
+  .variant h2 {
+    font-size: var(--text-xl);
+    margin-bottom: 1rem;
+  }
+  .variant h3 {
+    font-size: var(--text-lg);
+    margin: 2rem 0 0.75rem;
+  }
+  .variant p,
+  .variant li,
+  .variant dd {
+    font-size: var(--text-base);
+    line-height: 1.9;
+  }
+  .lead {
+    color: var(--color-ink-soft);
+  }
+  .paper {
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.375rem;
+    background: var(--color-bg-light);
+  }
+  .sec {
+    margin-top: 0.75rem;
+    font-weight: 700;
+  }
+  .items {
+    list-style: none;
+    padding-inline-start: 1rem;
+    margin: 0;
+  }
+  .structure {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0;
+  }
+  .structure dt {
+    font-weight: 700;
+  }
+  .structure dd {
+    margin: 0;
+    color: var(--color-ink-soft);
+  }
+  .mistakes {
+    display: grid;
+    gap: 1rem;
+    padding-inline-start: 1.5rem;
+  }
+  .mistakes p {
+    margin: 0.25rem 0;
+  }
+  .tag {
+    display: inline-block;
+    font-size: var(--text-xs);
+    margin-inline-end: 0.5rem;
+    padding: 0 0.5rem;
+    border-radius: 0.25rem;
+    background: var(--color-bg-light);
+    color: var(--color-ink-soft);
+  }
+  .tag.fix {
+    color: var(--color-primary);
+  }
+  .why {
+    color: var(--color-ink-soft);
+  }
+  .legal {
+    display: grid;
+    gap: 0.75rem;
+    list-style: none;
+    padding-inline-start: 0;
+  }
+  .legal a,
+  .dl a {
+    color: var(--color-primary);
+    margin-inline-end: 0.75rem;
+  }
+  .legal span,
+  .dl span {
+    color: var(--color-ink-soft);
+  }
+  .q {
+    font-weight: 700;
+    margin-top: 1rem;
+  }
+  .dl {
+    margin-top: 2rem;
+  }
+</style>

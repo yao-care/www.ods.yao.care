@@ -14,6 +14,7 @@ import SiteFooter from '../../components/SiteFooter.astro';
 import UniqueContent from '../../components/UniqueContent.astro';
 import { uniqueFor } from '../../data/unique.js';
 import { SERVICE_LINKS } from '../../site.config.js';
+// 這頁是全站 Word 入口：已併入其他頁的案例檔照樣列，連結改指主頁的那一段（2026-10-04）。
 import { CASES } from '../../data/cases.js';
 import { CITIZEN_EXAMPLES } from '../../data/citizen-examples.js';
 import { PRIVATE_DOCS } from '../../data/private-docs.js';
@@ -38,7 +39,7 @@ const caseRows = CASES.map((c) => ({
   ...downloads.cases[c.slug],
   slug: c.slug,
   title: c.seoTitle,
-  href: `${base}cases/${c.slug}/`,
+  href: c.mergedInto ? `${base}cases/${c.mergedInto}/#v-${c.slug}` : `${base}cases/${c.slug}/`,
   lead: c.lead,
 })).filter((row) => row.path);
 
@@ -140,7 +141,9 @@ const letterBlank = downloads.templates.find((t) => t.docType === '函');
 const privateRows = PRIVATE_DOCS.map((d) => ({
   ...downloads.private[d.slug],
   title: d.seoTitle,
-  href: `${base}private-documents/${d.slug}/`,
+  href: d.mergedInto
+    ? `${base}private-documents/${d.mergedInto}/#v-${d.slug}`
+    : `${base}private-documents/${d.slug}/`,
   lead: d.lead,
 })).filter((row) => row.path);
 

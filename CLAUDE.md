@@ -806,3 +806,14 @@ canonical 與宣告一致、robots／抓取全正常；GSC 每日曝光 09-28～
 頁間相似度實測（8 字 shingle Jaccard，main 內文）最高 0.30，沒有近似頁。
 66 頁有 39 頁最後爬取還停在 8 月，10-03 補的獨有內容當時一頁都還沒被重爬。
 所以獨有內容是必要但不夠的處置，**不要再用「再補一批內容」回應這個訊號**，判讀等 Google 重爬與 update 結束。
+
+**2026-10-04 用戶拍板縮收錄範圍**（GSC 人工判決處罰、安全性問題皆「未偵測到任何問題」，判定為演算法降級）。
+單一來源是 `src/data/indexing.js`，`astro.config.mjs`（sitemap filter、redirects）與 `BaseLayout`（robots meta）都讀它：
+- **noindex**：民間書件明細頁全部＋`/wills/`，`noindex, follow`、不進 sitemap，頁面與站內連結照舊；
+  入口頁 `/private-documents/` 保留收錄。robots.txt 不能擋這些路徑，否則 Google 看不到 noindex。
+- **合併**：資料上標 `mergedInto`（`cases.js`／`private-docs.js`），被併的不產頁，內容由
+  `src/components/MergedVariant.astro` 在主頁 `#v-<slug>` 段落呈現（全文、獨有內容、問答併進 FAQPage、Word 檔）。
+  列表與內鏈一律用 `LISTED_CASES`／`LISTED_PRIVATE_DOCS`；`/templates/` 是全站 Word 入口，照樣列被併那份、連到主頁段落。
+  GitHub Pages 沒有伺服器端 301，舊網址用 Astro `redirects` 產的轉址頁（meta refresh 0 秒＋canonical＋noindex）；
+  `check:inlinks`／`check:og` 會跳過這種轉址頁。
+- 重新開放的條件寫在 seo-ops `playbooks/ods.yao.care.md` 的 strategy 區塊。

@@ -15,17 +15,19 @@ import SiteHeader from '../../components/SiteHeader.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import CaseDemo from '../../components/CaseDemo.astro';
 import UniqueContent from '../../components/UniqueContent.astro';
+import MergedVariant from '../../components/MergedVariant.astro';
 import { uniqueFor, uniqueFaqEntities } from '../../data/unique.js';
 import { SERVICE_LINKS } from '../../site.config.js';
-import { PRIVATE_DOCS } from '../../data/private-docs.js';
+import { LISTED_PRIVATE_DOCS as PRIVATE_DOCS, mergedPrivateInto } from '../../data/private-docs.js';
 import index from '../../data/scenarios.json';
 import downloads from '../../data/downloads.json';
 
 const payloads = import.meta.glob('../../data/scenarios/*.json', { eager: true });
 
 export async function getStaticPaths() {
-  const { PRIVATE_DOCS } = await import('../../data/private-docs.js');
-  return PRIVATE_DOCS.map((d) => ({ params: { slug: d.slug }, props: { meta: d } }));
+  // 已併入其他頁的不產頁（網址由 astro.config 的 redirects 轉到主頁段落）
+  const { LISTED_PRIVATE_DOCS } = await import('../../data/private-docs.js');
+  return LISTED_PRIVATE_DOCS.map((d) => ({ params: { slug: d.slug }, props: { meta: d } }));
 }
 
 const { meta } = Astro.props;
@@ -60,6 +62,13 @@ const download = downloads.private?.[meta.slug] ?? null;
 const uq = uniqueFor(`private-documents/${meta.slug}`);
 const blankTemplate = downloads.templates.find((t) => t.docType === docType) ?? null;
 const failed = payload.checks.filter((c) => !c.ok);
+// 併進本頁的民間書件（2026-10-04 起）：全文、獨有內容與 Word 在本頁「#v-<slug>」段落呈現
+const variants = mergedPrivateInto(meta.slug).map((m) => ({
+  meta: m,
+  draft: payloads[`../../data/scenarios/${m.key}.json`].default.draft,
+  uq: uniqueFor(`private-documents/${m.slug}`),
+  download: downloads.private?.[m.slug] ?? null,
+}));
 const related = PRIVATE_DOCS.filter((d) => d.category === meta.category && d.slug !== meta.slug);
 // 每個其他分類各取一則，而不是 slice(0,2) —— 用 slice 的話永遠只會連到排在前面的
 // 那兩個分類，排後面的（借據）永遠拿不到橫向內鏈。實測內鏈稽核抓到借據只有 2 條。
@@ -127,6 +136,7 @@ const faq = {
       },
     },
     ...uniqueFaqEntities(uq),
+    ...variants.flatMap((v) => uniqueFaqEntities(v.uq)),
   ],
 };
 ---
@@ -473,6 +483,18 @@ const faq = {
     />
 
     <UniqueContent data={uq} part="body" />
+
+    {variants.map((v) => (
+      <MergedVariant
+        slug={v.meta.slug}
+        title={v.meta.seoTitle}
+        lead={v.meta.lead}
+        draft={v.draft}
+        uq={v.uq}
+        download={v.download}
+        skipLegalUrls={(uq?.legal ?? []).map((l) => l.url)}
+      />
+    ))}
 
     {download && !isLoan && (
       <>

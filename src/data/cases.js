@@ -107,6 +107,9 @@ export const CASES = [
   {
     key: 'procurement_request',
     slug: 'small-procurement-sign',
+    // 2026-10-04 用戶拍板合併進採購簽：本則全文與獨有內容改在 /cases/procurement-sign/ 的「小額採購」段落呈現，
+    // 本網址轉址過去（src/data/indexing.js）。資料留著：Word 檔照樣產、主頁照樣讀得到。
+    mergedInto: 'procurement-sign',
     seoTitle: '小額採購簽呈範例：請購單怎麼簽',
     category: '內部簽核',
     lead: '金額落在哪個級距決定要走哪種程序，這是簽裡面最該先講清楚的事。',
@@ -202,7 +205,12 @@ export const CASES = [
   },
 ];
 
-export const CATEGORIES = [...new Set(CASES.map((c) => c.category))];
+/** 有自己網址的案例（排除已併入其他頁的）。列表、內鏈、產頁一律用這份；CASES 只給產 Word 與資料對帳。 */
+export const LISTED_CASES = CASES.filter((c) => !c.mergedInto);
+/** 併進某頁的案例：主頁 slug → [被併入的案例…] */
+export const mergedCasesInto = (slug) => CASES.filter((c) => c.mergedInto === slug);
+
+export const CATEGORIES = [...new Set(LISTED_CASES.map((c) => c.category))];
 
 export function findCaseBySlug(slug) {
   return CASES.find((c) => c.slug === slug);

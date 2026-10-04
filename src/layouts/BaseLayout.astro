@@ -1,4 +1,5 @@
 ---
+import { isNoindex } from '../data/indexing.js';
 import '../styles/variables.css';
 import '../styles/global.css';
 import Analytics from '../components/Analytics.astro';
@@ -12,6 +13,11 @@ interface Props {
   schemas?: unknown[];
 }
 const { title, description, schemas = [] } = Astro.props;
+// 退出索引的頁由 src/data/indexing.js 統一決定（2026-10-04），頁面自己不用帶 prop。
+// 用 noindex, follow：頁面照常可讀、站內連結照常傳遞；max-image-preview:large 保留給 check:og 對帳。
+const robots = isNoindex(Astro.url.pathname)
+  ? 'noindex, follow, max-image-preview:large'
+  : 'max-image-preview:large';
 // 站內絕對路徑一律用 base 組：模式 A 時 BASE_URL='/'（行為不變），模式 B 才不會掉到主機根目錄。
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
@@ -77,7 +83,7 @@ const siteSchema = {
     <link rel="sitemap" href={`${base}sitemap-index.xml`} />
 
     <!-- 沒有這一行，Discover 與搜尋結果只會給縮圖版位，1200 寬的圖等於白做 -->
-    <meta name="robots" content="max-image-preview:large" />
+    <meta name="robots" content={robots} />
 
     <link rel="icon" href={`${base}favicon.ico`} sizes="48x48" />
     <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />

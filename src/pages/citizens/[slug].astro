@@ -34,8 +34,8 @@ const sameFamily = CITIZEN_EXAMPLES.filter((e) => e.family === example.family &&
 const otherFamily = CITIZEN_EXAMPLES.filter((e) => e.family !== example.family).slice(0, 2);
 // 民間書件是 2026-08-26 新開的一區，與這裡是同一批使用者（個人與企業），要有橫向入口。
 const PRIVATE_PICKS = [
-  { slug: 'power-of-attorney-household', title: '委託書範例：代領戶籍謄本' },
-  { slug: 'affidavit-documents-true', title: '切結書範例：切結所附文件屬實' },
+  { slug: 'power-of-attorney-vehicle', title: '委託書範本：代辦汽車過戶、代領戶籍謄本' },
+  { slug: 'affidavit-lost-document', title: '切結書範本：證件遺失、所附文件屬實' },
   { slug: 'settlement-traffic-accident', title: '車禍和解書範例：僅就車損和解' },
 ];
 const familyLabelOf = (e) => (e.family === 'notice' ? '存證信函' : '民眾對機關');

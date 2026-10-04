@@ -38,15 +38,67 @@ const newest = (...dates) => dates.filter(Boolean).sort().pop() ?? null;
 // 各區段的資料相依。刻意逐段列，不要一律吃整個 src/data ——
 // 那會讓任何一份資料變動就把全站 lastmod 一起推新，等於又回到「宣稱全站都改了」。
 const SECTION_DATA = {
-  cases: ['src/data/cases.js', 'src/data/scenarios', 'src/data/scenarios.json', 'src/data/downloads.json'],
-  citizens: ['src/data/citizen-examples.js', 'src/data/downloads.json'],
+  cases: ['src/data/cases.js', 'src/data/scenarios', 'src/data/scenarios.json'],
+  citizens: ['src/data/citizen-examples.js'],
   templates: ['src/data/downloads.json', 'src/data/gov-format.json'],
   checks: ['src/data/scenarios'],
   'doc-types': ['src/data/cases.js', 'src/data/citizen-examples.js', 'src/data/scenarios.json'],
-  // 這兩頁自 2026-09-27 起也有可下載的檔（領據、數字大寫對照表），
-  // 檔案換了就要告訴 Google 這一頁動過，所以把清單與各自的資料來源列進來。
-  receipt: ['src/data/downloads.json', 'src/data/receipt.js', 'src/data/voucher-rule.json'],
-  numbers: ['src/data/downloads.json', 'src/data/uppercase-number.js', 'src/data/voucher-rule.json'],
+  // 這兩頁自 2026-09-27 起也有可下載的檔（領據、數字大寫對照表）；下載清單改走下面的 DOWNLOADS 逐頁投影。
+  receipt: ['src/data/receipt.js', 'src/data/voucher-rule.json'],
+  numbers: ['src/data/uppercase-number.js', 'src/data/voucher-rule.json'],
+};
+
+// 🔴 downloads.json 是 build-docx 產的「全站下載清單」，一份檔被 50 幾頁吃到（2026-10-04 補）。
+//    原本把它整份列進 cases／citizens／receipt／numbers 的 SECTION_DATA：commit de4c4ac 只改了
+//    借據那一筆的檔名，線上 sitemap 就有 53 頁 lastmod 跳到同一刻——案例頁一個字都沒變。
+//    改成「逐頁投影」：只取該頁真的讀到的那幾筆（自己的檔＋同文別空白範本＋版面出處），
+//    沿 git 歷史找最後一次「投影結果」有變的 commit。/templates/ 列的是全部檔案，仍吃整份。
+const DOWNLOADS = 'src/data/downloads.json';
+const blankFor = (d, docType) => (d.templates || []).find((t) => t.docType === docType) ?? null;
+const DOWNLOAD_VIEW = {
+  // 明細頁：自己的那份＋同文別空白範本（docType 取自己那筆）＋版面出處名稱
+  cases: (d, slug) => slug && [d.cases?.[slug], blankFor(d, d.cases?.[slug]?.docType), d.source?.name],
+  citizens: (d, slug) =>
+    slug === 'certified-letter-guide'
+      ? [blankFor(d, '存證信函')]
+      : slug && [d.citizens?.[slug], blankFor(d, d.citizens?.[slug]?.docType), d.source?.name, d.postalGuide],
+  receipt: (d) => [(d.extras || []).filter((x) => x.page === 'receipt/'), (d.templates || []).length],
+  numbers: (d) => [(d.extras || []).filter((x) => x.page === 'numbers/')],
+};
+
+let dlHistory = null;   // [{ date, data }]，新到舊
+const downloadsHistory = () => {
+  if (dlHistory) return dlHistory;
+  dlHistory = [];
+  try {
+    const log = execFileSync('git', ['log', '--format=%H %cI', '--', DOWNLOADS], {
+      encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'],
+    }).trim();
+    for (const line of log ? log.split('\n') : []) {
+      const [sha, date] = line.split(' ');
+      try {
+        const raw = execFileSync('git', ['show', `${sha}:${DOWNLOADS}`], {
+          encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 16 << 20,
+        });
+        dlHistory.push({ date, data: JSON.parse(raw) });
+      } catch { dlHistory.push({ date, data: null }); }
+    }
+  } catch { /* 非 git 環境 → 空歷史，呼叫端退回其他日期 */ }
+  return dlHistory;
+};
+
+/** 該頁讀到的下載清單投影，最後一次改變的 commit 時間。 */
+const downloadsDate = (section, slug) => {
+  const view = DOWNLOAD_VIEW[section];
+  if (!view) return null;
+  const hist = downloadsHistory();
+  const key = (d) => (d ? JSON.stringify(view(d, slug) ?? null) : null);
+  for (let i = 0; i < hist.length; i++) {
+    const cur = key(hist[i].data);
+    const prev = i + 1 < hist.length ? key(hist[i + 1].data) : undefined;
+    if (cur !== prev) return hist[i].date;   // 沒有下載的頁投影恆為空，只會落到最舊那筆，不會壓過其他日期
+  }
+  return null;
 };
 
 /** 由網址路徑推回產生它的 .astro 檔（靜態頁優先，其次同層的動態路由）。 */
@@ -67,6 +119,7 @@ export function createLastmod(buildTime = new Date().toISOString()) {
     const date = newest(
       iso(routeFiles(segments)),
       SECTION_DATA[section] ? iso(SECTION_DATA[section]) : null,
+      downloadsDate(section, segments[1]),
       // 每頁獨有內容（2026-10-03 起，src/data/unique.js）：一頁一檔，只推動那一頁。
       iso([`src/data/unique/${segments.join('/') || 'home'}.json`]),
     );

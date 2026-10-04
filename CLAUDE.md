@@ -261,6 +261,11 @@ const S = { numbers: { id: 'numbers', label: '六、數字怎麼寫' }, … };
 而這個欄位正是上線初期唯一能催重爬的訊號（沒有它的那幾天，Google 每天下載 sitemap，
 逐頁查 URL Inspection 卻停在同一個爬取時間）。
 
+`src/data/downloads.json`（build-docx 產的全站下載清單）不再整份算進各區段：
+2026-10-04 只改借據一筆檔名，sitemap 就有 53 頁 lastmod 跳到同一刻。現在由
+`DOWNLOAD_VIEW` 逐頁投影（自己的檔＋同文別空白範本＋出處），沿 git 歷史找投影最後一次變動的 commit；
+只有 `/templates/` 列全部檔案、仍吃整份。新增會讀 downloads.json 的頁面型別時，要在那裡補投影。
+
 **規矩：內容或版面要改就攢起來一次推，不要為了「順手」分成好幾個 commit。**
 查現在全站是不是同一個時間（全部相同＝最近一次動到全域檔）：
 
@@ -793,3 +798,11 @@ pnpm gen:simplified-set  # 重產簡體字集合（只在來源資料改版時�
 都由 `node scripts/check-unique.mjs [檔]` 單檔驗（已串進 build）；加 `--online` 會實際打開每條連結、
 核對條號與 quote 逐字。sitemap `lastmod` 會吃該頁自己的 unique 檔。
 示範頁：`src/data/unique/cases/noise-petition-reply.json`。
+
+**2026-10-04 複查：不是模板頁的問題，是全站被降級。** 逐頁 URL Inspection 66/66 全部
+Crawled - currently not indexed（首頁、/apply/、/security/ 這些沒有模板的頁也一樣），
+canonical 與宣告一致、robots／抓取全正常；GSC 每日曝光 09-28～30 每天 360–740，
+10-01 掉到 26、10-03 剩 1，期間（09-27～10-02）站上沒有任何部署，與 Google 9 月 spam update（09-24 起）重疊。
+頁間相似度實測（8 字 shingle Jaccard，main 內文）最高 0.30，沒有近似頁。
+66 頁有 39 頁最後爬取還停在 8 月，10-03 補的獨有內容當時一頁都還沒被重爬。
+所以獨有內容是必要但不夠的處置，**不要再用「再補一批內容」回應這個訊號**，判讀等 Google 重爬與 update 結束。

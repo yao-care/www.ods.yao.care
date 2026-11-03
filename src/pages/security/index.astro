@@ -148,6 +148,10 @@ const faq = faqPage([
       採購或資安審查需要更細的說明文件，<a {...SERVICE_LINKS.agencyApply('security_agency_apply')}>來信告訴我們</a>，
       會依貴機關的檢核表逐項回覆。
     </p>
+    <p class="note">
+      這套系統實際涵蓋哪些功能、跟電子公文系統怎麼分工，看<a href={`${base}product/`}>公文 AI 系統</a>；
+      去識別化之後跑出來的格式檢核結果，每一則<a href={`${base}cases/`}>公文範例</a>都附逐條結果。
+    </p>
   </section>
 </ArticlePage>
 
@@ -158,5 +162,9 @@ const faq = faqPage([
   }
   blockquote .para + .para {
     margin-top: 0.5rem;
+  }
+  .note {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
   }
 </style>
